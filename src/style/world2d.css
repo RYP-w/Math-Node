@@ -1,0 +1,73 @@
+#world2d {
+    --world2d-target-x: 0px;
+    --world2d-target-y: 0px;
+    --world2d-offset-y: 100px;
+    --world2d-offset-x: 0px;
+    --world2d-scale: 1;
+
+    --world2d-zero-line-w: 0px;
+    --world2d-zero-line-h: 0px;
+}
+
+#world2d {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ffffff;
+    position: absolute;
+    overflow: hidden;
+
+}
+
+#svg_world2d {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+#offsite_world2d {
+    position: relative;
+    height: 100%;
+    transform: translate(var(--world2d-offset-x), var(--world2d-offset-y));
+    z-index: 1;
+}
+
+#svg_offsite_world2d {
+    transform: translate(var(--world2d-offset-x), var(--world2d-offset-y));
+}
+
+#place_world2d {
+    position: relative;
+    transform-origin: 0 0;
+    height: 100%;
+    transform: translate(var(--world2d-target-x), var(--world2d-target-y)) scale(var(--world2d-scale));
+}
+
+#svg_place_world2d {
+    transform: translate(var(--world2d-target-x), var(--world2d-target-y)) scale(var(--world2d-scale));
+}
+
+#container-zero-line {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+}
+
+#height-zero-line {
+    position: absolute;
+    border: 0;
+    border-bottom-width: 1px;
+    border-color: #ff00007f;
+    top: -1px;
+    transform: translate(0px, calc(var(--world2d-target-y) + var(--world2d-offset-y)));
+}
+
+#width-zero-line {
+    position: absolute;
+    border: 0;
+    border-right-width: 1px;
+    border-color: #00ff007f;
+    left: -1px;
+    transform: translate(calc(var(--world2d-target-x) + var(--world2d-offset-x)), 0px);
+}

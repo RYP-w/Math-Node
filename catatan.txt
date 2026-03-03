@@ -1,0 +1,7 @@
+di src untuk include image di src daripada public:
+
+public: 
+import image from "/image.svg";
+
+src:
+import { image } from "./image.ts";

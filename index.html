@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    connect-src 'self';
+    font-src 'self';
+    frame-src 'none';
+    ">
+    <title>Math-Node</title>
+    <script type="module" src="/src/index.ts" defer></script>
+</head>
+
+<body style="user-select: none;" id="body">
+    <div id="title-bar-region">
+        <div id="title-bar-left">
+            <div id="icon-app">
+                <div
+                    style="height: 100%; aspect-ratio: 1 / 1; display: flex; justify-content: center; align-items: center;">
+                    <img src="./src/assets/svg/icon.svg" id="icon_app" draggable="false">
+                </div>
+                <span>Math-Node</span>
+            </div>
+        </div>
+        <div id="title-bar-centre">
+            <span>Still on progress...</span>
+        </div>
+        <div id="title-bar-right">
+            <span>(✿◡‿◡)</span>
+            <div class="window-controls-container"></div>
+        </div>
+    </div>
+    <div id="editor">
+        <div id="world2d">
+            <svg id="svg_world2d">
+                <g id="svg_offsite_world2d">
+                    <g id="svg_place_world2d">
+                        <path d="M 0 0 L 15 0 L 45 30 L 60 30" stroke="white" stroke-width="4" stroke-linejoin="round"
+                            fill="none" from_node="asd" to_node="zxc" stroke-linecap="round" />
+                    </g>
+                </g>
+            </svg>
+            <div id="offsite_world2d">
+                <div id="place_world2d">
+
+                    <div class="node-style node" style="--position-y:200px" id="node_999">
+                        <div class="node-container-region">
+                            <div class="node-title">
+                                <div style="display: flex; align-items: center; height: 100%; margin-left: 3px;"
+                                    class="no-event">
+                                    <img src="./src/assets/logo.webp" width="20px" class="no-event">
+                                    <span>Let's go</span>
+                                </div>
+                            </div>
+                            <div class="node-header-line"></div>
+                            <div class="node-body">
+
+                                <div class="node-item-row">
+                                    <div class="node-container-value-box">
+                                        <div class="node-container-socket input">
+                                            <div class="node-item-socket"></div>
+                                        </div>
+                                        <div class="node-container-item-value">
+                                            <input type="number" class="node-item-value" value="50">
+                                        </div>
+                                    </div>
+                                    <div class="node-container-socket output">
+                                        <div class="node-item-socket"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="node_99" class="node-style node" style="--position-x: 150px; --position-y: 150px;">
+                        <div class="node-container-region">
+                            <div class="node-title">
+                                <div class="no-event"
+                                    style="display: flex; align-items: center; height: 100%; margin-left: 3px;">
+                                    <img class="no-event" src="./src/assets/logo.webp" style="width: 20px;">
+                                    <span>coba coba</span>
+                                </div>
+                            </div>
+                            <div class="node-header-line"></div>
+                            <div class="node-body">
+                                <div class="node-item-row">
+                                    <div class="node-container-value-box">
+                                        <div class="node-container-socket input">
+                                            <div id="inputsocket_0" class="node-item-socket"
+                                                style="--position-socket-x: -0.5px; --position-socket-y: 48.5px;">
+                                            </div>
+                                        </div>
+                                        <div class="node-container-item-value">
+                                            <input class="node-item-value" type="number">
+                                        </div>
+                                    </div>
+                                    <div class="node-container-socket output">
+                                        <div id="outputsocket_0" class="node-item-socket"
+                                            style="--position-socket-x: 0.5px; --position-socket-y: 48.5px;">
+                                            <svg>
+
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="node-item-row">
+                                    <div class="node-container-value-box">
+                                        <div class="node-container-item-value left-margin-wrap-socket">
+                                            <input class="node-item-value" type="number">
+                                        </div>
+                                    </div>
+                                    <div class="node-container-socket output">
+                                        <div id="outputsocket_1" class="node-item-socket"
+                                            style="--position-socket-x: 0.5px; --position-socket-y: 78.5px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="node-item-row">
+                                    <div class="node-container-value-box">
+                                        <div class="node-container-socket input">
+                                            <div id="inputsocket_1" class="node-item-socket"
+                                                style="--position-socket-x: -0.5px; --position-socket-y: 108.5px;">
+                                            </div>
+                                        </div>
+                                        <div class="node-container-item-value">
+                                            <input class="node-item-value" type="number">
+                                        </div>
+                                    </div>
+                                    <div class="node-container-socket output"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div id="container-zero-line">
+                <div id="height-zero-line"
+                    style="width: calc(100% - var(--world2d-zero-line-w)); border-style: solid; right: 0; "></div>
+                <div id="width-zero-line"
+                    style="height: calc(100% - var(--world2d-zero-line-h)); border-style: solid; bottom: 0px; "></div>
+                <div id="height-zero-line"
+                    style="width: calc(var(--world2d-zero-line-w)); border-style: dashed; left: 0; "></div>
+                <div id="width-zero-line"
+                    style="height: calc(var(--world2d-zero-line-h)); border-style: dashed; top: 0px; "></div>
+            </div>
+        </div>
+        <div id="toolkit">
+            <div></div>
+        </div>
+    </div>
+
+</body>
+
+</html>

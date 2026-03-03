@@ -1,0 +1,9 @@
+#editor {
+    margin: 1px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-dark-02);
+    position: relative;
+}

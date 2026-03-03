@@ -1,0 +1,54 @@
+@font-face {
+    font-family: "Cozette";
+    src: url("../assets/font/CozetteVector.ttf") format("truetype");
+}
+
+:root{
+    --color-dark-00: #000000;
+    --color-dark-01: #0f0f0f;
+    --color-dark-02: #161616;
+    --color-dark-03: #1e1e1e;
+    --color-dark-04: #252525;
+    --color-dark-05: #2d2d2d;
+    --color-dark-06: #343434;
+    --color-dark-07: #3c3c3c;
+    --color-dark-08: #434343;
+    --color-dark-09: #4b4b4b;
+    --color-dark-10: #525252;
+    --color-dark-11: #5a5a5a;
+    --color-dark-12: #616161;
+    --color-dark-13: #696969;
+    --color-dark-14: #707070;
+    --color-dark-15: #787878;
+    --color-dark-16: #8c8c8c;
+}
+
+
+body {
+    background: var(--color-dark-01);
+    color: white;
+    font-family: "Cozette";
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+img {
+    -webkit-user-drag: none;
+    pointer-events: auto;
+}
+
+.window-controls-container{
+    width: 138px;
+    
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.no-event{
+    pointer-events: none;
+}

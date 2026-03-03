@@ -1,0 +1,41 @@
+#title-bar-region{
+    height: 32px;
+    background-color: var(--color-dark-02);
+    border-bottom: 1px solid white;
+    -webkit-app-region: drag;
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+}
+
+#title-bar-left, 
+#title-bar-centre, 
+#title-bar-right{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    
+    user-select: none;
+    
+}
+
+#title-bar-left{
+    -webkit-app-region: no-drag;
+}
+
+#icon-app{
+    display: flex; 
+    align-items: center; 
+    height: 100%;
+}
+
+#icon_app{
+    transform: scale(1);
+    transition: transform 0.1s;
+}
+
+#icon_app:hover{
+    transform: scale(1.5);
+}
