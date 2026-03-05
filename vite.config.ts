@@ -8,6 +8,17 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsInlineLimit: 0,
+    minify: "esbuild",//!
+    assetsDir: "",//!
+    cssCodeSplit: false,//!
+    rollupOptions: {//!
+      output: {//!
+        entryFileNames: "app.js",//!
+        assetFileNames: "[name].[ext]",//!
+        inlineDynamicImports: true,//!
+        manualChunks: undefined,//!
+      }//!
+    }//!
   },
   assetsInclude: ['**/*.ttf', '**/*.woff', '**/*.woff2']
 })

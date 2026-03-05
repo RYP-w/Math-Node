@@ -6,22 +6,17 @@ import "./style/node.css";
 
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 
-const SVG_Place_World2D = document.querySelector(
-    "#svg_place_world2d",
-) as HTMLElement;
+const SVG_Place_World2D = document.querySelector( "#svg_place_world2d") as HTMLElement;
 
 //<?> Import Script / Module [*]
 import { Node } from "./code/node/node";
-import { SelectedNode, SetSelectedNode } from "./code/node/selectedNode";
+import { SelectedNode, SetSelectedNode, } from "./code/node/selectNode";
 import { DataBaseNode } from "./code/node/database";
 import { MovingNodes } from "./code/node/moving";
 import { Clamp } from "./code/costum_function";
-import { EventMouseDown } from "./code/costum_class";
-import {
-    World2d,
-    GetScreenToWorld2d,
-    GetWorld2dToScreen,
-} from "./code/world2d";
+import { MouseButtonState } from "./code/mouseButtonState";
+import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d";
+import { Live_SelectNodes } from "./code/node/selectNodes";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
@@ -33,7 +28,7 @@ world2d.updateHTML();
 
 //<?> Init Class
 const nodeSelected = new SelectedNode();
-const SignalMouseDown = new EventMouseDown();
+const mouseButtonState = new MouseButtonState();
 
 //<?> Create Database Nodes
 const DatabaseNode = new DataBaseNode(SVG_Place_World2D);
@@ -110,8 +105,8 @@ document
 
 //<- Word2d Events
 world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-    SignalMouseDown.setAlt(ev, "right", "world2d");
-    SignalMouseDown.setAlt(ev, "left", "DragNode");
+    mouseButtonState.setAlt(ev, "right", "world2d");
+    mouseButtonState.setAlt(ev, "left", "DragNode");
     if (ev.button === 0) {
         if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
             SetSelectedNode(ev, DatabaseNode, nodeSelected);
@@ -147,7 +142,7 @@ world2d.HtmlElement.addEventListener("wheel", (ev) => {
 
 //<- Window Events
 window.addEventListener("mousemove", (ev) => {
-    if (SignalMouseDown.getSignal("right") == "world2d") {
+    if (mouseButtonState.getSignal("right") == "world2d") {
         const position = {
             x: world2d.target.x,
             y: world2d.target.y,
@@ -158,21 +153,24 @@ window.addEventListener("mousemove", (ev) => {
         };
         world2d.updateHTML();
     }
-    MovingNodes(ev, DatabaseNode, nodeSelected, world2d, SignalMouseDown);
+    MovingNodes(ev, DatabaseNode, nodeSelected, world2d, mouseButtonState);
 });
 window.addEventListener("mouseup", (ev) => {
-    SignalMouseDown.set(ev, "");
+    mouseButtonState.set(ev, "");
 });
 
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
-CheckConnectedNode()
 
-export function CheckConnectedNode() {
+//<- Group Events 
+CheckConnectedNode()//? Runtime ConnectedNode System
+Live_SelectNodes(world2d,mouseButtonState);
+
+function CheckConnectedNode() {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-        SignalMouseDown.setAlt(ev, "right", "world2d");
-        SignalMouseDown.setAlt(ev, "left", "DragNode");
+        mouseButtonState.setAlt(ev, "right", "world2d");
+        mouseButtonState.setAlt(ev, "left", "DragNode");
         if (ev.button === 0) {
             if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
                 SetSelectedNode(ev, DatabaseNode, nodeSelected);

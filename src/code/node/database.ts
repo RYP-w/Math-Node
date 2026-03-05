@@ -1,5 +1,5 @@
 import { ConnectedSystem } from "./connectedSystem";
-import { SetElementPath } from "./helper/addons";
+import { SetElementPath } from "../helper/addons";
 import type { Node } from "./node";
 
 type IdInputSocket = `inputsocket_${number}`;

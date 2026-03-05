@@ -209,12 +209,13 @@ function setAttributePositionSocket(node:Node) {
     const socketXOutput = widthNode + sizeSocket + offsiteSocket + outline - sizeSocket / 2;
 
     let count = 0;
-    for (const inputSoket in node.HtmlSockets.inputSockets) {
-        const HtmlSocket = node.HtmlSockets.inputSockets[inputSoket as IdInputSocket];
+    for (const socketId in node.valueBoxs){
+        if (node.valueBoxs[socketId as IdValueBox].enableInput) {
+            const HtmlSocket = node.HtmlSockets.inputSockets[node.valueBoxs[socketId as IdValueBox].socket?.id as IdInputSocket];
 
-        HtmlSocket.setAttribute('position-socket-x', `${socketXInput}px`);
-        HtmlSocket.setAttribute('position-socket-y', `${locationSocketY + itemSpacing * count}px`);
-        
+            HtmlSocket.setAttribute('position-socket-x', `${socketXInput}px`);
+            HtmlSocket.setAttribute('position-socket-y', `${locationSocketY + itemSpacing * count}px`);
+        }
         count++;
     }
 

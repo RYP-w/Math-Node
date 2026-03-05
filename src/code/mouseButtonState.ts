@@ -1,3 +1,4 @@
+type MouseSignal = 'DragNode' | 'world2d' | 'RectSelect' | 'titleSelect' | '';
 type MouseKey = 'left' | 'middle' | 'right';
 const buttonMap: Record<number, MouseKey> = {
     0: 'left',
@@ -5,28 +6,28 @@ const buttonMap: Record<number, MouseKey> = {
     2: 'right',
 };
 
-export class EventMouseDown {
-    private keys: Record<MouseKey, string> = {
+export class MouseButtonState {
+    private keys: Record<MouseKey, MouseSignal> = {
         left: '',
         middle: '',
         right: '',
     }
 
-    set(mouseEvent: MouseEvent, textSignal: string) {
+    set(mouseEvent: MouseEvent, textSignal: MouseSignal) {
         const key = buttonMap[mouseEvent.button];
         if (key) {
             this.keys[key] = textSignal;
         }
     }
 
-    setAlt(mouseEvent: MouseEvent, mouse: MouseKey, textSignal: string) {
+    setAlt(mouseEvent: MouseEvent, mouse: MouseKey, textSignal: MouseSignal) {
         const key = buttonMap[mouseEvent.button];
         if (key === mouse) {
             this.keys[key] = textSignal;
         }
     }
 
-    getSignal(mouse: MouseKey): string {
+    getSignal(mouse: MouseKey): MouseSignal {
         return this.keys[mouse];
     }
 
