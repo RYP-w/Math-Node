@@ -1,4 +1,4 @@
-type MouseSignal = 'DragNode' | 'world2d' | 'RectSelect' | 'titleSelect' | '';
+type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | '';
 type MouseKey = 'left' | 'middle' | 'right';
 const buttonMap: Record<number, MouseKey> = {
     0: 'left',

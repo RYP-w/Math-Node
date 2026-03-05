@@ -1,3 +1,5 @@
+import type { MouseButtonState } from "../mouseButtonState";
+import type { World2d } from "../world2d";
 import { DataBaseNode } from "./database";
 import { Node } from "./node";
 
@@ -78,4 +80,24 @@ export function SetSelectedNode(event: MouseEvent, dataNode: DataBaseNode, selec
             selectedNode.set(getNode);
         }
     }
+}
+
+// fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
+// sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
+export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DataBaseNode, databaseNodeSelected:SelectedNode, mouseButtonState:MouseButtonState) {
+    world2d.HtmlElement.addEventListener("mousedown", (ev) => {
+        if (ev.button == 0) {
+            let target = ev.target as HTMLElement;
+            if (target.classList.contains('node-title')) {
+                const parent = target.closest('[id^="node_"]') as HTMLDivElement;
+                const getNode = databaseNode.getById(parent.id as IdNode);
+                if (getNode) {
+                    databaseNodeSelected.set(getNode);
+                    mouseButtonState.set(ev,'NodeTitle');
+                }
+            }else {
+                databaseNodeSelected.clear();
+            }
+        }
+    })
 }

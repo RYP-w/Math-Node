@@ -10,9 +10,9 @@ const SVG_Place_World2D = document.querySelector( "#svg_place_world2d") as HTMLE
 
 //<?> Import Script / Module [*]
 import { Node } from "./code/node/node";
-import { SelectedNode, SetSelectedNode, } from "./code/node/selectNode";
+import { Live_SelectNodeSystem, SelectedNode, SetSelectedNode, } from "./code/node/selectNode";
 import { DataBaseNode } from "./code/node/database";
-import { MovingNodes } from "./code/node/moving";
+import { Live_MovingNodesSystem, MovingNodes } from "./code/node/moving";
 import { Clamp } from "./code/costum_function";
 import { MouseButtonState } from "./code/mouseButtonState";
 import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d";
@@ -31,8 +31,8 @@ const nodeSelected = new SelectedNode();
 const mouseButtonState = new MouseButtonState();
 
 //<?> Create Database Nodes
-const DatabaseNode = new DataBaseNode(SVG_Place_World2D);
-DatabaseNode.add(
+const databaseNode = new DataBaseNode(SVG_Place_World2D);
+databaseNode.add(
     new Node(
         "coba coba",
         { x: 0, y: 0 },
@@ -45,7 +45,7 @@ DatabaseNode.add(
         ],
     ),
 );
-DatabaseNode.add(
+databaseNode.add(
     new Node(
         "coba coba",
         { x: 150, y: 0 },
@@ -60,7 +60,7 @@ DatabaseNode.add(
         ],
     ),
 );
-DatabaseNode.add(
+databaseNode.add(
     new Node(
         "coba coba",
         { x: 300, y: 0 },
@@ -75,7 +75,7 @@ DatabaseNode.add(
         ],
     ),
 );
-DatabaseNode.add(
+databaseNode.add(
     new Node(
         "coba coba",
         { x: 450, y: 0 },
@@ -106,14 +106,7 @@ document
 //<- Word2d Events
 world2d.HtmlElement.addEventListener("mousedown", (ev) => {
     mouseButtonState.setAlt(ev, "right", "world2d");
-    mouseButtonState.setAlt(ev, "left", "DragNode");
-    if (ev.button === 0) {
-        if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
-            SetSelectedNode(ev, DatabaseNode, nodeSelected);
-        } else {
-            nodeSelected.clear();
-        }
-    }
+    mouseButtonState.setAlt(ev, "left", "world2d");
 });
 world2d.HtmlElement.addEventListener("wheel", (ev) => {
     if (ev.deltaY != 0) {
@@ -153,7 +146,7 @@ window.addEventListener("mousemove", (ev) => {
         };
         world2d.updateHTML();
     }
-    MovingNodes(ev, DatabaseNode, nodeSelected, world2d, mouseButtonState);
+    MovingNodes(ev, databaseNode, nodeSelected, world2d, mouseButtonState);
 });
 window.addEventListener("mouseup", (ev) => {
     mouseButtonState.set(ev, "");
@@ -165,28 +158,21 @@ document.addEventListener("contextmenu", (e) => {
 
 //<- Group Events 
 CheckConnectedNode()//? Runtime ConnectedNode System
+Live_SelectNodeSystem(world2d, databaseNode, nodeSelected, mouseButtonState);
 Live_SelectNodes(world2d,mouseButtonState);
+//Live_MovingNodesSystem(world2d, databaseNode, nodeSelected, mouseButtonState)
 
 function CheckConnectedNode() {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-        mouseButtonState.setAlt(ev, "right", "world2d");
-        mouseButtonState.setAlt(ev, "left", "DragNode");
-        if (ev.button === 0) {
-            if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
-                SetSelectedNode(ev, DatabaseNode, nodeSelected);
-            } else {
-                nodeSelected.clear();
-            }
-        }
         if (ev.button == 0) {
-            DatabaseNode.connectedSystem.SetFromNode(ev);
+            databaseNode.connectedSystem.SetFromNode(ev);
         }
     })
 
     window.addEventListener("mouseup", (ev) => {
         if (ev.button == 0) {
-            DatabaseNode.connectedSystem.SetToNode(ev);
-            DatabaseNode.connectedSystem.CheckListConnected();
+            databaseNode.connectedSystem.SetToNode(ev);
+            databaseNode.connectedSystem.CheckListConnected();
         }
     });
 }
