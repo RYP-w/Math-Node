@@ -1,6 +1,9 @@
-import { Node } from "./node-node";
+import { DataBaseNode } from "./database";
+import { Node } from "./node";
 
-export class NodeSelected {
+type IdNode = `node_${number}`;
+
+export class SelectedNode {
     private nodes: Map<string, Node>;
 
     constructor() {
@@ -64,5 +67,15 @@ export class NodeSelected {
             element.classList.remove('selectedChecked');
         }
         this.nodes.delete(id);
+    }
+}
+
+export function SetSelectedNode(event: MouseEvent, dataNode: DataBaseNode, selectedNode: SelectedNode) {
+    if ((event.target as HTMLDivElement).classList.contains('node-title')) {
+        const parent = (event.target as HTMLDivElement).closest('[id^="node_"]') as HTMLDivElement;
+        const getNode = dataNode.getById(parent.id as IdNode);
+        if (getNode) {
+            selectedNode.set(getNode);
+        }
     }
 }

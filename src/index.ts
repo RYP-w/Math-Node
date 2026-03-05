@@ -11,10 +11,10 @@ const SVG_Place_World2D = document.querySelector(
 ) as HTMLElement;
 
 //<?> Import Script / Module [*]
-import { Node } from "./code/node-node";
-import { NodeSelected } from "./code/node-nodeSelected";
-import { DBNode } from "./code/node-databaseNode";
-import { SetNodeSelected, MovingNodes } from "./code/node-functions";
+import { Node } from "./code/node/node";
+import { SelectedNode, SetSelectedNode } from "./code/node/selectedNode";
+import { DataBaseNode } from "./code/node/database";
+import { MovingNodes } from "./code/node/moving";
 import { Clamp } from "./code/costum_function";
 import { EventMouseDown } from "./code/costum_class";
 import {
@@ -32,16 +32,16 @@ world2d.offset = {
 world2d.updateHTML();
 
 //<?> Init Class
-const nodeSelected = new NodeSelected();
+const nodeSelected = new SelectedNode();
 const SignalMouseDown = new EventMouseDown();
 
 //<?> Create Database Nodes
-const DatabaseNode = new DBNode(SVG_Place_World2D);
+const DatabaseNode = new DataBaseNode(SVG_Place_World2D);
 DatabaseNode.add(
     new Node(
         "coba coba",
         { x: 0, y: 0 },
-        [{ type: "number", value: 10, enebleInput: true }],
+        [{ type: "number", value: 10, enableInput: true }],
         [
             { type: "number", value: 0 },
             { type: "number", value: 0 },
@@ -55,8 +55,8 @@ DatabaseNode.add(
         "coba coba",
         { x: 150, y: 0 },
         [
-            { type: "number", value: 10, enebleInput: true },
-            { type: "number", value: 10, enebleInput: true },
+            { type: "number", value: 10, enableInput: true },
+            { type: "number", value: 10, enableInput: true },
         ],
         [
             { type: "number", value: 0 },
@@ -70,9 +70,9 @@ DatabaseNode.add(
         "coba coba",
         { x: 300, y: 0 },
         [
-            { type: "number", value: 10, enebleInput: true },
-            { type: "number", value: 10, enebleInput: false },
-            { type: "number", value: 10, enebleInput: true },
+            { type: "number", value: 10, enableInput: true },
+            { type: "number", value: 10, enableInput: false },
+            { type: "number", value: 10, enableInput: true },
         ],
         [
             { type: "number", value: 0 },
@@ -85,10 +85,10 @@ DatabaseNode.add(
         "coba coba",
         { x: 450, y: 0 },
         [
-            { type: "number", value: 10, enebleInput: true },
-            { type: "number", value: 10, enebleInput: true },
-            { type: "number", value: 10, enebleInput: true },
-            { type: "number", value: 10, enebleInput: true },
+            { type: "number", value: 10, enableInput: true },
+            { type: "number", value: 10, enableInput: true },
+            { type: "number", value: 10, enableInput: true },
+            { type: "number", value: 10, enableInput: true },
         ],
         [{ type: "number", value: 0 }],
     ),
@@ -114,13 +114,10 @@ world2d.HtmlElement.addEventListener("mousedown", (ev) => {
     SignalMouseDown.setAlt(ev, "left", "DragNode");
     if (ev.button === 0) {
         if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
-            SetNodeSelected(ev, DatabaseNode, nodeSelected);
+            SetSelectedNode(ev, DatabaseNode, nodeSelected);
         } else {
             nodeSelected.clear();
         }
-    }
-    if (ev.button == 0) {
-        DatabaseNode.System_connected.SetFromNode(ev);
     }
 });
 world2d.HtmlElement.addEventListener("wheel", (ev) => {
@@ -165,12 +162,33 @@ window.addEventListener("mousemove", (ev) => {
 });
 window.addEventListener("mouseup", (ev) => {
     SignalMouseDown.set(ev, "");
-    if (ev.button == 0) {
-        DatabaseNode.System_connected.SetToNode(ev);
-        DatabaseNode.System_connected.CheckListConnected();
-    }
 });
 
 document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
 });
+CheckConnectedNode()
+
+export function CheckConnectedNode() {
+    world2d.HtmlElement.addEventListener("mousedown", (ev) => {
+        SignalMouseDown.setAlt(ev, "right", "world2d");
+        SignalMouseDown.setAlt(ev, "left", "DragNode");
+        if (ev.button === 0) {
+            if ((ev.target as HTMLDivElement).classList.contains("node-title")) {
+                SetSelectedNode(ev, DatabaseNode, nodeSelected);
+            } else {
+                nodeSelected.clear();
+            }
+        }
+        if (ev.button == 0) {
+            DatabaseNode.connectedSystem.SetFromNode(ev);
+        }
+    })
+
+    window.addEventListener("mouseup", (ev) => {
+        if (ev.button == 0) {
+            DatabaseNode.connectedSystem.SetToNode(ev);
+            DatabaseNode.connectedSystem.CheckListConnected();
+        }
+    });
+}
