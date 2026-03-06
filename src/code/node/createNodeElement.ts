@@ -1,7 +1,7 @@
 import { Node } from "./node";
 import { SetElement } from "../helper/addons";
 
-export function DrawHtml(node: Node) {
+export function createNodeElement(node: Node) {
     const HtmlNode = SetElement('div', { id: node.id, class: ["node-style", "node"], style: [`--position-x: ${node.position.x}px`, `--position-y: ${node.position.y}px`] });
     HtmlNode.appendChild(
         SetElement('div', { class: ['node-container-region'] },
@@ -16,7 +16,6 @@ export function DrawHtml(node: Node) {
                 SetElement('div', { id: 'node-items-container' }),
                 () => {
                     const ElOutput: HTMLElement[] = []
-
 
                     const maxCountValueBoxs = Object.keys(node.valueBoxs).length;
                     const maxCountOutputSocket = node.outputSocket.length;

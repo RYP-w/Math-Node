@@ -1,7 +1,7 @@
 //<!> file ini menjadi tempat untuk class node 
 
 import type { Vector2 } from "../TypeDefinition";
-import { DrawHtml } from "./drawHtml";
+import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 
@@ -93,7 +93,7 @@ export class Node {
 
         initValueBox(this, valueBoxs);
         initOutputSocket(this, outputSockets);
-        this.HtmlElement = DrawHtml(this) as HTMLDivElement
+        this.HtmlElement = createNodeElement(this) as HTMLDivElement
         this.HtmlElement.id = this.id;
         this.zIndex = 0;
 

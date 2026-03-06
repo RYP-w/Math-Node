@@ -1,23 +1,23 @@
-import type { DataBaseNode } from "./database";
+import type { DatabaseNode } from "./database";
 import { Node } from "./node";
 
 type IdInputSocket = `inputsocket_${number}`;
 type IdOutputSocket = `outputsocket_${number}`;
 type IdNode = `node_${number}`;
 
-export class ConnectedSystem{
-    private parent: DataBaseNode; //? ikat database Node ke ConnectedSystem
+export class ConnectionManager{
+    private parent: DatabaseNode; //? ikat database Node ke ConnectionManager
     private nodePair: { //? struktur data untuk memasang node output dan input
         from_node?: {node: Node, idSocket:IdOutputSocket},
         to_node?: {node: Node, idSocket: IdInputSocket}
     }
 
-    constructor(parent: DataBaseNode){
+    constructor(parent: DatabaseNode){
         this.parent = parent
         this.nodePair = {};
     }
 
-    SetFromNode(event: MouseEvent) {
+    setConnectionStart(event: MouseEvent) {
         const target = event.target as HTMLElement;
 
         if (target.classList.contains("node-item-socket") && target.classList.contains("output")) {
@@ -33,7 +33,7 @@ export class ConnectedSystem{
         }
     }
 
-    SetToNode(event: MouseEvent) {
+    setConnectionEnd(event: MouseEvent) {
         const target = event.target as HTMLElement;
 
         if (target.classList.contains("node-item-socket") && target.classList.contains("input")) {
@@ -48,7 +48,7 @@ export class ConnectedSystem{
         }
     }
 
-    CheckListConnected() {
+    processConnection() {
         if (this.nodePair.from_node !== undefined && this.nodePair.to_node !== undefined) {
             // logic koneksi (7 aturan basic)
             if (!this.parent.SystemCheckChild(this.nodePair.from_node.node, this.nodePair.to_node.node)) {

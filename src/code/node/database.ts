@@ -1,4 +1,4 @@
-import { ConnectedSystem } from "./connectedSystem";
+import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
 import type { Node } from "./node";
 
@@ -7,40 +7,40 @@ type IdOutputSocket = `outputsocket_${number}`;
 type IdNode = `node_${number}`;
 
 
-export class DataBaseNode {
-    private dataBase:Record<IdNode, Node>; //? list Nodes
-    connectedSystem: ConnectedSystem;
+export class DatabaseNode {
+    private database:Record<IdNode, Node>; //? list Nodes
+    connectedSystem: ConnectionManager;
     HtmlPlaceCurve: HTMLElement;
 
     constructor(HtmlPlaceCurve: HTMLElement){
-        this.dataBase = {}
-        this.connectedSystem = new ConnectedSystem(this);
+        this.database = {}
+        this.connectedSystem = new ConnectionManager(this);
         this.HtmlPlaceCurve = HtmlPlaceCurve;
     }
 
     add(node: Node) {
-        this.dataBase[node.id] = node;
+        this.database[node.id] = node;
     }
 
     removeById(id: IdNode) {
-        const element = this.dataBase[id];
+        const element = this.database[id];
         if (element) {
-            delete this.dataBase[id];
+            delete this.database[id];
         }
     }
 
     getById(id: IdNode): Node | undefined {
-        return this.dataBase[id];
+        return this.database[id];
     }
 
     getAll() {
-        return Object.values(this.dataBase)
+        return Object.values(this.database)
     }
 
-    SystemCheckObjectConnectToObject(nodeMain: { node: Node, idSocket: IdOutputSocket }, nodeTarget: { node: Node, idSocket: IdInputSocket }) {
-        for (const incomingNode of nodeTarget.node.connection.incomingNodes[nodeTarget.idSocket].values()) {
-            if (incomingNode.otherNode == nodeMain.node) {
-                if (incomingNode.otherIdSocket == nodeMain.idSocket) {
+    SystemCheckObjectConnectToObject(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
+        for (const incomingNode of toNode.node.connection.incomingNodes[toNode.idSocket].values()) {
+            if (incomingNode.otherNode == fromNode.node) {
+                if (incomingNode.otherIdSocket == fromNode.idSocket) {
                     return 1
                 } else {
                     return 2

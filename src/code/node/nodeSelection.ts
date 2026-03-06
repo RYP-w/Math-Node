@@ -1,11 +1,11 @@
 import type { MouseButtonState } from "../mouseButtonState";
 import type { World2d } from "../world2d";
-import { DataBaseNode } from "./database";
+import { DatabaseNode } from "./database";
 import { Node } from "./node";
 
 type IdNode = `node_${number}`;
 
-export class SelectedNode {
+export class NodeSelection {
     private nodes: Map<string, Node>;
 
     constructor() {
@@ -72,7 +72,7 @@ export class SelectedNode {
     }
 }
 
-export function SetSelectedNode(event: MouseEvent, dataNode: DataBaseNode, selectedNode: SelectedNode) {
+export function SetSelectedNode(event: MouseEvent, dataNode: DatabaseNode, selectedNode: NodeSelection) {
     if ((event.target as HTMLDivElement).classList.contains('node-title')) {
         const parent = (event.target as HTMLDivElement).closest('[id^="node_"]') as HTMLDivElement;
         const getNode = dataNode.getById(parent.id as IdNode);
@@ -84,7 +84,7 @@ export function SetSelectedNode(event: MouseEvent, dataNode: DataBaseNode, selec
 
 // fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
 // sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
-export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DataBaseNode, databaseNodeSelected:SelectedNode, mouseButtonState:MouseButtonState) {
+export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {
             let target = ev.target as HTMLElement;
@@ -92,11 +92,11 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DataBaseNode
                 const parent = target.closest('[id^="node_"]') as HTMLDivElement;
                 const getNode = databaseNode.getById(parent.id as IdNode);
                 if (getNode) {
-                    databaseNodeSelected.set(getNode);
-                    mouseButtonState.set(ev,'NodeTitle');
+                    nodeSelection.set(getNode);
+                    mouseState.set(ev,'NodeTitle');
                 }
             }else {
-                databaseNodeSelected.clear();
+                nodeSelection.clear();
             }
         }
     })

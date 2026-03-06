@@ -2,7 +2,7 @@ import type { MouseButtonState } from "../mouseButtonState";
 import type { Rect, Vector2 } from "../TypeDefinition";
 import type { World2d } from "../world2d";
 
-export class SelectNodes{
+export class SelectionBox{
     private previous_position:Vector2;
     private position:Vector2;
     constructor(){
@@ -36,12 +36,12 @@ export class SelectNodes{
     }
 }
 
-const selectedNodes = new SelectNodes();
+const selectionBox = new SelectionBox();
 
-export function Live_SelectNodes(world2d: World2d, eventMouseDown:MouseButtonState) {
+export function setupNodeSelection(world2d: World2d, eventMouseDown:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {
-            selectedNodes.set_startPosition({x:ev.clientX, y:ev.clientY});
+            selectionBox.set_startPosition({x:ev.clientX, y:ev.clientY});
         }
     });
     window.addEventListener('mousemove', (ev) => {
@@ -50,14 +50,14 @@ export function Live_SelectNodes(world2d: World2d, eventMouseDown:MouseButtonSta
                 eventMouseDown.set(ev,'RectSelect')
             }
             if (eventMouseDown.getSignal('left') == 'RectSelect') {
-                selectedNodes.set_MovingPosition({x:ev.clientX, y:ev.clientY});
+                selectionBox.set_MovingPosition({x:ev.clientX, y:ev.clientY});
             }
         }
         
     });
     window.addEventListener('mouseup', (ev) => {
         if (ev.button == 0 && eventMouseDown.getSignal('left') == 'RectSelect') {
-            console.log(selectedNodes.get_rect());
+            console.log(selectionBox.get_rect());
             eventMouseDown.set(ev,'');
         }
     })
