@@ -10,9 +10,9 @@ const SVG_Place_World2D = document.querySelector( "#svg_place_world2d") as HTMLE
 
 //<?> Import Script / Module [*]
 import { Node } from "./code/node/node";
-import { Live_SelectNodeSystem, SelectedNode, SetSelectedNode, } from "./code/node/selectNode";
+import { Live_SelectNodeSystem, SelectedNode, } from "./code/node/selectNode";
 import { DataBaseNode } from "./code/node/database";
-import { Live_MovingNodesSystem, MovingNodes } from "./code/node/moving";
+import { Live_MovingNodesSystem } from "./code/node/moving";
 import { Clamp } from "./code/costum_function";
 import { MouseButtonState } from "./code/mouseButtonState";
 import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d";
@@ -146,7 +146,6 @@ window.addEventListener("mousemove", (ev) => {
         };
         world2d.updateHTML();
     }
-    MovingNodes(ev, databaseNode, nodeSelected, world2d, mouseButtonState);
 });
 window.addEventListener("mouseup", (ev) => {
     mouseButtonState.set(ev, "");
@@ -160,7 +159,7 @@ document.addEventListener("contextmenu", (e) => {
 CheckConnectedNode()//? Runtime ConnectedNode System
 Live_SelectNodeSystem(world2d, databaseNode, nodeSelected, mouseButtonState);
 Live_SelectNodes(world2d,mouseButtonState);
-//Live_MovingNodesSystem(world2d, databaseNode, nodeSelected, mouseButtonState)
+Live_MovingNodesSystem(world2d, databaseNode, nodeSelected, mouseButtonState)
 
 function CheckConnectedNode() {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
