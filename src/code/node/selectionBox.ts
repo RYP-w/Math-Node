@@ -1,6 +1,5 @@
-import type { MouseButtonState } from "../mouseButtonState";
 import type { Rect, Vector2 } from "../TypeDefinition";
-import type { World2d } from "../world2d";
+import type { World2d } from "../world2d/world2d";
 
 export class SelectionBox{
     private previous_position:Vector2;
@@ -34,31 +33,12 @@ export class SelectionBox{
             height: y_max
         }
     }
-}
-
-const selectionBox = new SelectionBox();
-
-export function setupNodeSelection(world2d: World2d, eventMouseDown:MouseButtonState) {
-    world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-        if (ev.button == 0) {
-            selectionBox.set_startPosition({x:ev.clientX, y:ev.clientY});
-        }
-    });
-    window.addEventListener('mousemove', (ev) => {
-        if (ev.button == 0) {
-            if (eventMouseDown.getSignal('left') == 'world2d') {
-                eventMouseDown.set(ev,'RectSelect')
-            }
-            if (eventMouseDown.getSignal('left') == 'RectSelect') {
-                selectionBox.set_MovingPosition({x:ev.clientX, y:ev.clientY});
-            }
-        }
-        
-    });
-    window.addEventListener('mouseup', (ev) => {
-        if (ev.button == 0 && eventMouseDown.getSignal('left') == 'RectSelect') {
-            console.log(selectionBox.get_rect());
-            eventMouseDown.set(ev,'');
-        }
-    })
+    showRectElement(world2d:World2d){
+        let rectSelection = world2d.toolsHtmlElement.querySelector("#rect-selection") as HTMLDivElement;
+        rectSelection.style.display = "block";
+    }
+    closeRectElement(world2d:World2d){
+        let rectSelection = world2d.toolsHtmlElement.querySelector("#rect-selection") as HTMLDivElement;
+        rectSelection.style.display = "none";
+    }
 }

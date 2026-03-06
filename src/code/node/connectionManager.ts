@@ -59,7 +59,6 @@ export class ConnectionManager{
 
                 console.log(this.nodePair);
 
-
                 if (checkSignal == 1) {
                     this.parent.SystemRemovingConnection(
                         { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },

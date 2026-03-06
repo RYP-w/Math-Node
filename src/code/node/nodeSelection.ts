@@ -1,11 +1,12 @@
 import type { MouseButtonState } from "../mouseButtonState";
-import type { World2d } from "../world2d";
+import type { World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
 import { Node } from "./node";
+import { SelectionBox } from "./selectionBox";
 
 type IdNode = `node_${number}`;
 
-export class NodeSelection {
+export class NodeSelection { //? class untuk menyimpan node node yang di pilih
     private nodes: Map<string, Node>;
 
     constructor() {
@@ -72,6 +73,8 @@ export class NodeSelection {
     }
 }
 
+const selectionBox = new SelectionBox();
+
 export function SetSelectedNode(event: MouseEvent, dataNode: DatabaseNode, selectedNode: NodeSelection) {
     if ((event.target as HTMLDivElement).classList.contains('node-title')) {
         const parent = (event.target as HTMLDivElement).closest('[id^="node_"]') as HTMLDivElement;
@@ -93,10 +96,36 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
                 const getNode = databaseNode.getById(parent.id as IdNode);
                 if (getNode) {
                     nodeSelection.set(getNode);
-                    mouseState.set(ev,'NodeTitle');
+                    mouseState.setAlt(ev, 'left', 'NodeTitle');
                 }
             }else {
                 nodeSelection.clear();
+            }
+            selectionBox.set_startPosition({x:ev.clientX, y:ev.clientY}); //? set start position
+        }
+    })
+    window.addEventListener('mousemove', (ev) => {
+        if (ev.button == 0) {
+            if (mouseState.getSignal('left') == 'world2d') {
+                mouseState.setAlt(ev, 'left', 'RectSelect');
+                selectionBox.showRectElement(world2d);
+            }
+            if (mouseState.getSignal('left') == 'RectSelect') {
+                selectionBox.set_MovingPosition({x:ev.clientX, y:ev.clientY});
+
+            }
+        }
+        
+    });
+    window.addEventListener('mouseup', (ev) => {
+        if (ev.button == 0) {
+            if (mouseState.getSignal('left') == 'NodeTitle') {
+                mouseState.setAlt(ev, 'left', '');
+            }
+            if (mouseState.getSignal('left') == 'RectSelect') {
+                console.log(selectionBox.get_rect());
+                selectionBox.closeRectElement(world2d);
+                mouseState.setAlt(ev, 'left', '');
             }
         }
     })

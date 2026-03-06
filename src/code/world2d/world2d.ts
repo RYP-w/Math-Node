@@ -1,17 +1,19 @@
-import type { Vector2 } from './TypeDefinition.ts'
+import type { Vector2 } from '../TypeDefinition.ts'
 
 export class World2d {
     target: Vector2;
     offset: Vector2;
     scale: number;
     HtmlElement: HTMLDivElement;
+    toolsHtmlElement: HTMLDivElement;
     RectHTML: DOMRect;
 
     constructor(target: Vector2 = { x: 0, y: 0 }, offset: Vector2 = { x: 0, y: 0 }, scale = 1) {
         this.target = target;
         this.offset = offset;
         this.scale = scale
-        this.HtmlElement = document.querySelector(`#world2d`) as HTMLDivElement;
+        this.HtmlElement = document.getElementById(`world2d`) as HTMLDivElement;
+        this.toolsHtmlElement = this.HtmlElement.querySelector("#tools") as HTMLDivElement;
 
         this.RectHTML = this.HtmlElement.getBoundingClientRect();
         this.applyHTML()
@@ -35,6 +37,7 @@ export class World2d {
 
 }
 
+// jika dipikir lagi, dulu guah kok niat kali buat dokumentasi
 /**
 * Konversi koordinat layar (screen space) menjadi koordinat dunia (world space) pada sistem World2D.
 * @param position - Koordinat dalam screen space

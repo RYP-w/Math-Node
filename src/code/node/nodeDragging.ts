@@ -1,5 +1,5 @@
 import { MouseButtonState } from "../mouseButtonState";
-import { World2d } from "../world2d";
+import { World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
 import { NodeSelection } from "./nodeSelection";
 
@@ -7,12 +7,12 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, n
     world2D.HtmlElement.addEventListener('mousemove', (ev) => {
         if (ev.button == 0) {
             if (mouseState.getSignal('left') == 'NodeTitle') {
-                mouseState.set(ev, 'DragNode');
+                mouseState.setAlt(ev, 'left', 'DragNode');
             }
         }
     });
     window.addEventListener('mousemove', (ev) => {
-        if (mouseState.getSignal('left') == 'DragNode' && mouseState.getSignal('right') != 'world2d') {
+        if (mouseState.getSignal('left') == 'DragNode' && mouseState.getSignal('right') != 'dragView') {
             nodeSelection.getElements().forEach(el => {
                 const node = databaseNode.getById(el.id);
                 if (node) {
@@ -21,6 +21,11 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, n
                     node.UpdateHTMLPosition();
                 }
             });
+        }
+    })
+    window.addEventListener('mouseup', (ev) => {
+        if (ev.button == 0 && mouseState.getSignal('left') == 'DragNode') {
+            mouseState.setAlt(ev, 'left', '');
         }
     })
 }

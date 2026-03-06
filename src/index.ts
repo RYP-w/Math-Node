@@ -6,7 +6,7 @@ import "./style/node.css";
 
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 
-const SVG_Place_World2D = document.querySelector( "#svg_place_world2d") as HTMLElement;
+const SVG_Place_World2D = document.getElementById( "svg_place_world2d") as HTMLElement;
 
 //<?> Import Script / Module [*]
 import { Node } from "./code/node/node";
@@ -15,8 +15,8 @@ import { DatabaseNode } from "./code/node/database";
 import { setupNodeDragging } from "./code/node/nodeDragging";
 import { Clamp } from "./code/costum_function";
 import { MouseButtonState } from "./code/mouseButtonState";
-import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d";
-import { setupNodeSelection } from "./code/node/selectionBox";
+import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d/world2d";
+import { dragViewWorld2d } from "./code/world2d/dragView";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
@@ -128,21 +128,16 @@ world2d.HtmlElement.addEventListener("wheel", (ev) => {
 });
 
 //<- Window Events
-window.addEventListener("mousemove", (ev) => {
-    if (mouseState.getSignal("right") == "world2d") {
-        const position = {
-            x: world2d.target.x,
-            y: world2d.target.y,
-        };
-        world2d.target = {
-            x: position.x + ev.movementX,
-            y: position.y + ev.movementY,
-        };
-        world2d.updateHTML();
-    }
+window.addEventListener("mousemove", (_ev) => {
+
 });
 window.addEventListener("mouseup", (ev) => {
-    mouseState.set(ev, "");
+    if (mouseState.getSignal('left') == 'world2d') {
+        mouseState.setAlt(ev, 'left', '');
+    }
+    if (mouseState.getSignal('right') == 'world2d') {
+        mouseState.setAlt(ev, 'right', '');
+    }
 });
 
 document.addEventListener("contextmenu", (e) => {
@@ -150,10 +145,16 @@ document.addEventListener("contextmenu", (e) => {
 });
 
 //<- Group Events 
+dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode()//? Runtime ConnectedNode System
 Live_SelectNodeSystem(world2d, databaseNode, nodeSelection, mouseState); //? Runtime selected Node System
-setupNodeSelection(world2d,mouseState);
 setupNodeDragging(world2d, databaseNode, nodeSelection, mouseState); //? Runtime Moving Node System
+window.addEventListener('mousedown', () => {
+    console.log("left:", mouseState.getSignal('left'),"right:", mouseState.getSignal('right'))
+})
+window.addEventListener('mousemove', () => {
+    console.log("left:", mouseState.getSignal('left'),"right:", mouseState.getSignal('right'))
+})
 
 function CheckConnectedNode() {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {

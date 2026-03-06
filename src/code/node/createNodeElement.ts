@@ -81,6 +81,6 @@ export function createNodeElement(node: Node) {
             )
         )
     )
-    document.querySelector('#place_world2d')?.appendChild(HtmlNode);
+    document.getElementById('place_world2d')?.appendChild(HtmlNode);
     return HtmlNode
 }

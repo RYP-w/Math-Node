@@ -25,6 +25,34 @@
     position: absolute;
 }
 
+#tools{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events:  none;
+    z-index: 1;
+}
+
+#rect-selection{
+    --position-x1: 10px;
+    --position-y1: 10px;
+    --position-x2: 100px;
+    --position-y2: 100px;
+
+    width: calc(var(--position-x2) - var(--position-x1));
+    height: calc(var(--position-y2) - var(--position-y1));
+    transform: translate(var(--position-x1), var(--position-y1));
+
+    border-width: 1px;
+    border-style: dashed;
+    border-color: white;
+
+    background-color: #ffffff22;
+
+    display: none;
+}
+
 #offsite_world2d {
     position: relative;
     height: 100%;
