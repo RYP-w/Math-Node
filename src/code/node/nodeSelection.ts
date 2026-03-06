@@ -1,5 +1,6 @@
 import type { MouseButtonState } from "../mouseButtonState";
-import type { World2d } from "../world2d/world2d";
+import type { Rect } from "../TypeDefinition";
+import { GetScreenToWorld2d, GetWorld2dToScreen, type World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
 import { Node } from "./node";
 import { SelectionBox } from "./selectionBox";
@@ -101,7 +102,7 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
             }else {
                 nodeSelection.clear();
             }
-            selectionBox.set_startPosition({x:ev.clientX, y:ev.clientY}); //? set start position
+            selectionBox.set_startPosition(GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d)); //? set start position
         }
     })
     window.addEventListener('mousemove', (ev) => {
@@ -111,12 +112,22 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
                 selectionBox.showRectElement(world2d);
             }
             if (mouseState.getSignal('left') == 'RectSelect') {
-                selectionBox.set_MovingPosition({x:ev.clientX, y:ev.clientY});
-
+                selectionBox.set_MovingPosition(GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d));
+                let minPos = GetWorld2dToScreen(selectionBox.get_minPos(), world2d);
+                let maxPos = GetWorld2dToScreen(selectionBox.get_maxPos(), world2d);
+                let rePosition:Rect = {x1: minPos.x - 2, y1: minPos.y - 35, x2: maxPos.x - 2, y2: maxPos.y - 35};
+                selectionBox.updateStateErctElement(world2d, rePosition);
             }
         }
-        
     });
+    window.addEventListener('wheel', (_ev) => {
+        if (mouseState.getSignal('left') == 'RectSelect') {
+            let minPos = GetWorld2dToScreen(selectionBox.get_minPos(), world2d);
+            let maxPos = GetWorld2dToScreen(selectionBox.get_maxPos(), world2d);
+            let rePosition:Rect = {x1: minPos.x - 2, y1: minPos.y - 35, x2: maxPos.x - 2, y2: maxPos.y - 35};
+            selectionBox.updateStateErctElement(world2d, rePosition);
+        }
+    })
     window.addEventListener('mouseup', (ev) => {
         if (ev.button == 0) {
             if (mouseState.getSignal('left') == 'NodeTitle') {

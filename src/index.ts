@@ -149,11 +149,8 @@ dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode()//? Runtime ConnectedNode System
 Live_SelectNodeSystem(world2d, databaseNode, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, nodeSelection, mouseState); //? Runtime Moving Node System
-window.addEventListener('mousedown', () => {
-    console.log("left:", mouseState.getSignal('left'),"right:", mouseState.getSignal('right'))
-})
-window.addEventListener('mousemove', () => {
-    console.log("left:", mouseState.getSignal('left'),"right:", mouseState.getSignal('right'))
+window.addEventListener('mouseup', (ev) => {
+    console.log("mposX:",ev.clientX,"mposY:",ev.clientY,'world2d:',GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d))
 })
 
 function CheckConnectedNode() {
