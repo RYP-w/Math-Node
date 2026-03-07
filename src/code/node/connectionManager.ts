@@ -1,3 +1,5 @@
+import type { MouseButtonState } from "../mouseButtonState";
+import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
 import { Node } from "./node";
 
@@ -17,20 +19,31 @@ export class ConnectionManager{
         this.nodePair = {};
     }
 
-    setConnectionStart(event: MouseEvent) {
+    setConnectionStart(event: MouseEvent): boolean {
         const target = event.target as HTMLElement;
 
-        if (target.classList.contains("node-item-socket") && target.classList.contains("output")) {
-            const HtmlNode = target.closest('[id^="node_"]') as HTMLElement;
-            const Node = this.parent.getById(HtmlNode.id as IdNode)
-            if (Node == undefined){ console.warn("BUG"); return; };
-
-
-            this.nodePair.from_node = {
-                node: Node,
-                idSocket: target.id as IdOutputSocket,
-            };
+        if (!target.classList.contains("node-item-socket") || !target.classList.contains("output")) {
+            return false;
         }
+
+        const HtmlNode = target.closest('[id^="node_"]') as HTMLElement;
+        if (!HtmlNode) {
+            console.warn("Socket element not inside a node");
+            return false;
+        }
+
+        const Node = this.parent.getById(HtmlNode.id as IdNode);
+        if (Node == undefined) { 
+            console.warn("BUG: Node not found in database"); 
+            return false; 
+        }
+
+        this.nodePair.from_node = {
+            node: Node,
+            idSocket: target.id as IdOutputSocket,
+        };
+
+        return true;
     }
 
     setConnectionEnd(event: MouseEvent) {
@@ -112,4 +125,23 @@ export class ConnectionManager{
             this.nodePair = {};
         }
     }
+}
+
+export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mouseState:MouseButtonState) {
+    world2d.HtmlElement.addEventListener("mousedown", (ev) => {
+        if (ev.button == 0 && mouseState.getSignal('left') == 'world2d') {
+            const success = database.connectedSystem.setConnectionStart(ev);
+            if (success) {
+                mouseState.setAlt(ev, 'left', 'socketSelected');
+            }
+        }
+    })
+
+    window.addEventListener("mouseup", (ev) => {
+        if (ev.button == 0 && mouseState.getSignal('left') == 'socketSelected') {
+            database.connectedSystem.setConnectionEnd(ev);
+            database.connectedSystem.processConnection();
+            mouseState.setAlt(ev, 'left', '');
+        }
+    });
 }

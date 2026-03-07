@@ -17,6 +17,8 @@ import { Clamp } from "./code/costum_function";
 import { MouseButtonState } from "./code/mouseButtonState";
 import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d/world2d";
 import { dragViewWorld2d } from "./code/world2d/dragView";
+import { rBushRectSelection } from "./code/node/rBushRectSelection";
+import { CheckConnectedNode } from "./code/node/connectionManager";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
@@ -31,7 +33,8 @@ const nodeSelection = new NodeSelection();
 const mouseState = new MouseButtonState();
 
 //<?> Create Database Nodes
-const databaseNode = new DatabaseNode(SVG_Place_World2D);
+const rBushSelection = new rBushRectSelection();
+const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 databaseNode.add(
     new Node(
         "coba coba",
@@ -146,24 +149,10 @@ document.addEventListener("contextmenu", (e) => {
 
 //<- Group Events 
 dragViewWorld2d(world2d, mouseState);
-CheckConnectedNode()//? Runtime ConnectedNode System
-Live_SelectNodeSystem(world2d, databaseNode, nodeSelection, mouseState); //? Runtime selected Node System
-setupNodeDragging(world2d, databaseNode, nodeSelection, mouseState); //? Runtime Moving Node System
+CheckConnectedNode(world2d, databaseNode, mouseState)//? Runtime ConnectedNode System
+Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
+setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
 window.addEventListener('mouseup', (ev) => {
     console.log("mposX:",ev.clientX,"mposY:",ev.clientY,'world2d:',GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d))
 })
 
-function CheckConnectedNode() {
-    world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-        if (ev.button == 0) {
-            databaseNode.connectedSystem.setConnectionStart(ev);
-        }
-    })
-
-    window.addEventListener("mouseup", (ev) => {
-        if (ev.button == 0) {
-            databaseNode.connectedSystem.setConnectionEnd(ev);
-            databaseNode.connectedSystem.processConnection();
-        }
-    });
-}

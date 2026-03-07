@@ -2,8 +2,9 @@ import { MouseButtonState } from "../mouseButtonState";
 import { World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
 import { NodeSelection } from "./nodeSelection";
+import { rBushRectSelection } from "./rBushRectSelection";
 
-export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
+export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, rBushSelection:rBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2D.HtmlElement.addEventListener('mousemove', (ev) => {
         if (ev.button == 0) {
             if (mouseState.getSignal('left') == 'NodeTitle') {
@@ -25,6 +26,12 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, n
     })
     window.addEventListener('mouseup', (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'DragNode') {
+            nodeSelection.getElements().forEach(el => {
+                const node = databaseNode.getById(el.id);
+                if (node) {
+                    rBushSelection.update(node);
+                }
+            })
             mouseState.setAlt(ev, 'left', '');
         }
     })

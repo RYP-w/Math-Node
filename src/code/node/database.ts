@@ -1,6 +1,7 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
 import type { Node } from "./node";
+import { rBushRectSelection } from "./rBushRectSelection";
 
 type IdInputSocket = `inputsocket_${number}`;
 type IdOutputSocket = `outputsocket_${number}`;
@@ -8,33 +9,41 @@ type IdNode = `node_${number}`;
 
 
 export class DatabaseNode {
-    private database:Record<IdNode, Node>; //? list Nodes
+    private database:Map<IdNode, Node>; //? list Nodes
     connectedSystem: ConnectionManager;
+    rBushSelection: rBushRectSelection;
     HtmlPlaceCurve: HTMLElement;
 
-    constructor(HtmlPlaceCurve: HTMLElement){
-        this.database = {}
+    constructor(HtmlPlaceCurve: HTMLElement, rBushSelection:rBushRectSelection){
+        this.database = new Map<IdNode, Node>()
         this.connectedSystem = new ConnectionManager(this);
         this.HtmlPlaceCurve = HtmlPlaceCurve;
+        this.rBushSelection = rBushSelection;
     }
 
     add(node: Node) {
-        this.database[node.id] = node;
+        this.rBushSelection.insert(node);
+        this.database.set(node.id,node);
     }
 
     removeById(id: IdNode) {
-        const element = this.database[id];
-        if (element) {
-            delete this.database[id];
+        const node = this.database.get(id);
+        if (node) {
+            this.rBushSelection.remove(node);
+            this.database.delete(id);
         }
     }
 
     getById(id: IdNode): Node | undefined {
-        return this.database[id];
+        return this.database.get(id);
     }
 
     getAll() {
-        return Object.values(this.database)
+        return [...this.database.values()]
+    }
+
+    getAll_raw(){
+        return this.database;
     }
 
     SystemCheckObjectConnectToObject(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {

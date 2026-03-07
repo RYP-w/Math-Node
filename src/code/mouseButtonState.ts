@@ -1,4 +1,4 @@
-type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | '';
+type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | '';
 type MouseKey = 'left' | 'middle' | 'right';
 
 // Mapping untuk ev.button (index tombol yang memicu event)

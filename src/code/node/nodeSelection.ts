@@ -3,6 +3,7 @@ import type { Rect } from "../TypeDefinition";
 import { GetScreenToWorld2d, GetWorld2dToScreen, type World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
 import { Node } from "./node";
+import type { rBushRectSelection } from "./rBushRectSelection";
 import { SelectionBox } from "./selectionBox";
 
 type IdNode = `node_${number}`;
@@ -88,7 +89,7 @@ export function SetSelectedNode(event: MouseEvent, dataNode: DatabaseNode, selec
 
 // fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
 // sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
-export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
+export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode, rBushSelection:rBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {
             let target = ev.target as HTMLElement;
@@ -135,9 +136,19 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
             }
             if (mouseState.getSignal('left') == 'RectSelect') {
                 console.log(selectionBox.get_rect());
+                checkNodeInZoneSelection(rBushSelection, selectionBox, nodeSelection);
                 selectionBox.closeRectElement(world2d);
                 mouseState.setAlt(ev, 'left', '');
             }
         }
     })
+}
+
+function checkNodeInZoneSelection(rBushSelection:rBushRectSelection, selectionBox:SelectionBox, nodeSelection:NodeSelection) {
+    const rectBox = selectionBox.get_rect();
+    const result = rBushSelection.RectSelection(rectBox);
+    if (result.length == 0) return;
+    for (const node of result){
+        nodeSelection.add(node);
+    }
 }
