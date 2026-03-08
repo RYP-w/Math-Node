@@ -23,56 +23,68 @@ export function createNodeElement(node: Node) {
 
                     for (let Count = 0; Count < maxCountCountainer; Count++) {
                         ElOutput.push(
-                            SetElement('div', { class: ['node-item-row'] },
-                                SetElement('div', { class: ['node-container-value-box'] },
-                                    () => {
-                                        const nodeContainerValueBox: HTMLElement[] = [];
+                            SetElement('div', { class: ['node-item-row'] }, () => {
+                                    const nodeItemRow: HTMLElement[] = [];
+                                    let idNodeContainerValueBox:string | undefined;
+                                    if (Count < maxCountValueBoxs) {
+                                        idNodeContainerValueBox = `valuebox_${Count}`
+                                    }
 
-                                        if (Count + 1 > maxCountValueBoxs) {
-                                            return nodeContainerValueBox;
-                                        }
+                                    nodeItemRow.push(
+                                        SetElement('div', { id:idNodeContainerValueBox, class: ['node-container-value-box'] },
+                                            () => {
+                                                const nodeContainerValueBox: HTMLElement[] = [];
 
-                                        const valueBox = node.valueBoxs[`valuebox_${Count}`];
-                                        const checkEnebleInput = valueBox.enableInput;
-                                        if (checkEnebleInput) {
-                                            nodeContainerValueBox.push(
-                                                SetElement('div', { class: ['node-container-socket', 'input'] },
-                                                    SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id })
-                                                )
-                                            );
-                                        }
-
-                                        nodeContainerValueBox.push(
-                                            SetElement('div', { class: ['node-container-item-value', !checkEnebleInput ? 'left-margin-wrap-socket' : ''] },
-                                                () => {
-                                                    const nodeContainerItemValue: HTMLElement[] = [];
-
-
-
-                                                    if (valueBox.type == 'number') {
-                                                        nodeContainerItemValue.push(
-                                                            SetElement('input', { class: ['node-item-value'], value: valueBox.value, attr: { 'type': 'number' } })
-                                                        )
-                                                    }
-                                                    return nodeContainerItemValue;
+                                                if (Count + 1 > maxCountValueBoxs) {
+                                                    return nodeContainerValueBox;
                                                 }
-                                            )
-                                        )
-                                        return nodeContainerValueBox;
-                                    }
-                                ),
-                                SetElement('div', { class: ['node-container-socket', 'output'] },
-                                    () => {
-                                        const nodeContainerSocketOutput: HTMLElement[] = []
 
-                                        if (Count + 1 <= maxCountOutputSocket) {
-                                            nodeContainerSocketOutput.push(
-                                                SetElement('div', { class: ['node-item-socket', 'output'], id: node.outputSocket[Count].id })
-                                            );
-                                        }
-                                        return nodeContainerSocketOutput;
-                                    }
-                                )
+                                                const valueBox = node.valueBoxs[`valuebox_${Count}`];
+                                                const checkEnebleInput = valueBox.enableInput;
+                                                if (checkEnebleInput) {
+                                                    nodeContainerValueBox.push(
+                                                        SetElement('div', { class: ['node-container-socket', 'input'] },
+                                                            SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id })
+                                                        )
+                                                    );
+                                                }
+
+                                                nodeContainerValueBox.push(
+                                                    SetElement('div', { class: ['node-container-item-value', !checkEnebleInput ? 'left-margin-wrap-socket' : ''] },
+                                                        () => {
+                                                            const nodeContainerItemValue: HTMLElement[] = [];
+
+                                                            if (valueBox.type == 'number') {
+                                                                nodeContainerItemValue.push(
+                                                                    SetElement('input', {class: ['node-item-value', 'input_0'], value: valueBox.value, attr: { 'type': 'number' } })
+                                                                )
+                                                            }
+                                                            return nodeContainerItemValue;
+                                                        }
+                                                    )
+                                                )
+                                                return nodeContainerValueBox;
+                                            }
+                                        )
+                                    )
+
+                                    nodeItemRow.push(
+                                        SetElement('div', { class: ['node-container-socket', 'output'] },
+                                            () => {
+                                                const nodeContainerSocketOutput: HTMLElement[] = []
+
+                                                if (Count + 1 <= maxCountOutputSocket) {
+                                                    nodeContainerSocketOutput.push(
+                                                        SetElement('div', { class: ['node-item-socket', 'output'], id: node.outputSocket[Count].id })
+                                                    );
+                                                }
+                                                return nodeContainerSocketOutput;
+                                            }
+                                        )
+                                    )
+
+                                    return nodeItemRow
+                                }
                             )
                         )
                     }

@@ -19,6 +19,7 @@ import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d
 import { dragViewWorld2d } from "./code/world2d/dragView";
 import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
+import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
@@ -30,6 +31,7 @@ world2d.updateHTML();
 
 //<?> Init Class
 const nodeSelection = new NodeSelection();
+const editValueNodeState = new EditValueNodeState()
 const mouseState = new MouseButtonState();
 
 //<?> Create Database Nodes
@@ -131,9 +133,6 @@ world2d.HtmlElement.addEventListener("wheel", (ev) => {
 });
 
 //<- Window Events
-window.addEventListener("mousemove", (_ev) => {
-
-});
 window.addEventListener("mouseup", (ev) => {
     if (mouseState.getSignal('left') == 'world2d') {
         mouseState.setAlt(ev, 'left', '');
@@ -144,15 +143,26 @@ window.addEventListener("mouseup", (ev) => {
 });
 
 document.addEventListener("contextmenu", (e) => {
-  e.preventDefault();
+    //? Disable Contextmenu
+    e.preventDefault();
 });
 
-//<- Group Events 
+//<- Group Events [prioritas utama paling atas] 
 dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode(world2d, databaseNode, mouseState)//? Runtime ConnectedNode System
+editValueNode(world2d, databaseNode, editValueNodeState,mouseState);
 Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
-window.addEventListener('mouseup', (ev) => {
-    console.log("mposX:",ev.clientX,"mposY:",ev.clientY,'world2d:',GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d))
-})
+// window.addEventListener('mousedown', () => {
+//     console.log("mouse down");
+//     mouseState.log();
+// })
+// window.addEventListener('mousemove', () => {
+//     console.log("mouse move");
+//     mouseState.log();
+// });
+// window.addEventListener('mouseup', () => {
+//     console.log("mouse up");
+//     mouseState.log();
+// })
 

@@ -2,11 +2,9 @@ import type { MouseButtonState } from "../mouseButtonState";
 import type { Rect } from "../TypeDefinition";
 import { GetScreenToWorld2d, GetWorld2dToScreen, type World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
-import { Node } from "./node";
+import { Node, type IdNode } from "./node";
 import type { rBushRectSelection } from "./rBushRectSelection";
 import { SelectionBox } from "./selectionBox";
-
-type IdNode = `node_${number}`;
 
 export class NodeSelection { //? class untuk menyimpan node node yang di pilih
     private nodes: Map<string, Node>;
@@ -108,7 +106,7 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
     })
     window.addEventListener('mousemove', (ev) => {
         if (ev.button == 0) {
-            if (mouseState.getSignal('left') == 'world2d') {
+            if (mouseState.getSignal('left') == 'world2d' && !mouseState.hasSpecial('left','inputTypingModeNode')) {
                 mouseState.setAlt(ev, 'left', 'RectSelect');
                 selectionBox.showRectElement(world2d);
             }
@@ -135,7 +133,6 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
                 mouseState.setAlt(ev, 'left', '');
             }
             if (mouseState.getSignal('left') == 'RectSelect') {
-                console.log(selectionBox.get_rect());
                 checkNodeInZoneSelection(rBushSelection, selectionBox, nodeSelection);
                 selectionBox.closeRectElement(world2d);
                 mouseState.setAlt(ev, 'left', '');

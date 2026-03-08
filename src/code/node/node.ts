@@ -6,13 +6,16 @@ import { createNodeElement } from "./createNodeElement";
 import { getAtribute_number } from "../helper/addons";
 
 type DataTypeNode = 'number';
+type ValueByType = {
+    'number': number;
+};
 
-type IdSocket = string;
-type IdInputSocket = `inputsocket_${number}`;
-type IdOutputSocket = `outputsocket_${number}`;
-type IdNode = `node_${number}`;
-type IdValueBox = `valuebox_${number}`;
-type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
+export type IdSocket = string;
+export type IdInputSocket = `inputsocket_${number}`;
+export type IdOutputSocket = `outputsocket_${number}`;
+export type IdNode = `node_${number}`;
+export type IdValueBox = `valuebox_${number}`;
+export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 //? class Socket
 //? berisi id dan tipe socket
@@ -28,14 +31,14 @@ class Socket {
 
 //? Class ValueBox
 //? berisi idValue Box, tipe boxValue, literal value, flag enable boxValue dan Class Socket
-class ValueBox {
+class ValueBox<T extends DataTypeNode = DataTypeNode> {
     id: IdValueBox;
-    type: DataTypeNode;
-    value: number;
+    type: T;
+    value: ValueByType[T];
     enableInput: boolean;
     socket: Socket | null;
 
-    constructor(id: IdValueBox, type: DataTypeNode, value = 20, enableInput: boolean) {
+    constructor(id: IdValueBox, type: T, value = 20, enableInput: boolean) {
         this.id = id;
         this.type = type;
         this.value = value;
@@ -67,11 +70,13 @@ export class Node {
         //? struktur map dengan value dictionary digunakan untuk memudahkan penghapusan node
     };
     outputSocket:Array<Socket>; //? list Socket output
+    //! memakai valueBoxs harus di grouping sesuai dengan type pada valuebox, lihat `UpdateHtmlValueBoxs`
     valueBoxs: Record<IdValueBox, ValueBox>; //? list ValueBox
     HtmlSockets: { //? list Container HTML Input / Output Socket
         inputSockets: Record<IdInputSocket, HTMLElement>,
         outputSockets: Record<IdOutputSocket, HTMLElement>,
     };
+    HtmlValueBoxs:Record<IdValueBox,HTMLElement>;
     HtmlElement: HTMLDivElement; //? Container Html Node (self)
     OutgoingPathLines: Map<IdPath,SVGPathElement>; //? list Html Path lines
     zIndex: number; //? position z / layer
@@ -89,6 +94,7 @@ export class Node {
         this.valueBoxs = {};
         
         this.HtmlSockets = { inputSockets: {}, outputSockets: {} };
+        this.HtmlValueBoxs = {};
         this.OutgoingPathLines = new Map();
 
         initValueBox(this, valueBoxs);
@@ -97,6 +103,7 @@ export class Node {
         this.HtmlElement.id = this.id;
         this.zIndex = 0;
 
+        initHtmlValueboxs(this);
         initHtmlSocket(this);
         setAttributePositionSocket(this);
     }
@@ -115,6 +122,35 @@ export class Node {
             y: this.position.y + parseFloat(this.HtmlSockets.outputSockets[idSocket].getAttribute('position-socket-y') as string),
         }
         return op
+    }
+
+    UpdateHtmlValueBoxsByNode(idValueBox: IdValueBox){
+        if (this.valueBoxs[idValueBox].type == 'number') {
+            const htmlInput = this.HtmlValueBoxs[idValueBox].querySelector('[class*="input_0"]') as HTMLInputElement;
+            if (!htmlInput) {
+                console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
+                return;
+            }
+            htmlInput.value = String(this.valueBoxs[idValueBox].value);
+        }
+    }
+
+    UpdateNodeValueBoxsByHtml(htmlInput:HTMLInputElement){
+        if (!htmlInput.classList.contains('node-item-value')) {
+            console.log("BUG");
+            return;
+        }
+
+        const idValueBox = htmlInput.closest('[id^="valuebox_"]')?.id as IdValueBox | undefined;
+
+        if (idValueBox == undefined) {
+            console.log("BUG");
+            return;
+        }
+
+        if (this.valueBoxs[idValueBox].type == 'number') {
+            this.valueBoxs[idValueBox].value = Number(htmlInput.value);
+        }
     }
 
     UpdateHTMLPosition() { //? update position dari Html Node
@@ -173,6 +209,17 @@ function initOutputSocket(node:Node, outputSockets: Array<{ type: DataTypeNode, 
         node.outputSocket.push(new Socket(IdSocket, outputSocket.type));
         node.connection.outgoingNodes[IdSocket] = new Map()
         countIdSocket++;
+    }
+}
+
+function initHtmlValueboxs(node: Node) {
+    for (const key of Object.keys(node.valueBoxs) as IdValueBox[]){
+        const htmlValueBox = node.HtmlElement.querySelector(`[id^="${key}"]`)
+        if (htmlValueBox) {
+            node.HtmlValueBoxs[htmlValueBox.id as IdValueBox] = (htmlValueBox as HTMLElement);
+        }else{
+            console.log("Bug: Htmltidak di temukan:",key);
+        }
     }
 }
 

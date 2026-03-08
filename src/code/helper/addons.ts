@@ -1,3 +1,5 @@
+
+//<?> Set Element 
 export type ElementTypes = 'div' | 'span' | 'img' | 'input'
 export type AttributesElement = {
     id?: string,
@@ -98,6 +100,7 @@ export function SetElementPath(attributes: AttributesElementPath = {}) {
 
     return Path
 }
+//<?> Set Element [End] 
 
 
 export function getAtribute_number(element: HTMLElement, atribute: string) {

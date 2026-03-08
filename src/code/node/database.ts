@@ -1,12 +1,7 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
-import type { Node } from "./node";
+import type { IdInputSocket, IdNode, IdOutputSocket, Node } from "./node";
 import { rBushRectSelection } from "./rBushRectSelection";
-
-type IdInputSocket = `inputsocket_${number}`;
-type IdOutputSocket = `outputsocket_${number}`;
-type IdNode = `node_${number}`;
-
 
 export class DatabaseNode {
     private database:Map<IdNode, Node>; //? list Nodes

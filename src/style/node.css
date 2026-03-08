@@ -138,12 +138,20 @@
     background-color: var(--color-dark-03);
     text-align: center;
 
+    cursor:crosshair;
+
     transition: border-color var(--duration-transition);
 }
 
 .node-item-value:focus {
     outline: none;
     border-color: #00ff00;
+    cursor:auto;
+}
+
+.node-item-value::selection {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #00ff00;
 }
 
 

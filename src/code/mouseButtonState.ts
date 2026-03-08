@@ -1,4 +1,5 @@
-type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | '';
+type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | '';
+type SpecialSignal = 'inputTypingModeNode' | '';
 type MouseKey = 'left' | 'middle' | 'right';
 
 // Mapping untuk ev.button (index tombol yang memicu event)
@@ -19,6 +20,12 @@ export class MouseButtonState {
         left: '',
         middle: '',
         right: '',
+    }
+
+    private specialKeys: Record<MouseKey, Set<SpecialSignal>> = {
+        left: new Set<SpecialSignal>(),
+        middle: new Set<SpecialSignal>(),
+        right: new Set<SpecialSignal>(),
     }
 
     private normalize(ev: MouseEvent): number {
@@ -50,6 +57,42 @@ export class MouseButtonState {
 
     getSignal(mouse: MouseKey): MouseSignal {
         return this.keys[mouse];
+    }
+
+    addSpecial(mouseEvent: MouseEvent, signal: SpecialSignal) {
+        const key = buttonMap[this.normalize(mouseEvent)];
+        if (key) {
+            this.specialKeys[key].add(signal);
+        }
+    }
+
+    addSpecialAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: SpecialSignal) {
+        if (this.isButtonPressed(mouseEvent, mouse)) {
+            this.specialKeys[mouse].add(signal);
+        }
+    }
+
+    hasSpecial(mouse: MouseKey, signal: SpecialSignal){
+        return this.specialKeys[mouse].has(signal);
+    }
+
+    getListSpecials(mouse: MouseKey){
+        return this.specialKeys[mouse]
+    }
+
+    removeSpecial(mouse: MouseKey, signal: SpecialSignal){
+        return this.specialKeys[mouse].delete(signal);
+    }
+
+    specialExist(mouse: MouseKey){
+        if (this.specialKeys[mouse].size == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    log(){
+        console.log('keys:','\nleft:',this.keys.left,'middle:',this.keys.middle,'right:',this.keys.right,'\nspecialKeys:', '\nleft:',...this.specialKeys.left, 'middle:',...this.specialKeys.middle, 'right:',...this.specialKeys.right)
     }
 
 }

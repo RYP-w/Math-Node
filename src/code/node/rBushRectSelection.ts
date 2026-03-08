@@ -1,5 +1,5 @@
 import type { Rect } from "../TypeDefinition";
-import { Node } from "./node"
+import { Node, type IdNode } from "./node"
 import RBush from "rbush";
 
 interface NodeBushRect {
@@ -9,8 +9,6 @@ interface NodeBushRect {
     maxY:number;
     node: Node;
 }
-
-type IdNode = `node_${number}`;
 
 export class rBushRectSelection {
     private bush = new RBush<NodeBushRect>();

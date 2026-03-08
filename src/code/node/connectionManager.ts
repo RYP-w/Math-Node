@@ -1,11 +1,7 @@
 import type { MouseButtonState } from "../mouseButtonState";
 import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
-import { Node } from "./node";
-
-type IdInputSocket = `inputsocket_${number}`;
-type IdOutputSocket = `outputsocket_${number}`;
-type IdNode = `node_${number}`;
+import { Node, type IdInputSocket, type IdNode, type IdOutputSocket } from "./node";
 
 export class ConnectionManager{
     private parent: DatabaseNode; //? ikat database Node ke ConnectionManager
@@ -130,12 +126,23 @@ export class ConnectionManager{
 export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'world2d') {
+
+        }
+    });
+
+    window.addEventListener('mousemove', (ev) => {
+        if (ev.buttons == 1 && mouseState.getSignal('left') == 'world2d') {
             const success = database.connectedSystem.setConnectionStart(ev);
             if (success) {
                 mouseState.setAlt(ev, 'left', 'socketSelected');
             }
         }
-    })
+        if (ev.buttons == 1 && mouseState.getSignal('left') == 'socketSelected') {
+            
+        }
+
+
+    });
 
     window.addEventListener("mouseup", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'socketSelected') {
