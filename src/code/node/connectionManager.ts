@@ -1,3 +1,4 @@
+import { markAllDirty } from "../engineNode/engineNode";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
@@ -115,6 +116,7 @@ export class ConnectionManager{
                     }
 
                 }
+                console.log(...markAllDirty(this.nodePair.to_node.node));
             }
             this.nodePair = {};
         } else {

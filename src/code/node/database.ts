@@ -1,6 +1,6 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
-import type { IdInputSocket, IdNode, IdOutputSocket, Node } from "./node";
+import { Node, type IdInputSocket, type IdNode, type IdOutputSocket } from "./node";
 import { rBushRectSelection } from "./rBushRectSelection";
 
 export class DatabaseNode {
@@ -59,12 +59,29 @@ export class DatabaseNode {
         fromNode.node.connection.outgoingNodes[fromNode.idSocket].set(`${toNode.node.id}`, {
             otherNode: toNode.node,
             otherIdSocket: toNode.idSocket,
-        })
+        });
         toNode.node.connection.incomingNodes[toNode.idSocket].set(`${fromNode.node.id}`, {
             otherNode: fromNode.node,
             otherIdSocket: fromNode.idSocket,
-        })
+        });
+
         this.createPathLine(fromNode,toNode);
+
+        const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
+        console.log(elementValueBox);
+        
+        if (!elementValueBox) {
+            console.log("BUG");
+            return;
+        }
+
+        const elementInput = elementValueBox.querySelector('[class*=input_]') as HTMLInputElement;
+        if (!elementInput) {
+            console.log("BUG");
+            return;
+        }
+
+        elementInput.disabled = true;
     }
 
     SystemRemovingConnection(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
@@ -88,6 +105,20 @@ export class DatabaseNode {
                 this.HtmlPlaceCurve.querySelector(`[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`)?.remove();
 
                 fromNode.node.OutgoingPathLines.delete(`${fromNode.node.id},${fromNode.idSocket},${toNode.node.id},${toNode.idSocket}`);
+
+                const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
+                if (!elementValueBox) {
+                    console.log("BUG");
+                    return;
+                }
+
+                const elementInput = elementValueBox.querySelector('[class*=input_]') as HTMLInputElement;
+                if (!elementInput) {
+                    console.log("BUG");
+                    return;
+                }
+
+                elementInput.disabled = false;
 
             }
         } else console.log("Bug");

@@ -81,6 +81,8 @@ export class Node {
     OutgoingPathLines: Map<IdPath,SVGPathElement>; //? list Html Path lines
     zIndex: number; //? position z / layer
 
+    dirty:boolean;
+
     constructor(name: string, position: Vector2, valueBoxs: Array<{ type: DataTypeNode, value: number, enableInput: boolean }>, outputSockets: Array<{ type: DataTypeNode, value: number }>){
         this.name = name;
         this.id = `node_${nodeIdCounter++}` as IdNode;
@@ -102,6 +104,7 @@ export class Node {
         this.HtmlElement = createNodeElement(this) as HTMLDivElement
         this.HtmlElement.id = this.id;
         this.zIndex = 0;
+        this.dirty = false;
 
         initHtmlValueboxs(this);
         initHtmlSocket(this);

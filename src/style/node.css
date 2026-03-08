@@ -140,7 +140,7 @@
 
     cursor:crosshair;
 
-    transition: border-color var(--duration-transition);
+    transition: border-color var(--duration-transition), color var(--duration-transition);
 }
 
 .node-item-value:focus {
@@ -152,6 +152,12 @@
 .node-item-value::selection {
     background-color: rgba(255, 255, 255, 0.15);
     color: #00ff00;
+}
+
+.node-item-value:disabled {
+    border-color: #808080;
+    color: #808080;
+    pointer-events: none;
 }
 
 
