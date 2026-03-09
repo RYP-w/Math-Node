@@ -20,7 +20,7 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
-import { TorpologySortNode } from "./code/engineNode/engineNode";
+import { TorpologySortNode } from "./code/engineNode/torpologicalSortNode";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);

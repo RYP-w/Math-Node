@@ -85,6 +85,8 @@ export class TorpologySortNode{
         const rootNodeDependenties = new NodeDependence(nodeRoot);
         mapNodeDependencies.set(nodeRoot.id, rootNodeDependenties);
         queue.enqueue(nodeRoot);
+
+        let count = 0;
         
         while (queue.size() > 0) {
             const node = queue.dequeue()!;
@@ -101,8 +103,9 @@ export class TorpologySortNode{
                     mapNodeDependencies.get(neighbor.otherNode.id)?.setDependenties(node);
                 }
             }
+            count ++;
         }
-        console.log([...mapNodeDependencies.values()]);
+        console.log('makeDependence membutuhkan perulangan: ', count, "kali");
         return [...mapNodeDependencies.values()];
     }
 }
