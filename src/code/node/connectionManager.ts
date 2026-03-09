@@ -1,4 +1,4 @@
-import { markAllDirty } from "../engineNode/engineNode";
+import {  TorpologySortNode } from "../engineNode/engineNode";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
@@ -58,7 +58,7 @@ export class ConnectionManager{
         }
     }
 
-    processConnection() {
+    processConnection(torpologySortNode:TorpologySortNode) {
         if (this.nodePair.from_node !== undefined && this.nodePair.to_node !== undefined) {
             // logic koneksi (7 aturan basic)
             if (!this.parent.SystemCheckChild(this.nodePair.from_node.node, this.nodePair.to_node.node)) {
@@ -66,8 +66,6 @@ export class ConnectionManager{
                     { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                     { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                 )
-
-                console.log(this.nodePair);
 
                 if (checkSignal == 1) {
                     this.parent.SystemRemovingConnection(
@@ -116,7 +114,8 @@ export class ConnectionManager{
                     }
 
                 }
-                console.log(...markAllDirty(this.nodePair.to_node.node));
+                //console.log(...markAllDirty(this.nodePair.to_node.node));
+                torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
             }
             this.nodePair = {};
         } else {
@@ -125,7 +124,7 @@ export class ConnectionManager{
     }
 }
 
-export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mouseState:MouseButtonState) {
+export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mouseState:MouseButtonState, torpologiSortNode:TorpologySortNode) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'world2d') {
 
@@ -149,7 +148,7 @@ export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mous
     window.addEventListener("mouseup", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'socketSelected') {
             database.connectedSystem.setConnectionEnd(ev);
-            database.connectedSystem.processConnection();
+            database.connectedSystem.processConnection(torpologiSortNode);
             mouseState.setAlt(ev, 'left', '');
         }
     });

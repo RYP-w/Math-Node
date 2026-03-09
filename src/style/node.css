@@ -173,3 +173,21 @@
 .right-margin-wrap-socket {
     margin-right: var(--size-socket);
 }
+
+.icon-info{
+    display: flex;
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+
+    border-radius: var(--pading-node-region);
+    background-color: var(--color-dark-03);
+    font-size: xx-small;
+    padding: 5px;
+    right: 0;
+    transform: translate(1px, -25px);
+    pointer-events: none;
+
+    display: ;
+}

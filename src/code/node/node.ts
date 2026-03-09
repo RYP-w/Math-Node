@@ -186,6 +186,18 @@ export class Node {
         }
 
     }
+
+    makeDirty(){
+        this.dirty = true;
+    }
+
+    hasDirty(){
+        return this.dirty;
+    }
+
+    resetDirty(){
+        this.dirty = false
+    }
 }
 
 function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: number, enableInput: boolean }>){

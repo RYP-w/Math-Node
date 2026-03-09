@@ -20,16 +20,18 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
+import { TorpologySortNode } from "./code/engineNode/engineNode";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
 world2d.offset = {
-    x: world2d.RectHTML.width / 10,
+    x: -100,//world2d.RectHTML.width / 10,
     y: world2d.RectHTML.height / 10,
 };
 world2d.updateHTML();
 
 //<?> Init Class
+const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
 const editValueNodeState = new EditValueNodeState()
 const mouseState = new MouseButtonState();
@@ -40,7 +42,7 @@ const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 databaseNode.add(
     new Node(
         "coba coba",
-        { x: 0, y: 0 },
+        { x: 150, y: 150 },
         [{ type: "number", value: 10, enableInput: true }],
         [
             { type: "number", value: 0 },
@@ -149,7 +151,7 @@ document.addEventListener("contextmenu", (e) => {
 
 //<- Group Events [prioritas utama paling atas] 
 dragViewWorld2d(world2d, mouseState);
-CheckConnectedNode(world2d, databaseNode, mouseState)//? Runtime ConnectedNode System
+CheckConnectedNode(world2d, databaseNode, mouseState, torpologiSortNode)//? Runtime ConnectedNode System
 editValueNode(world2d, databaseNode, editValueNodeState,mouseState);
 Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
