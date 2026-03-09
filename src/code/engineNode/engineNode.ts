@@ -10,6 +10,7 @@ export class TorpologySortNode{
     isRunning:boolean = false;
     visited:Set<Node> = new Set<Node>();
     maxChunck:number;
+    check_cycle = 0;
 
     constructor(maxChunck:number = 100){
         this.maxChunck = maxChunck;
@@ -20,10 +21,20 @@ export class TorpologySortNode{
     }
 
     runTorpological(){
+        this.visited.clear();
         this.isRunning = true;
+        this.check_cycle = 0;
         requestAnimationFrame(() => {
             this.tick();
         })
+    }
+
+    stop(){
+        this.isRunning = false;
+    }
+
+    play(){
+        this.isRunning = true;
     }
 
     private tick() {
@@ -37,23 +48,32 @@ export class TorpologySortNode{
     }
 
     private processChunk() {
-        let count:number = 0;
-        while (this.nodeDependencies.length > 0){
-            console.log(this.nodeDependencies[ count % this.nodeDependencies.length ]);
-            
-            //proses di sini
-            const nodeDependence = this.nodeDependencies[ count % this.nodeDependencies.length ];
-            if (!nodeDependence.hasDependenties(this.visited)) {
-                
+        let count = 0;
+        const stillPending: NodeDependence[] = [];
+
+        for (const nodeDependence of this.nodeDependencies) {
+            if (count >= this.maxChunck) {
+                stillPending.push(nodeDependence);
+                continue;
             }
 
-            count++;
-            if (count >= this.maxChunck) {
-                break;
+            if (!nodeDependence.haveDependence(this.visited)) {
+                nodeDependence.node.dirty = false;
+                this.visited.add(nodeDependence.node);
+                console.log("Finally: ", nodeDependence.node.id);
+                count++;
+            } else {
+                stillPending.push(nodeDependence);
             }
+            this.check_cycle++;
         }
-        if (this.nodeDependencies.length == 0) {
+
+        this.nodeDependencies = stillPending;
+
+        if (this.nodeDependencies.length === 0) {
             this.isRunning = false;
+            console.log("jumlah perulangan:", this.check_cycle);
+            
         }
     }
 
@@ -61,17 +81,16 @@ export class TorpologySortNode{
         let mapNodeDependencies:Map<IdNode,NodeDependence> = new Map<IdNode,NodeDependence>();
         let queue:Queue<Node> = new Queue<Node>();
 
+        nodeRoot.dirty = true;
         const rootNodeDependenties = new NodeDependence(nodeRoot);
         mapNodeDependencies.set(nodeRoot.id, rootNodeDependenties);
         queue.enqueue(nodeRoot);
         
         while (queue.size() > 0) {
             const node = queue.dequeue()!;
-            console.log('dequeue:',node);
 
             for (const socketId of Object.keys(node.connection.outgoingNodes) as IdOutputSocket[]){
                 for (const neighbor of node.connection.outgoingNodes[socketId].values()){
-                    console.log(node.id,'->',neighbor.otherNode.id);
                     
                     if (!mapNodeDependencies.has(neighbor.otherNode.id)) {
                         mapNodeDependencies.set(neighbor.otherNode.id, new NodeDependence(neighbor.otherNode));
@@ -83,8 +102,8 @@ export class TorpologySortNode{
                 }
             }
         }
-
-        return [...mapNodeDependencies.values()]
+        console.log([...mapNodeDependencies.values()]);
+        return [...mapNodeDependencies.values()];
     }
 }
 
@@ -100,9 +119,10 @@ class NodeDependence{
         this.dependencies.add(node);
     }
 
-    hasDependenties(visited:Set<Node>){
+    haveDependence(visited:Set<Node>){
+        if (this.dependencies.size == 0) return false;
         for (const dependence of this.dependencies){
-            if (visited.has(dependence)) {
+            if (!visited.has(dependence)) {
                 return true;
             }
         }

@@ -31,7 +31,7 @@ world2d.offset = {
 world2d.updateHTML();
 
 //<?> Init Class
-const torpologiSortNode = new TorpologySortNode();
+const torpologiSortNode = new TorpologySortNode(1);
 const nodeSelection = new NodeSelection();
 const editValueNodeState = new EditValueNodeState()
 const mouseState = new MouseButtonState();

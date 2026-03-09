@@ -87,7 +87,7 @@ export class ConnectionManager{
 
                     } else console.log('ada yang kosong');
 
-
+                    torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
                     console.log('Check Signal 2');
                 } else {
                     if (this.nodePair.to_node.node.connection.incomingNodes[this.nodePair.to_node.idSocket].size == 0) {
@@ -112,10 +112,9 @@ export class ConnectionManager{
 
                         console.log('Check Signal 3 2');
                     }
-
+                    torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
                 }
-                //console.log(...markAllDirty(this.nodePair.to_node.node));
-                torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
+                torpologySortNode.runTorpological();
             }
             this.nodePair = {};
         } else {
