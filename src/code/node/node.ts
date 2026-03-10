@@ -4,9 +4,8 @@ import type { Vector2 } from "../TypeDefinition";
 import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
-import type { TypeNode } from "./typeNode";
 import Decimal from "decimal.js";
-import { GroupsTypeNode } from "../engineNode/addNode";
+import { GroupsTemplatesNode, type TypeNode } from "../engineNode/addNode";
 
 export type DataTypeNode = 'number';
 type ValueByType = {
@@ -165,7 +164,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 
     updateOutputValue() {
-        if (GroupsTypeNode.Input2Output1.includes(this.type)) {
+        if (GroupsTemplatesNode.Input2Output1.includes(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
@@ -182,12 +181,23 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = value_0.div(value_1).toNumber();
             }else if (this.type == 'POWER') {
                 output_0.value = value_0.pow(value_1).toNumber();
+            
             }else{
                 console.log("BUG: ", this.type);
             }
-            console.log("SELESAI");
+        }else if (GroupsTemplatesNode.Input1Output1.includes(this.type)) {
+            const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
+            const output_0 = this.outputSockets.get("outputsocket_0");
+
+            if (!output_0) { console.log("BUG"); return;}
             
-        }else{
+            if (this.type == 'INPUT') {
+                output_0.value = value_0.toNumber();
+            }else{
+                console.log("BUG: ", this.type);
+            }
+        }
+        else{
             console.log("BUG");
             
         }

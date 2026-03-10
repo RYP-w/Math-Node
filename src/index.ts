@@ -22,6 +22,7 @@ import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
 import { TorpologySortNode } from "./code/engineNode/torpologicalSortNode";
 import { addNode } from "./code/engineNode/addNode";
+import { registerShortcut } from "./code/helper/addons";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
@@ -60,6 +61,7 @@ addNode('ADD',{x:20, y:20},databaseNode);
 addNode('DIVIDE',{x:20, y:200},databaseNode);
 addNode('MULTIPLY',{x:200, y:20},databaseNode);
 addNode('POWER',{x:200, y:200},databaseNode);
+addNode('INPUT', {x:380, y:200}, databaseNode);
 
 //<?> Events
 //<- Document Events
@@ -113,6 +115,10 @@ document.addEventListener("contextmenu", (e) => {
     //? Disable Contextmenu
     e.preventDefault();
 });
+//<- Shortcut Keys 
+registerShortcut({'key':'a','shift': true}, world2d.HtmlElement, () => {
+        
+})
 
 //<- Group Events [prioritas utama paling atas] 
 dragViewWorld2d(world2d, mouseState);

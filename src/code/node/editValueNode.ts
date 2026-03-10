@@ -102,6 +102,7 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
                 node.valueBoxs[htmlValueBox.id as IdValueBox].value = editValueNodeState.getInitialValue().plus(editValueNodeState.getOffsetX().dividedBy(step).floor()).toNumber();
             }
             node.UpdateHtmlValueBoxsByNode(htmlValueBox.id as IdValueBox);
+            torpologicalSort.setTorpologycal(node);
         }
     })
 
@@ -143,6 +144,7 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
                         console.log("BUG");
                         return;
                     }
+                    torpologicalSort.setTorpologycal(node);
                     editValueNodeState.hasTypingEditeMode = false;
                     editValueNodeState.clean();
                     
@@ -165,7 +167,6 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
                 console.log("BUG");
                 return;
             }
-            torpologicalSort.setTorpologycal(node);
             editValueNodeState.clean()
             mouseState.setAlt(ev,'left','');
         }
