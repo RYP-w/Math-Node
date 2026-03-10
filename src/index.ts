@@ -9,7 +9,7 @@ import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 const SVG_Place_World2D = document.getElementById( "svg_place_world2d") as HTMLElement;
 
 //<?> Import Script / Module [*]
-import { Node } from "./code/node/node";
+//import { Node } from "./code/node/node";
 import { Live_SelectNodeSystem, NodeSelection, } from "./code/node/nodeSelection";
 import { DatabaseNode } from "./code/node/database";
 import { setupNodeDragging } from "./code/node/nodeDragging";
@@ -21,17 +21,18 @@ import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
 import { TorpologySortNode } from "./code/engineNode/torpologicalSortNode";
+import { addNode } from "./code/engineNode/addNode";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
 world2d.offset = {
-    x: -100,//world2d.RectHTML.width / 10,
-    y: world2d.RectHTML.height / 10,
+    x: 0,//world2d.RectHTML.width / 10,
+    y: 0,//world2d.RectHTML.height / 10,
 };
 world2d.updateHTML();
 
 //<?> Init Class
-const torpologiSortNode = new TorpologySortNode(1);
+const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
 const editValueNodeState = new EditValueNodeState()
 const mouseState = new MouseButtonState();
@@ -39,62 +40,26 @@ const mouseState = new MouseButtonState();
 //<?> Create Database Nodes
 const rBushSelection = new rBushRectSelection();
 const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
-databaseNode.add(
-    new Node(
-        "coba coba",
-        { x: 150, y: 150 },
-        [{ type: "number", value: 10, enableInput: true }],
-        [
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-        ],
-    ),
-);
-databaseNode.add(
-    new Node(
-        "coba coba",
-        { x: 150, y: 0 },
-        [
-            { type: "number", value: 10, enableInput: true },
-            { type: "number", value: 10, enableInput: true },
-        ],
-        [
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-        ],
-    ),
-);
-databaseNode.add(
-    new Node(
-        "coba coba",
-        { x: 300, y: 0 },
-        [
-            { type: "number", value: 10, enableInput: true },
-            { type: "number", value: 10, enableInput: false },
-            { type: "number", value: 10, enableInput: true },
-        ],
-        [
-            { type: "number", value: 0 },
-            { type: "number", value: 0 },
-        ],
-    ),
-);
-databaseNode.add(
-    new Node(
-        "coba coba",
-        { x: 450, y: 0 },
-        [
-            { type: "number", value: 10, enableInput: true },
-            { type: "number", value: 10, enableInput: true },
-            { type: "number", value: 10, enableInput: true },
-            { type: "number", value: 10, enableInput: true },
-        ],
-        [{ type: "number", value: 0 }],
-    ),
-);
+// databaseNode.add( //Testing adding node
+//     new Node(
+//         "coba coba",
+//         'ADD',
+//         { x: 300, y: 0 },
+//         [
+//             { type: "number", value: 10, enableInput: true },
+//             { type: "number", value: 10, enableInput: false },
+//             { type: "number", value: 10, enableInput: true },
+//         ],
+//         [
+//             { type: "number", value: 0 },
+//             { type: "number", value: 0 },
+//         ],
+//     ),
+// );
+addNode('ADD',{x:20, y:20},databaseNode);
+addNode('DIVIDE',{x:20, y:200},databaseNode);
+addNode('MULTIPLY',{x:200, y:20},databaseNode);
+addNode('POWER',{x:200, y:200},databaseNode);
 
 //<?> Events
 //<- Document Events
@@ -152,7 +117,7 @@ document.addEventListener("contextmenu", (e) => {
 //<- Group Events [prioritas utama paling atas] 
 dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode(world2d, databaseNode, mouseState, torpologiSortNode)//? Runtime ConnectedNode System
-editValueNode(world2d, databaseNode, editValueNodeState,mouseState);
+editValueNode(world2d, databaseNode, editValueNodeState,mouseState, torpologiSortNode);
 Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
 // window.addEventListener('mousedown', () => {

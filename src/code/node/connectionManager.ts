@@ -114,7 +114,6 @@ export class ConnectionManager{
                     }
                     torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
                 }
-                torpologySortNode.runTorpological();
             }
             this.nodePair = {};
         } else {

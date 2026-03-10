@@ -4,8 +4,11 @@ import type { Vector2 } from "../TypeDefinition";
 import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
+import type { TypeNode } from "./typeNode";
+import Decimal from "decimal.js";
+import { GroupsTypeNode } from "../engineNode/addNode";
 
-type DataTypeNode = 'number';
+export type DataTypeNode = 'number';
 type ValueByType = {
     'number': number;
 };
@@ -38,7 +41,7 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
     enableInput: boolean;
     socket: Socket | null;
 
-    constructor(id: IdValueBox, type: T, value = 20, enableInput: boolean) {
+    constructor(id: IdValueBox, type: T, value:ValueByType[T], enableInput: boolean) {
         this.id = id;
         this.type = type;
         this.value = value;
@@ -51,10 +54,19 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
     }
 }
 
+class OutputSocket<T extends DataTypeNode = DataTypeNode> extends Socket {
+    value: ValueByType[T];
+    constructor(id: IdSocket, type: T, value:ValueByType[T]){
+        super(id,type);
+        this.value =  value;
+    }
+}
+
 let nodeIdCounter = 0;
 
-export class Node {
+export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNode = DataTypeNode> {
     name: string; //? nama node
+    type:TypeNode;
     id: IdNode ; //? id node (unique)
     position: Vector2; //? posisi node di world
     selected: boolean; //? flag apakah Node dipilih
@@ -69,7 +81,7 @@ export class Node {
         }>>,
         //? struktur map dengan value dictionary digunakan untuk memudahkan penghapusan node
     };
-    outputSocket:Array<Socket>; //? list Socket output
+    outputSockets:Map<IdOutputSocket,OutputSocket>; //? list Socket output
     //! memakai valueBoxs harus di grouping sesuai dengan type pada valuebox, lihat `UpdateHtmlValueBoxs`
     valueBoxs: Record<IdValueBox, ValueBox>; //? list ValueBox
     HtmlSockets: { //? list Container HTML Input / Output Socket
@@ -83,8 +95,9 @@ export class Node {
 
     dirty:boolean;
 
-    constructor(name: string, position: Vector2, valueBoxs: Array<{ type: DataTypeNode, value: number, enableInput: boolean }>, outputSockets: Array<{ type: DataTypeNode, value: number }>){
+    constructor(name: string,type:TypeNode, position: Vector2, valueBoxs: Array<{ type: T1, value: ValueByType[T1], enableInput: boolean }>, outputSockets: Array<{ type: T2, value: ValueByType[T2] }>){
         this.name = name;
+        this.type = type;
         this.id = `node_${nodeIdCounter++}` as IdNode;
         this.position = position;
         this.selected = false;
@@ -92,7 +105,7 @@ export class Node {
             incomingNodes: {},
             outgoingNodes: {},
         };
-        this.outputSocket = [];
+        this.outputSockets = new Map();
         this.valueBoxs = {};
         
         this.HtmlSockets = { inputSockets: {}, outputSockets: {} };
@@ -127,6 +140,59 @@ export class Node {
         return op
     }
 
+    updateValueNode(){
+        for (const idValueBox of Object.keys(this.valueBoxs) as IdValueBox[]){
+            const valueBox = this.valueBoxs[idValueBox];
+            if (valueBox.type == 'number') {
+                if (valueBox.enableInput){
+                    const inputConnected = this.connection.incomingNodes[valueBox.socket!.id as IdInputSocket];
+                    if (inputConnected.size > 1) {
+                        console.log("BUG:");
+                        break;
+                    }
+                    if (inputConnected.size == 1) {
+                        const incomingConnection = [...inputConnected.values()][0];
+                        const connectedOutputSocket = incomingConnection.otherNode.outputSockets.get(incomingConnection.otherIdSocket);
+                        if (connectedOutputSocket) {
+                            valueBox.value = connectedOutputSocket.value;
+                        }
+                    }
+                }
+                this.UpdateHtmlValueBoxsByNode(idValueBox);
+            }
+        }
+        this.updateOutputValue()
+    }
+
+    updateOutputValue() {
+        if (GroupsTypeNode.Input2Output1.includes(this.type)) {
+            const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
+            const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
+            const output_0 = this.outputSockets.get("outputsocket_0");
+
+            if (!output_0) { console.log("BUG"); return;}
+
+            if (this.type == 'ADD') {
+                output_0.value = value_0.add(value_1).toNumber();
+            }else if (this.type == 'SUBTRACT') {
+                output_0.value = value_0.sub(value_1).toNumber();
+            }else if (this.type == 'MULTIPLY') {
+                output_0.value = value_0.mul(value_1).toNumber();
+            }else if (this.type == 'DIVIDE') {
+                output_0.value = value_0.div(value_1).toNumber();
+            }else if (this.type == 'POWER') {
+                output_0.value = value_0.pow(value_1).toNumber();
+            }else{
+                console.log("BUG: ", this.type);
+            }
+            console.log("SELESAI");
+            
+        }else{
+            console.log("BUG");
+            
+        }
+    }
+
     UpdateHtmlValueBoxsByNode(idValueBox: IdValueBox){
         if (this.valueBoxs[idValueBox].type == 'number') {
             const htmlInput = this.HtmlValueBoxs[idValueBox].querySelector('[class*="input_0"]') as HTMLInputElement;
@@ -134,7 +200,12 @@ export class Node {
                 console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
                 return;
             }
-            htmlInput.value = String(this.valueBoxs[idValueBox].value);
+            console.log(this.id,'->',idValueBox,":",this.valueBoxs[idValueBox].value);
+            let value = this.valueBoxs[idValueBox].value;
+            if (Number.isNaN(value) || !Number.isFinite(value)) {
+                value = 0;
+            }
+            htmlInput.value = String(value);
         }
     }
 
@@ -218,10 +289,9 @@ function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: nu
 
 function initOutputSocket(node:Node, outputSockets: Array<{ type: DataTypeNode, value: number }>){
     let countIdSocket = 0;
-    node.outputSocket = [];
     for (const outputSocket of outputSockets){
         const IdSocket:IdOutputSocket = `outputsocket_${countIdSocket}`;
-        node.outputSocket.push(new Socket(IdSocket, outputSocket.type));
+        node.outputSockets.set(IdSocket, new OutputSocket(IdSocket,outputSocket.type,outputSocket.value));
         node.connection.outgoingNodes[IdSocket] = new Map()
         countIdSocket++;
     }
@@ -247,8 +317,8 @@ function initHtmlSocket(node:Node) {
         }
     }
 
-    for (let i = 0; i < node.outputSocket.length; i++) {
-        const idSocket = node.outputSocket[i].id as IdOutputSocket;
+    for (const outputSocket of node.outputSockets.values()){
+        const idSocket = outputSocket.id as IdOutputSocket;
         const HtmlSocket = node.HtmlElement.querySelector(`#${idSocket}`) as HTMLElement;
         node.HtmlSockets.outputSockets[idSocket] = HtmlSocket;
     }

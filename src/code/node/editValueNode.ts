@@ -1,3 +1,4 @@
+import type { TorpologySortNode } from "../engineNode/torpologicalSortNode";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../TypeDefinition";
 import type { World2d } from "../world2d/world2d";
@@ -54,26 +55,28 @@ export class EditValueNodeState{
     }
 }
 
-export function editValueNode(world2d:World2d, database:DatabaseNode, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState) {
+export function editValueNode(world2d:World2d, database:DatabaseNode, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState, torpologicalSort:TorpologySortNode) {
     world2d.HtmlElement.addEventListener('mousedown', (ev) => {
-        let target = ev.target as HTMLInputElement;
-        if (target.classList.contains('node-item-value')) {
+        let HtmlInput = ev.target as HTMLInputElement;
+        if (HtmlInput.classList.contains('node-item-value')) {
             // Blur input sebelumnya jika klik input berbeda saat typing mode
             if (editValueNodeState.hasTypingEditeMode && 
-                editValueNodeState.getTargetInput() !== target) {
+                editValueNodeState.getTargetInput() !== HtmlInput) {
                 editValueNodeState.getTargetInput()?.blur();
             }
             
             ev.preventDefault();
             if (ev.button != 0) return;
-            const idNode = (target.closest('[id^="node_"]') as HTMLDivElement).id as IdNode;
+
+            
+            const idNode = (HtmlInput.closest('[id^="node_"]') as HTMLDivElement).id as IdNode;
             const node = database.getById(idNode)
             if (!node) {
                 console.log("BUG: node not in database: ",idNode);
                 return;
             }
-            editValueNodeState.setStartPos({x: ev.clientX, y:ev.clientY},node,target);
-            editValueNodeState.setInitialValue(target.value);
+            editValueNodeState.setStartPos({x: ev.clientX, y:ev.clientY},node,HtmlInput);
+            editValueNodeState.setInitialValue(HtmlInput.value);
             
             mouseState.setAlt(ev, 'left', 'inValueNode');
         };
@@ -135,6 +138,11 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
                 };
                 
                 const handleBlur = () => {
+                    const node = editValueNodeState.getTargetNode();
+                    if (!node) {
+                        console.log("BUG");
+                        return;
+                    }
                     editValueNodeState.hasTypingEditeMode = false;
                     editValueNodeState.clean();
                     
@@ -152,6 +160,12 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
             mouseState.setAlt(ev,'left','');
         }
         if (mouseState.getSignal('left') == 'editValueNode') {
+            const node = editValueNodeState.getTargetNode();
+            if (!node) {
+                console.log("BUG");
+                return;
+            }
+            torpologicalSort.setTorpologycal(node);
             editValueNodeState.clean()
             mouseState.setAlt(ev,'left','');
         }

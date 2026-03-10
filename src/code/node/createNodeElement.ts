@@ -18,9 +18,10 @@ export function createNodeElement(node: Node) {
                     const ElOutput: HTMLElement[] = []
 
                     const maxCountValueBoxs = Object.keys(node.valueBoxs).length;
-                    const maxCountOutputSocket = node.outputSocket.length;
+                    const maxCountOutputSocket = node.outputSockets.size;
                     const maxCountCountainer = Math.max(maxCountValueBoxs, maxCountOutputSocket);
-
+                    const outputSockets = [...node.outputSockets.values()];
+                    
                     for (let Count = 0; Count < maxCountCountainer; Count++) {
                         ElOutput.push(
                             SetElement('div', { class: ['node-item-row'] }, () => {
@@ -75,7 +76,7 @@ export function createNodeElement(node: Node) {
 
                                                 if (Count + 1 <= maxCountOutputSocket) {
                                                     nodeContainerSocketOutput.push(
-                                                        SetElement('div', { class: ['node-item-socket', 'output'], id: node.outputSocket[Count].id })
+                                                        SetElement('div', { class: ['node-item-socket', 'output'], id: outputSockets[Count].id })
                                                     );
                                                 }
                                                 return nodeContainerSocketOutput;

@@ -18,6 +18,7 @@ export class TorpologySortNode{
 
     setTorpologycal(node:Node){
         this.nodeDependencies = this.makeDependence(node);
+        this.runTorpological()
     }
 
     runTorpological(){
@@ -59,6 +60,7 @@ export class TorpologySortNode{
 
             if (!nodeDependence.haveDependence(this.visited)) {
                 nodeDependence.node.dirty = false;
+                nodeDependence.node.updateValueNode()
                 this.visited.add(nodeDependence.node);
                 console.log("Finally: ", nodeDependence.node.id);
                 count++;
@@ -72,8 +74,9 @@ export class TorpologySortNode{
 
         if (this.nodeDependencies.length === 0) {
             this.isRunning = false;
-            console.log("jumlah perulangan:", this.check_cycle);
+            console.log([...this.visited.values()]);
             
+            console.log("jumlah perulangan:", this.check_cycle);
         }
     }
 
@@ -106,6 +109,8 @@ export class TorpologySortNode{
             count ++;
         }
         console.log('makeDependence membutuhkan perulangan: ', count, "kali");
+        console.log([...mapNodeDependencies.values()]);
+        
         return [...mapNodeDependencies.values()];
     }
 }
