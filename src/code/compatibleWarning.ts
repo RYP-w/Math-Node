@@ -4,10 +4,10 @@ export function actionCheckCompatible() {
     let check = checkEditorCompatibility();
     
     const htmlCompatibleWarning = document.getElementById('compatible-warning')!;
-    // if (check.isSuitableForEditor) {
-    //     htmlCompatibleWarning.remove();
-    //     return;
-    // }
+    if (check.isSuitableForEditor) {
+        htmlCompatibleWarning.remove();
+        return;
+    }
 
     htmlCompatibleWarning.style.display = 'flex';
 
