@@ -3,8 +3,9 @@ import type { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../TypeDefinition";
 import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
-import type { IdNode, IdValueBox, Node } from "./node";
+import type { Node } from "./node";
 import { Decimal } from 'decimal.js';
+import type { IdNode, IdValueBox } from "./typesDefinition";
 
 export class EditValueNodeState{
     private startPos:Vector2 = {x:0,y:0};

@@ -1,6 +1,7 @@
 import type { Rect } from "../TypeDefinition";
-import { Node, type IdNode } from "./node"
+import { Node } from "./node"
 import RBush from "rbush";
+import type { IdNode } from "./typesDefinition";
 
 interface NodeBushRect {
     minX:number;

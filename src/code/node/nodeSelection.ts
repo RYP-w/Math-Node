@@ -2,9 +2,10 @@ import type { MouseButtonState } from "../mouseButtonState";
 import type { Rect } from "../TypeDefinition";
 import { GetScreenToWorld2d, GetWorld2dToScreen, type World2d } from "../world2d/world2d";
 import { DatabaseNode } from "./database";
-import { Node, type IdNode } from "./node";
+import { Node } from "./node";
 import type { rBushRectSelection } from "./rBushRectSelection";
 import { SelectionBox } from "./selectionBox";
+import type { IdNode } from "./typesDefinition";
 
 export class NodeSelection { //? class untuk menyimpan node node yang di pilih
     private nodes: Map<string, Node>;

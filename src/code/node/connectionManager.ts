@@ -2,7 +2,8 @@ import {  TorpologySortNode } from "../functionalNode/torpologicalSortNode";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
-import { Node, type IdInputSocket, type IdNode, type IdOutputSocket } from "./node";
+import { Node } from "./node";
+import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
 
 export class ConnectionManager{
     private parent: DatabaseNode; //? ikat database Node ke ConnectionManager
