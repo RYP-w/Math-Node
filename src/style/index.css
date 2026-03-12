@@ -55,6 +55,8 @@ input[type=number]::-webkit-inner-spin-button {
 
 /* Compatible Warning */
 #compatible-warning{
+    --font-text-size: 16px;
+    --font-icon-size: calc(var(--font-text-size) * 2);
     position: absolute;
     background-color: var(--color-dark-02);
     width: 100vw;
@@ -69,7 +71,15 @@ input[type=number]::-webkit-inner-spin-button {
 #cw-container-info{
     display: flex;
     flex-direction: column;
+    font-size: var(--font-text-size); 
+    margin-bottom: 10px;
+
+    padding: 20px;
+    max-width: 90vw;
+    box-sizing: border-box;
+    
 }
+
 
 .cw-text-detail {
     margin-top: 5px;
@@ -82,6 +92,9 @@ input[type=number]::-webkit-inner-spin-button {
 
 #cw-info-expression-icon {
     height: 40px;
+    font-size: var(--font-icon-size);
+    margin-bottom: 10px;
+
     display: flex;
     align-items: end;
 }
@@ -113,7 +126,7 @@ input[type=number]::-webkit-inner-spin-button {
     border: 2px solid white;
     width: fit-content;
     padding: 5px;
-    font-size: medium;
+    font-size: var(--font-text-size);
 }
 #cw-info-button-continue:hover {
     background-color: white;

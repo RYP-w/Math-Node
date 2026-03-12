@@ -1,5 +1,6 @@
 import { Queue } from "../helper/addons";
-import type { IdNode, IdOutputSocket, Node } from "../node/node";
+import type { Node } from "../node/node";
+import type { IdNode, IdOutputSocket } from "../node/typesDefinition";
 
 //TODO: aku akan membuat sebush sistem pemerosesan pada node,
 // misal jika node_1 di ubah value nya seluruh node yang bergantung/ bberhubungan dengan node tersebut akan menjadi dirty dan akan memperbarui value dan outputnya sesuai dengan urutannya
