@@ -1,5 +1,5 @@
 .node-style {
-    --width-node: 100px;
+    --width-node: 150px;
     --width-node-min: 100px;
 
     --outline: 1px;
@@ -123,6 +123,7 @@
 
 .node-container-item-value {
     padding: 0 5px;
+    width: 100%;
 }
 
 .node-item-value {
@@ -189,5 +190,4 @@
     transform: translate(1px, -25px);
     pointer-events: none;
 
-    display: ;
 }

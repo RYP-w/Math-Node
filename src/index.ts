@@ -3,6 +3,7 @@ import "./style/wondow-title_bar.css";
 import "./style/editor.css";
 import "./style/world2d.css";
 import "./style/node.css";
+import './style/addNode.css'
 
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 
@@ -20,15 +21,16 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
-import { TorpologySortNode } from "./code/engineNode/torpologicalSortNode";
-import { addNode } from "./code/engineNode/addNode";
+import { TorpologySortNode } from "./code/functionalNode/torpologicalSortNode";
+import { addNode } from "./code/functionalNode/setupNode";
 import { registerShortcut } from "./code/helper/addons";
+import { actionCheckCompatible } from "./code/compatibleWarning";
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
 world2d.offset = {
-    x: 0,//world2d.RectHTML.width / 10,
-    y: 0,//world2d.RectHTML.height / 10,
+    x: world2d.RectHTML.width / 2,
+    y: world2d.RectHTML.height / 2,
 };
 world2d.updateHTML();
 
@@ -62,6 +64,9 @@ addNode('DIVIDE',{x:20, y:200},databaseNode);
 addNode('MULTIPLY',{x:200, y:20},databaseNode);
 addNode('POWER',{x:200, y:200},databaseNode);
 addNode('INPUT', {x:380, y:200}, databaseNode);
+
+//<?> init 
+actionCheckCompatible()
 
 //<?> Events
 //<- Document Events

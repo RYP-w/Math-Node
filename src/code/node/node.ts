@@ -5,19 +5,9 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import { GroupsTemplatesNode, type TypeNode } from "../engineNode/addNode";
+import { GroupsTemplatesNode, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./typesDefinition";
 
-export type DataTypeNode = 'number';
-type ValueByType = {
-    'number': number;
-};
 
-export type IdSocket = string;
-export type IdInputSocket = `inputsocket_${number}`;
-export type IdOutputSocket = `outputsocket_${number}`;
-export type IdNode = `node_${number}`;
-export type IdValueBox = `valuebox_${number}`;
-export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 //? class Socket
 //? berisi id dan tipe socket

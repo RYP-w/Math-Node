@@ -1,7 +1,8 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
-import { Node, type IdInputSocket, type IdNode, type IdOutputSocket } from "./node";
 import { rBushRectSelection } from "./rBushRectSelection";
+import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
+import type { Node } from "./node";
 
 export class DatabaseNode {
     private database:Map<IdNode, Node>; //? list Nodes
@@ -75,13 +76,14 @@ export class DatabaseNode {
             return;
         }
 
-        const elementInput = elementValueBox.querySelector('[class*=input_]') as HTMLInputElement;
-        if (!elementInput) {
+        const elementInput = elementValueBox.querySelectorAll('[class*=input_]') as NodeListOf<HTMLInputElement>;
+        if (elementInput.length == 0) {
             console.log("BUG");
             return;
         }
-
-        elementInput.disabled = true;
+        elementInput.forEach((e) => {
+            e.disabled = true;
+        })
     }
 
     SystemRemovingConnection(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
@@ -111,14 +113,17 @@ export class DatabaseNode {
                     console.log("BUG");
                     return;
                 }
-
-                const elementInput = elementValueBox.querySelector('[class*=input_]') as HTMLInputElement;
-                if (!elementInput) {
+                
+                //? mengapa All? karena kemungkinan di masa depan valueBox group memiliki 2 (x,y) atau 3 (x,y,z) input. hhe "masa depan"
+                const elementInput = elementValueBox.querySelectorAll('[class*=input_]') as NodeListOf<HTMLInputElement>;
+                elementInput.length
+                if (elementInput.length == 0) {
                     console.log("BUG");
                     return;
                 }
-
-                elementInput.disabled = false;
+                elementInput.forEach((e) => {
+                    e.disabled = false;
+                })
 
             }
         } else console.log("Bug");

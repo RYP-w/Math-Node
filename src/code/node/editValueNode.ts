@@ -1,4 +1,4 @@
-import type { TorpologySortNode } from "../engineNode/torpologicalSortNode";
+import type { TorpologySortNode } from "../functionalNode/torpologicalSortNode";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../TypeDefinition";
 import type { World2d } from "../world2d/world2d";

@@ -189,3 +189,27 @@ export function registerShortcut(options: ShortcutOptions, targetElement:HTMLEle
         targetElement.removeEventListener('mouseleave', handlerMouseLeave);
     }
 }
+
+export function randomRange(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+interface InputCapabilityCheck {
+    hasMouseSupport: boolean;
+    hasKeyboardSupport: boolean;
+    isSuitableForEditor: boolean;
+}
+
+export function checkEditorCompatibility(): InputCapabilityCheck {
+
+    const hasPrecisePointer = window.matchMedia('(pointer: fine)').matches;
+
+    const hasHoverCapability = window.matchMedia('(hover: hover)').matches;
+
+    const hasMouseSupport = hasPrecisePointer;
+    const hasKeyboardSupport = hasHoverCapability; // proxy terbaik untuk keyboard fisik
+
+    const isSuitableForEditor = hasMouseSupport && hasKeyboardSupport;
+
+    return { hasMouseSupport, hasKeyboardSupport, isSuitableForEditor };
+}

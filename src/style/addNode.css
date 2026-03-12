@@ -1,0 +1,26 @@
+.add_node-style {
+    --width-node: 150px;
+    --width-node-min: 100px;
+
+    --outline: 1px;
+    --line-bold: 1px;
+    --pading-node-region: 4px;
+    --height-size-items: 20px;
+    --size-socket: 10px;
+    --offsite-socket: -5.5px;
+    --gap-vertical-node-body: 12.5px;
+    --item-value-radius: 4px;
+    --header-line-weight: 1px;
+    --margin-y-container-items: 2.5px;
+    --height-title: 25px;
+
+    --duration-transition: 0.2s;
+}
+
+
+.add_node-item-row {
+    margin: var(--margin-y-container-items) 0;
+    display: flex;
+    justify-content: space-between;
+    height: var(--height-size-items);
+}
