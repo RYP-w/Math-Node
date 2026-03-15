@@ -27,6 +27,7 @@ export class DatabaseNode {
         if (node) {
             this.rBushSelection.remove(node);
             this.database.delete(id);
+            node.HtmlElement.remove();
         }
     }
 
@@ -57,11 +58,11 @@ export class DatabaseNode {
 
     SystemConnectingNode(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
         //a
-        fromNode.node.connection.outgoingNodes[fromNode.idSocket].set(`${toNode.node.id}`, {
+        fromNode.node.connection.outgoingNodes[fromNode.idSocket].set(`${toNode.node.id}:${toNode.idSocket}`, {
             otherNode: toNode.node,
             otherIdSocket: toNode.idSocket,
         });
-        toNode.node.connection.incomingNodes[toNode.idSocket].set(`${fromNode.node.id}`, {
+        toNode.node.connection.incomingNodes[toNode.idSocket].set(`${fromNode.node.id}:${fromNode.idSocket}`, {
             otherNode: fromNode.node,
             otherIdSocket: fromNode.idSocket,
         });
@@ -104,7 +105,13 @@ export class DatabaseNode {
 
                 }
 
-                this.HtmlPlaceCurve.querySelector(`[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`)?.remove();
+                const pathSelector = `[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`;
+                const pathElement = this.HtmlPlaceCurve.querySelector(pathSelector);
+                if (pathElement === null) {
+                    console.log("BUG:",pathSelector);
+                    return;
+                }
+                pathElement.remove();
 
                 fromNode.node.OutgoingPathLines.delete(`${fromNode.node.id},${fromNode.idSocket},${toNode.node.id},${toNode.idSocket}`);
 
@@ -129,21 +136,19 @@ export class DatabaseNode {
         } else console.log("Bug");
     }
 
-    SystemRemovingAllConnection(fromNode: Node, toNode: Node) {
-        for (const idSocket in toNode.connection.incomingNodes) {
-            const incomingNode = toNode.connection.incomingNodes[idSocket as IdInputSocket];
-            for (const key of incomingNode.keys()) {
-                if (incomingNode.get(key)?.otherNode == fromNode) {
-                    incomingNode.delete(key);
-                }
+    SystemRemovingAllConnection(node:Node) {
+        const incomingConnection = node.connection.incomingNodes;
+        for (const idSocket of Object.keys(incomingConnection) as IdInputSocket[]){
+            const incomingNodes = incomingConnection[idSocket];
+            for (const incomingNode of incomingNodes.values()){
+                this.SystemRemovingConnection({node:incomingNode.otherNode, idSocket:incomingNode.otherIdSocket}, {node:node, idSocket:idSocket});
             }
         }
-        for (const idSocket in fromNode.connection.outgoingNodes) {
-            const outgoingNode = fromNode.connection.outgoingNodes[idSocket as IdOutputSocket];
-            for (const key of outgoingNode.keys()) {
-                if (outgoingNode.get(key)?.otherNode == fromNode) {
-                    outgoingNode.delete(key);
-                }
+        const outgoingConnection = node.connection.outgoingNodes;
+        for (const idSocket of Object.keys(outgoingConnection) as IdOutputSocket[]){
+            const outgoingNodes = outgoingConnection[idSocket];
+            for (const outgoingNode of outgoingNodes.values()){
+                this.SystemRemovingConnection({node:node, idSocket:idSocket}, {node:outgoingNode.otherNode, idSocket:outgoingNode.otherIdSocket});
             }
         }
     }

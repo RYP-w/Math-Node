@@ -5,15 +5,19 @@ import type { Vector2 } from '../../TypeDefinition';
 export class AddNodeEnvironment {
     private popupStack: { element: HTMLElement; level: number }[] = [];
     private rootContainer: HTMLElement;
-    private onCall: (type: TypeNode) => void;
+    private onCall: (event:MouseEvent, type: TypeNode ) => void;
 
-    constructor(rootContainer: HTMLElement, onCall: (type: TypeNode) => void) {
+    constructor(rootContainer: HTMLElement, onCall: (event:MouseEvent, type: TypeNode) => void) {
         this.rootContainer = rootContainer;
         this.onCall = onCall;
     }
 
     openRoot(items: Map<string, GroupAddNode>, position: Vector2) {
         this.closeAll();
+        const fogElement = this.rootContainer.querySelector('.fog');
+        if (fogElement && !fogElement.classList.contains('active')) {
+            fogElement.classList.add('active');
+        }
         this._openPopup(items, position, 0);
     }
 
@@ -24,22 +28,28 @@ export class AddNodeEnvironment {
     }
 
     closeAll() {
+        const fogElement = this.rootContainer.querySelector('.fog');
+        if (fogElement && fogElement.classList.contains('active')) {
+            fogElement.classList.remove('active');
+        }
         this.popupStack.forEach(p => p.element.remove());
         this.popupStack = [];
     }
 
-    private _openPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number) {
-        const popup = this._buildPopup(items, position, level);
+    private _openPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number, childMode:boolean = false) {
+        const popup = this._buildPopup(items, position, level, childMode);
         this.rootContainer.appendChild(popup);
         this.popupStack.push({ element: popup, level });
     }
 
-    private _buildPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number): HTMLElement {
+    
+
+    private _buildPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number, childMode:boolean): HTMLElement {
         return SetElement('div',{
                 class: ['add_node', 'add_node-style'],
                 style: [`--position-x: ${position.x}px`, `--position-y: ${position.y}px`],
             },
-            SetElement('div', { class: ['title-add_node'] }, 'Add Node'),
+            ...(!childMode? [SetElement('div', { class: ['title-add_node'] }, 'Add Node')] : []),
             SetElement('div', { class: ['container-items-add_node'] }, () =>
                 Array.from(items.entries()).map(([key, value]) =>
                     this._buildItem(key, value, level)
@@ -65,7 +75,7 @@ export class AddNodeEnvironment {
                 timeOut = setTimeout(() => {
                     const rect = item.getBoundingClientRect();
                     const containerRect = this.rootContainer.getBoundingClientRect();
-                    this._openPopup( value.action as Map<string, GroupAddNode>, { x: rect.right - containerRect.left, y: rect.top - containerRect.top}, level + 1);
+                    this._openPopup( value.action as Map<string, GroupAddNode>, { x: rect.right - containerRect.left + 12, y: rect.top - containerRect.top - 6}, level + 1, true);
                 },150);
             }
         });
@@ -75,8 +85,8 @@ export class AddNodeEnvironment {
         })
 
         if (value.isCall()) {
-            item.addEventListener('mousedown', () => {
-                this.onCall(value.action as TypeNode);
+            item.addEventListener('mousedown', (ev) => {
+                this.onCall(ev, value.action as TypeNode);
                 this.closeAll();
             });
         }

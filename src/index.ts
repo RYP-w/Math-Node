@@ -29,6 +29,7 @@ import { actionCheckCompatible } from "./code/compatibleWarning";
 import type { Vector2 } from "./code/TypeDefinition";
 import { AddNodeEnvironment } from "./code/functionalNode/addNode/addNodeEnv";
 import { groupingAddNodes } from "./code/node/typesDefinition";
+import { checkRemoveNodes } from "./code/node/removeNodes";
 
 let _mousePosition:Vector2 = {x:0, y:0};
 window.addEventListener('mousemove', (ev) => {
@@ -38,15 +39,21 @@ window.addEventListener('mousemove', (ev) => {
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
 world2d.offset = {
-    x: 190,//world2d.RectHTML.width / 2,
-    y: 0,//world2d.RectHTML.height / 2,
+    x: world2d.RectHTML.width / 2,
+    y: world2d.RectHTML.height / 2,
 };
 world2d.updateHTML();
 
 //<?> Init Class
-const env = new AddNodeEnvironment(toolkitContainer, (type) => {
-    createNode(type, GetScreenToWorld2d({x: _mousePosition.x, y: _mousePosition.y}, world2d), databaseNode);
+const env = new AddNodeEnvironment(toolkitContainer, (ev, type) => {
+    const pointPosition = GetScreenToWorld2d({x: _mousePosition.x, y: _mousePosition.y + 33}, world2d)
+    const node = createNode(type, {x:pointPosition.x - 75, y: pointPosition.y - 16.5}, databaseNode);
     env.closeAll();
+
+    // paksa node baru ke mode selected dan mouse state left ke mode "NodeTitle"
+    nodeSelection.clear();
+    nodeSelection.add(node);
+    mouseState.setAlt(ev,'left','NodeTitle');
 });
 const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
@@ -72,11 +79,6 @@ const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 //         ],
 //     ),
 // );
-createNode('ADD',{x:20, y:20},databaseNode);
-createNode('DIVIDE',{x:20, y:200},databaseNode);
-createNode('MULTIPLY',{x:200, y:20},databaseNode);
-createNode('POWER',{x:200, y:200},databaseNode);
-createNode('INPUT', {x:380, y:200}, databaseNode);
 
 //<?> init 
 actionCheckCompatible()
@@ -141,6 +143,10 @@ registerShortcut({'key':'a','shift': true}, world2d.HtmlElement, () => {
         x: _mousePosition.x - rect.left,
         y: _mousePosition.y - rect.top + 33,
     });
+})
+
+registerShortcut({key:'x'},world2d.HtmlElement, () => {
+    checkRemoveNodes(databaseNode,nodeSelection);
 })
 
 world2d.HtmlElement.addEventListener('mousedown', (e) => {

@@ -29,7 +29,7 @@
 
     transform: translate(var(--position-x), var(--position-y));
 
-    z-index: 9999
+    z-index: 1
 }
 
 .title-add_node {
@@ -43,6 +43,9 @@
 
 .container-items-add_node {
     padding: calc(var(--title-height) / 4) 0px;
+    border-radius: 4px;
+
+    background-color: var(--color-dark-03);
 
     display: flex;
     flex-direction: column;
@@ -55,7 +58,10 @@
 
     margin: 0 calc(var(--title-height) / 4);
 
-    border: 1px solid white;
+    border-width: 1px;
+    border-style: solid;
+    border-color:  transparent;
+
     border-radius: 2px;
 
     padding: 0 5px;
@@ -63,4 +69,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    transition: border-color 0.1s;
+}
+
+.item-add_node:hover {
+    border-color: white;
 }

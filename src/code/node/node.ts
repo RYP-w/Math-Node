@@ -60,11 +60,11 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     position: Vector2; //? posisi node di world
     selected: boolean; //? flag apakah Node dipilih
     connection: { //? menyimpan semua koneksi node
-        incomingNodes:Record<IdInputSocket, Map<IdNode, { //? daftar dari setiap socket input, setiap socket bisa menerima koneksi lebih dari 0 (ya walaupun saat ini tidak boleh)
+        incomingNodes:Record<IdInputSocket, Map<`${IdNode}:${IdOutputSocket}`, { //? daftar dari setiap socket input, setiap socket bisa menerima koneksi lebih dari 0 (ya walaupun saat ini tidak boleh)
             otherNode: Node;
             otherIdSocket: IdOutputSocket;
         }>>,
-        outgoingNodes:Record<IdOutputSocket, Map<IdNode, {
+        outgoingNodes:Record<IdOutputSocket, Map<`${IdNode}:${IdInputSocket}`, {
             otherNode: Node;
             otherIdSocket: IdInputSocket;
         }>>,
@@ -237,7 +237,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         const length_horizontal_line = 15;
         for (const [key, path] of this.OutgoingPathLines) {
             let [_, idOutputSocket, idInputNode, idInputSocket] = key.split(',') as [IdNode, IdOutputSocket, IdNode, IdInputSocket];
-            const outgoingNode = this.connection.outgoingNodes[idOutputSocket].get(idInputNode);
+            const outgoingNode = this.connection.outgoingNodes[idOutputSocket].get(`${idInputNode}:${idInputSocket}`);
             if (outgoingNode != undefined) {
                 const positionSocketFrom = this.getPositionSocketOutput(idOutputSocket);
                 const positionSocketTo = outgoingNode.otherNode.getPositionSocketInput(idInputSocket);
