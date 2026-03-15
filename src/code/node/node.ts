@@ -5,7 +5,7 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import { GroupsTemplatesNode, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./typesDefinition";
+import {isNumericBinary, isNumericUnary, isNumericUnique, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./typesDefinition";
 
 
 
@@ -154,7 +154,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 
     updateOutputValue() {
-        if (GroupsTemplatesNode.Input2Output1.includes(this.type)) {
+        if (isNumericBinary(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
@@ -163,19 +163,53 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
 
             if (this.type == 'ADD') {
                 output_0.value = value_0.add(value_1).toNumber();
+
             }else if (this.type == 'SUBTRACT') {
                 output_0.value = value_0.sub(value_1).toNumber();
+
             }else if (this.type == 'MULTIPLY') {
                 output_0.value = value_0.mul(value_1).toNumber();
+
             }else if (this.type == 'DIVIDE') {
                 output_0.value = value_0.div(value_1).toNumber();
+
             }else if (this.type == 'POWER') {
                 output_0.value = value_0.pow(value_1).toNumber();
             
             }else{
                 console.log("BUG: ", this.type);
             }
-        }else if (GroupsTemplatesNode.Input1Output1.includes(this.type)) {
+        } else if (isNumericUnary(this.type)) {
+            const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
+            const output_0 = this.outputSockets.get("outputsocket_0");
+
+            if (!output_0) { console.log("BUG"); return;}
+
+            if (this.type == 'SQRT') {
+                output_0.value = value_0.sqrt().toNumber();
+
+            }else if (this.type == 'ABS') {
+                output_0.value = value_0.abs().toNumber();
+
+            }else if (this.type == 'NEGATE') {
+                output_0.value = value_0.neg().toNumber();
+
+            }else if (this.type == 'FACTORIAL') {
+                if (value_0.isNegative()) {
+                    output_0.value = NaN;
+                }else{
+                    let result = Decimal('1');
+                    for (let i = Decimal('2'); i.lessThanOrEqualTo(value_0); i = i.add('1')) {
+                        result = result.mul(i);
+                    }
+                    output_0.value = result.toNumber();
+                }
+
+            }else{
+                console.log("BUG");
+            }
+            
+        } else if (isNumericUnique(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
@@ -189,7 +223,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         }
         else{
             console.log("BUG");
-            
         }
     }
 

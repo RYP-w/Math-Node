@@ -76,3 +76,22 @@
 .item-add_node:hover {
     border-color: white;
 }
+
+.item-empty {
+    height: var(--item-height);
+    box-sizing: border-box;
+
+    margin: 0 calc(var(--title-height) / 4);
+
+    border-width: 1px;
+    border-style: solid;
+    border-color:  transparent;
+
+    border-radius: 2px;
+
+    padding: 0 5px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -10,14 +10,42 @@ export type IdNode = `node_${number}`;
 export type IdValueBox = `valuebox_${number}`;
 export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
-export type groupTypeNode = 'Input' | 'Output' | 'Function' | 'Comprasion' | 'Rounding' | 'Trigonometric';
+type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
+export type TypeNode =  Arithmetic | 'INPUT' | 'DUMMY';
 
-export const GroupsTemplatesNode:{Input1Output1: TypeNode[], Input2Output1: TypeNode[]} = {
-    Input1Output1: ['INPUT'],
-    Input2Output1: ['ADD','DIVIDE','MULTIPLY','POWER','SUBTRACT']
+//? numeric binary type set
+const numericBinaryArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER'] as const;
+export type NumericBinary = typeof numericBinaryArray[number];
+const numericBinary = new Set<TypeNode>(numericBinaryArray);
+//* Function
+export function isNumericBinary(type:TypeNode): type is NumericBinary{
+    return numericBinary.has(type);
 }
 
-export const templatesNode:Map<TypeNode,{input:Array<{type: DataTypeNode, value: number, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: number}>}> = new Map([
+//? numeric unary type set
+const numericUnaryArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL'] as const;
+export type NumericUnary = typeof numericUnaryArray[number];
+const numericUnary = new Set<TypeNode>(numericUnaryArray);
+//* Function
+export function isNumericUnary(type:TypeNode):type is NumericUnary {
+    return numericUnary.has(type);
+}
+
+//? numeric unique type set
+const numericUniqueArray = ['INPUT'] as const;
+export type NumericUnique = typeof numericUniqueArray[number];
+const numericUnique = new Set<TypeNode>(numericUniqueArray);
+//* Function
+export function isNumericUnique(type:TypeNode):type is NumericUnique {
+    return numericUnique.has(type);
+}
+
+
+//? shortcut
+type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: number, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: number}>};
+
+//? Arithmetic Template
+const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arithmetic,TamplateInputOutput>([
     ['ADD',{
         input:[
             { type:'number', value:0, enableInput:true, },
@@ -46,21 +74,72 @@ export const templatesNode:Map<TypeNode,{input:Array<{type: DataTypeNode, value:
         ],
         output:[ { type:'number', value:0,} ]
     }],
+    ['MOD', {
+        input:[
+            {type:'number', value:0, enableInput:true},
+            {type:'number', value:0, enableInput:true},
+        ],
+        output:[
+            {type:'number', value:0},
+        ]
+    }],
     ['POWER',{
         input:[
             { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, }
+            { type:'number', value:0, enableInput:true, },
         ],
         output:[ { type:'number', value:0,} ]
     }],
+    ['SQRT', {
+        input:[
+            { type:'number', value:0, enableInput:true, },
+        ],
+        output:[
+            { type:'number', value:0,},
+        ]
+    }],
+    ['ABS', {
+        input:[
+            {type:'number', value:0, enableInput:true, },
+        ],
+        output:[
+            { type:'number', value:0,},
+        ]
+    }],
+    ['NEGATE', {
+        input:[
+            {type:'number', value:0, enableInput:true, },
+        ],
+        output:[
+            { type:'number', value:0,},
+        ]
+    }],
+    ['FACTORIAL', {
+        input:[
+            {type:'number', value:0, enableInput:true, },
+        ],
+        output:[
+            { type:'number', value:0,},
+        ]
+    }]
+])
+
+//<?> Gabungkan semua template 
+export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
+    ...templateArithmeticNode,
     ['INPUT',{
         input: [ {type:'number', value:0, enableInput:false} ],
         output: [ {type:'number', value:0,} ]
+    }],
+    ['DUMMY', {
+        input: [  ],
+        output: [  ]
     }]
+    
 ]);
 
 
-export type TypeNode = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE'  | 'POWER' | 'INPUT';
+
 type ActionByType = {
     'spawn': Map<string, GroupAddNode>;
     'call' : TypeNode;
@@ -85,16 +164,24 @@ export class GroupAddNode<T extends 'spawn' | 'call' = 'spawn' | 'call'> {
 
 export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupAddNode>([
     ['Input',new GroupAddNode('call','INPUT')],
-    ['Function', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
-        ['Operator', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
-            ['Add',new GroupAddNode('call','ADD')],
-            ['Subtract',new GroupAddNode('call','SUBTRACT')],
-            ['Multiply',new GroupAddNode('call','MULTIPLY')],
-            ['Divide',new GroupAddNode('call','DIVIDE')],
-        ]))],
-        ['Other', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
-            ['Power', new GroupAddNode('call','POWER')]
-        ]))]
-    ]))]
+    ['Arithmetic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Add',new GroupAddNode('call','ADD')],
+        ['Subtract',new GroupAddNode('call','SUBTRACT')],
+        ['Multiply',new GroupAddNode('call','MULTIPLY')],
+        ['Divide',new GroupAddNode('call','DIVIDE')],
+        ['Mod', new GroupAddNode('call', 'MOD')],
+        ['Power', new GroupAddNode('call', 'POWER')],
+        ['Sqrt', new GroupAddNode('call', 'SQRT')],
+        ['Absolute', new GroupAddNode('call', 'ABS')],
+        ['Negate', new GroupAddNode('call', 'NEGATE')],
+        ['Factorial', new GroupAddNode('call', 'FACTORIAL')],
+    ]))],
+    ['Comparisons', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Logic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Rounding', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
 ])
 

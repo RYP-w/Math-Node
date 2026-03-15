@@ -45,9 +45,9 @@ world2d.offset = {
 world2d.updateHTML();
 
 //<?> Init Class
-const env = new AddNodeEnvironment(toolkitContainer, (ev, type) => {
+const env = new AddNodeEnvironment(toolkitContainer, (ev, name, type) => {
     const pointPosition = GetScreenToWorld2d({x: _mousePosition.x, y: _mousePosition.y + 33}, world2d)
-    const node = createNode(type, {x:pointPosition.x - 75, y: pointPosition.y - 16.5}, databaseNode);
+    const node = createNode(type, {x:pointPosition.x - 75, y: pointPosition.y - 16.5}, databaseNode, name);
     env.closeAll();
 
     // paksa node baru ke mode selected dan mouse state left ke mode "NodeTitle"

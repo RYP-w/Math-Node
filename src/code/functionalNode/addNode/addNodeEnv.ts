@@ -5,9 +5,9 @@ import type { Vector2 } from '../../TypeDefinition';
 export class AddNodeEnvironment {
     private popupStack: { element: HTMLElement; level: number }[] = [];
     private rootContainer: HTMLElement;
-    private onCall: (event:MouseEvent, type: TypeNode ) => void;
+    private onCall: (event:MouseEvent, name:string, type: TypeNode ) => void;
 
-    constructor(rootContainer: HTMLElement, onCall: (event:MouseEvent, type: TypeNode) => void) {
+    constructor(rootContainer: HTMLElement, onCall: (event:MouseEvent, name:string, type: TypeNode) => void) {
         this.rootContainer = rootContainer;
         this.onCall = onCall;
     }
@@ -18,7 +18,7 @@ export class AddNodeEnvironment {
         if (fogElement && !fogElement.classList.contains('active')) {
             fogElement.classList.add('active');
         }
-        this._openPopup(items, position, 0);
+        this._openPopup(items, position, 0, true);
     }
 
     closeFromLevel(targetLevel: number) {
@@ -51,9 +51,12 @@ export class AddNodeEnvironment {
             },
             ...(!childMode? [SetElement('div', { class: ['title-add_node'] }, 'Add Node')] : []),
             SetElement('div', { class: ['container-items-add_node'] }, () =>
+                (items.size > 0? 
                 Array.from(items.entries()).map(([key, value]) =>
                     this._buildItem(key, value, level)
-                )
+                ): [
+                    SetElement('div',{class:['item-empty']},"Empty (ó_ò。 )")
+                ])
             )
         );
     }
@@ -86,7 +89,7 @@ export class AddNodeEnvironment {
 
         if (value.isCall()) {
             item.addEventListener('mousedown', (ev) => {
-                this.onCall(ev, value.action as TypeNode);
+                this.onCall(ev, key, value.action as TypeNode);
                 this.closeAll();
             });
         }
