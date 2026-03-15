@@ -57,3 +57,38 @@ import { image } from "./image.ts";
                             </div>
                         </div>
                     </div>
+
+
+
+
+add_node
+    /* --position-x: 0px;
+    --position-y: 0px;
+    --z-index: 1;
+
+    width: var(--width-node);
+    min-width: var(--width-node-min);
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    z-index: var(--z-index);
+
+    transform: translate(var(--position-x), var(--position-y)); */
+
+style
+    /* --width-node: 150px;
+    
+
+    --outline: 1px;
+    --line-bold: 1px;
+    --pading-node-region: 4px;
+    --height-size-items: 20px;
+    --size-socket: 10px;
+    --offsite-socket: -5.5px;
+    --gap-vertical-node-body: 5px;
+    --item-value-radius: 4px;
+    --header-line-weight: 1px;
+    --margin-y-container-items: 1px;
+    --height-title: 25px;
+
+    --duration-transition: 0.2s; */

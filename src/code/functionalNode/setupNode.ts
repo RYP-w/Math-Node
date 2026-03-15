@@ -4,7 +4,7 @@ import { templatesNode, type TypeNode } from "../node/typesDefinition";
 import type { Vector2 } from "../TypeDefinition";
 
 
-export function addNode(type:TypeNode,position:Vector2,database:DatabaseNode) {
+export function createNode(type:TypeNode,position:Vector2,database:DatabaseNode) {
     const templateNode = templatesNode.get(type)!;
     const name = type.charAt(0).toUpperCase() + type.slice(1).toLocaleLowerCase();
     database.add(new Node(name,type,position,templateNode.input,templateNode.output));

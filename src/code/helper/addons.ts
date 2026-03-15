@@ -147,7 +147,7 @@ type ShortcutOptions = {
     alt?: boolean;
 };
 
-function createShortcut(options: ShortcutOptions, callback: () => void) {
+function createShortcut(options: ShortcutOptions, callback: (ev:KeyboardEvent) => void) {
     const handler = (event: KeyboardEvent) => {
         const isKeyMatch = event.key.toLowerCase() === options.key.toLowerCase();
         
@@ -157,7 +157,7 @@ function createShortcut(options: ShortcutOptions, callback: () => void) {
 
         if (isKeyMatch && isCtrlMatch && isShiftMatch && isAltMatch) {
             event.preventDefault();
-            callback();
+            callback(event);
         }
     };
 
@@ -165,7 +165,7 @@ function createShortcut(options: ShortcutOptions, callback: () => void) {
     return () => window.removeEventListener('keydown', handler);
 }
 
-export function registerShortcut(options: ShortcutOptions, targetElement:HTMLElement, callback: () => void) {
+export function registerShortcut(options: ShortcutOptions, targetElement:HTMLElement, callback: (ev:KeyboardEvent) => void) {
     let removeShortcut: (() => void) | null = null;
 
     const handlerMouseEnter = () => {
@@ -195,21 +195,17 @@ export function randomRange(min: number, max: number): number {
 }
 
 interface InputCapabilityCheck {
-    hasMouseSupport: boolean;
-    hasKeyboardSupport: boolean;
+    hasPrecisePointer: boolean;
+    hasHoverCapability: boolean;
     isSuitableForEditor: boolean;
 }
 
 export function checkEditorCompatibility(): InputCapabilityCheck {
 
     const hasPrecisePointer = window.matchMedia('(pointer: fine)').matches;
-
     const hasHoverCapability = window.matchMedia('(hover: hover)').matches;
 
-    const hasMouseSupport = hasPrecisePointer;
-    const hasKeyboardSupport = hasHoverCapability; // proxy terbaik untuk keyboard fisik
+    const isSuitableForEditor = hasPrecisePointer && hasHoverCapability;
 
-    const isSuitableForEditor = hasMouseSupport && hasKeyboardSupport;
-
-    return { hasMouseSupport, hasKeyboardSupport, isSuitableForEditor };
+    return { hasPrecisePointer, hasHoverCapability, isSuitableForEditor };
 }

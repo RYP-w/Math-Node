@@ -13,7 +13,7 @@ export class World2d {
         this.offset = offset;
         this.scale = scale
         this.HtmlElement = document.getElementById(`world2d`) as HTMLDivElement;
-        this.toolsHtmlElement = this.HtmlElement.querySelector("#tools") as HTMLDivElement;
+        this.toolsHtmlElement = this.HtmlElement.querySelector("#world2d-tools") as HTMLDivElement;
 
         this.RectHTML = this.HtmlElement.getBoundingClientRect();
         this.applyHTML()

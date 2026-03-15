@@ -8,6 +8,7 @@ import './style/addNode.css'
 import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
 
 const SVG_Place_World2D = document.getElementById( "svg_place_world2d") as HTMLElement;
+const toolkitContainer = document.getElementById('toolkit')!;
 
 //<?> Import Script / Module [*]
 //import { Node } from "./code/node/node";
@@ -22,22 +23,34 @@ import { rBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
 import { TorpologySortNode } from "./code/functionalNode/torpologicalSortNode";
-import { addNode } from "./code/functionalNode/setupNode";
+import { createNode } from "./code/functionalNode/setupNode";
 import { registerShortcut } from "./code/helper/addons";
 import { actionCheckCompatible } from "./code/compatibleWarning";
+import type { Vector2 } from "./code/TypeDefinition";
+import { AddNodeEnvironment } from "./code/functionalNode/addNode/addNodeEnv";
+import { groupingAddNodes } from "./code/node/typesDefinition";
+
+let _mousePosition:Vector2 = {x:0, y:0};
+window.addEventListener('mousemove', (ev) => {
+    _mousePosition = {x: ev.clientX, y:ev.clientY - 33};
+})
 
 //<?> Create World2D
 const world2d = new World2d({ x: 0, y: 0 }, { x: 0, y: 0 }, 1);
 world2d.offset = {
-    x: world2d.RectHTML.width / 2,
-    y: world2d.RectHTML.height / 2,
+    x: 190,//world2d.RectHTML.width / 2,
+    y: 0,//world2d.RectHTML.height / 2,
 };
 world2d.updateHTML();
 
 //<?> Init Class
+const env = new AddNodeEnvironment(toolkitContainer, (type) => {
+    createNode(type, GetScreenToWorld2d({x: _mousePosition.x, y: _mousePosition.y}, world2d), databaseNode);
+    env.closeAll();
+});
 const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
-const editValueNodeState = new EditValueNodeState()
+const editValueNodeState = new EditValueNodeState();
 const mouseState = new MouseButtonState();
 
 //<?> Create Database Nodes
@@ -59,11 +72,11 @@ const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 //         ],
 //     ),
 // );
-addNode('ADD',{x:20, y:20},databaseNode);
-addNode('DIVIDE',{x:20, y:200},databaseNode);
-addNode('MULTIPLY',{x:200, y:20},databaseNode);
-addNode('POWER',{x:200, y:200},databaseNode);
-addNode('INPUT', {x:380, y:200}, databaseNode);
+createNode('ADD',{x:20, y:20},databaseNode);
+createNode('DIVIDE',{x:20, y:200},databaseNode);
+createNode('MULTIPLY',{x:200, y:20},databaseNode);
+createNode('POWER',{x:200, y:200},databaseNode);
+createNode('INPUT', {x:380, y:200}, databaseNode);
 
 //<?> init 
 actionCheckCompatible()
@@ -121,9 +134,23 @@ document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
 });
 //<- Shortcut Keys 
+
 registerShortcut({'key':'a','shift': true}, world2d.HtmlElement, () => {
-        
+    const rect = toolkitContainer.getBoundingClientRect();
+    env.openRoot(groupingAddNodes, {
+        x: _mousePosition.x - rect.left,
+        y: _mousePosition.y - rect.top + 33,
+    });
 })
+
+world2d.HtmlElement.addEventListener('mousedown', (e) => {
+    const target = e.target as HTMLElement;
+    const clickedInsidePopup = target.closest('.add_node');
+    if (!clickedInsidePopup) {
+        env.closeAll();
+    }
+});
+
 
 //<- Group Events [prioritas utama paling atas] 
 dragViewWorld2d(world2d, mouseState);
