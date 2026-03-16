@@ -7,7 +7,6 @@ import { rBushRectSelection } from "./rBushRectSelection";
 import type { IdNode } from "./typesDefinition";
 
 export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, rBushSelection:rBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
-    let previousPosition:Vector2 = {x:0, y:0};
     let previousNodePosition:Map<IdNode,Vector2> = new Map<IdNode,Vector2>();
     let levelClampDragging:Record<number,'25x'|'50x'> = {
         1 : '25x',
@@ -34,7 +33,6 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, r
                 nodeSelection.getElements().forEach( (node) => {
                     previousNodePosition.set(node.id, {x:node.position.x, y:node.position.y});
                 })
-                previousPosition = {x:ev.clientX, y:ev.clientY};
             }
         }
     });
