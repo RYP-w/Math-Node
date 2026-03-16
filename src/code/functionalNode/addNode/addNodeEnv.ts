@@ -38,7 +38,7 @@ export class AddNodeEnvironment {
     }
 
     private _openPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number, childMode:boolean = false) {
-        const popup = this._buildPopup(items, position, level, childMode);
+        const popup = this._buildPopup(items, position, level);
         this.rootContainer.appendChild(popup);
 
         const popupRect = popup.getBoundingClientRect()
@@ -64,7 +64,7 @@ export class AddNodeEnvironment {
 
     
 
-    private _buildPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number, childMode:boolean): HTMLElement {
+    private _buildPopup(items: Map<string, GroupAddNode>, position: Vector2, level: number): HTMLElement {
         return SetElement('div',{class: ['add_node', 'add_node-style'], style: [`--position-x: ${position.x}px`, `--position-y: ${position.y}px`], },
             //...(!childMode? [SetElement('div', { class: ['title-add_node'] }, 'Add Node')] : []),
             SetElement('div', { class: ['container-items-add_node'] }, () =>
