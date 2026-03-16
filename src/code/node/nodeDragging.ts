@@ -1,4 +1,3 @@
-import { registerShortcut } from "../helper/addons";
 import { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../TypeDefinition";
 import { World2d } from "../world2d/world2d";
