@@ -1,4 +1,4 @@
-import type Decimal from "decimal.js";
+import Decimal from "decimal.js";
 
 export type DataTypeNode = 'number';
 export type ValueByType = {
@@ -44,84 +44,84 @@ export function isNumericUnique(type:TypeNode):type is NumericUnique {
 
 
 //? shortcut
-type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: number, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: number}>};
+type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: Decimal, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: Decimal}>};
 
 //? Arithmetic Template
 const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arithmetic,TamplateInputOutput>([
     ['ADD',{
         input:[
-            { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, }
+            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, }
         ],
-        output:[ { type:'number', value:0,} ]
+        output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['SUBTRACT',{
         input:[
-            { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, }
+            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, }
         ],
-        output:[ { type:'number', value:0,} ]
+        output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['MULTIPLY',{
         input:[
-            { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, }
+            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, }
         ],
-        output:[ { type:'number', value:0,} ]
+        output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['DIVIDE',{
         input:[
-            { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, }
+            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, }
         ],
-        output:[ { type:'number', value:0,} ]
+        output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['MOD', {
         input:[
-            {type:'number', value:0, enableInput:true},
-            {type:'number', value:0, enableInput:true},
+            {type:'number', value: Decimal('0'), enableInput:true},
+            {type:'number', value: Decimal('0'), enableInput:true},
         ],
         output:[
-            {type:'number', value:0},
+            {type:'number', value: Decimal('0')},
         ]
     }],
     ['POWER',{
         input:[
-            { type:'number', value:0, enableInput:true, },
-            { type:'number', value:0, enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, },
         ],
-        output:[ { type:'number', value:0,} ]
+        output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['SQRT', {
         input:[
-            { type:'number', value:0, enableInput:true, },
+            { type:'number', value: Decimal('0'), enableInput:true, },
         ],
         output:[
-            { type:'number', value:0,},
+            { type:'number', value: Decimal('0'),},
         ]
     }],
     ['ABS', {
         input:[
-            {type:'number', value:0, enableInput:true, },
+            {type:'number', value: Decimal('0'), enableInput:true, },
         ],
         output:[
-            { type:'number', value:0,},
+            { type:'number', value: Decimal('0'),},
         ]
     }],
     ['NEGATE', {
         input:[
-            {type:'number', value:0, enableInput:true, },
+            {type:'number', value: Decimal('0'), enableInput:true, },
         ],
         output:[
-            { type:'number', value:0,},
+            { type:'number', value: Decimal('0'),},
         ]
     }],
     ['FACTORIAL', {
         input:[
-            {type:'number', value:0, enableInput:true, },
+            {type:'number', value: Decimal('0'), enableInput:true, },
         ],
         output:[
-            { type:'number', value:0,},
+            { type:'number', value: Decimal('0'),},
         ]
     }]
 ])
@@ -130,8 +130,8 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
     ['INPUT',{
-        input: [ {type:'number', value:0, enableInput:false} ],
-        output: [ {type:'number', value:0,} ]
+        input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
+        output: [ {type:'number', value: Decimal('0'),} ]
     }],
     ['DUMMY', {
         input: [  ],

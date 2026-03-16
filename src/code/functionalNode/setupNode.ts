@@ -4,7 +4,7 @@ import { templatesNode, type TypeNode } from "../node/typesDefinition";
 import type { Vector2 } from "../TypeDefinition";
 
 
-export function createNode(type:TypeNode,position:Vector2,database:DatabaseNode, name:string|undefined = undefined): Node {
+export function createNode(type:TypeNode, position:Vector2, database:DatabaseNode, name:string|undefined = undefined): Node {
     const templateNode = templatesNode.get(type)!;
     let trueName = type.charAt(0).toUpperCase() + type.slice(1).toLocaleLowerCase();
     if (name) {
