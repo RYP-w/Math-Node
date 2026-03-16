@@ -72,7 +72,7 @@ export class AddNodeEnvironment {
                 Array.from(items.entries()).map(([key, value]) =>
                     this._buildItem(key, value, level)
                 ): [
-                    SetElement('div',{class:['item-empty']},SetElement('span',{},"Empty (ó_ò。 )▶A"))
+                    SetElement('div',{class:['item-empty']},SetElement('span',{},"Empty (ó_ò。 )"))
                 ])
             )
         );
