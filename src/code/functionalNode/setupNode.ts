@@ -14,7 +14,3 @@ export function createNode(type:TypeNode,position:Vector2,database:DatabaseNode,
     database.add(node);
     return node;
 }
-
-// const groupNodes = {
-//     ""
-// }
