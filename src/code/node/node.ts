@@ -162,19 +162,19 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'ADD') {
-                output_0.value = value_0.add(value_1).toNumber();
+                output_0.value = value_0.add(value_1);
 
             }else if (this.type == 'SUBTRACT') {
-                output_0.value = value_0.sub(value_1).toNumber();
+                output_0.value = value_0.sub(value_1);
 
             }else if (this.type == 'MULTIPLY') {
-                output_0.value = value_0.mul(value_1).toNumber();
+                output_0.value = value_0.mul(value_1);
 
             }else if (this.type == 'DIVIDE') {
-                output_0.value = value_0.div(value_1).toNumber();
+                output_0.value = value_0.div(value_1);
 
             }else if (this.type == 'POWER') {
-                output_0.value = value_0.pow(value_1).toNumber();
+                output_0.value = value_0.pow(value_1);
             
             }else{
                 console.log("BUG: ", this.type);
@@ -186,23 +186,23 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'SQRT') {
-                output_0.value = value_0.sqrt().toNumber();
+                output_0.value = value_0.sqrt();
 
             }else if (this.type == 'ABS') {
-                output_0.value = value_0.abs().toNumber();
+                output_0.value = value_0.abs();
 
             }else if (this.type == 'NEGATE') {
-                output_0.value = value_0.neg().toNumber();
+                output_0.value = value_0.neg();
 
             }else if (this.type == 'FACTORIAL') {
                 if (value_0.isNegative()) {
-                    output_0.value = NaN;
+                    output_0.value = Decimal('NaN');
                 }else{
                     let result = Decimal('1');
                     for (let i = Decimal('2'); i.lessThanOrEqualTo(value_0); i = i.add('1')) {
                         result = result.mul(i);
                     }
-                    output_0.value = result.toNumber();
+                    output_0.value = result;
                 }
 
             }else{
@@ -216,7 +216,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
             
             if (this.type == 'INPUT') {
-                output_0.value = value_0.toNumber();
+                output_0.value = value_0;
             }else{
                 console.log("BUG: ", this.type);
             }
@@ -233,12 +233,12 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
                 return;
             }
-            console.log(this.id,'->',idValueBox,":",this.valueBoxs[idValueBox].value);
+            //c onsole.log(this.id,'->',idValueBox,":",this.valueBoxs[idValueBox].value);
             let value = this.valueBoxs[idValueBox].value;
-            if (Number.isNaN(value) || !Number.isFinite(value)) {
-                value = 0;
+            if (value.isNaN() || !value.isFinite()) {
+                value = Decimal('0');
             }
-            htmlInput.value = String(value);
+            htmlInput.value = value.toString();
         }
     }
 
@@ -256,7 +256,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         }
 
         if (this.valueBoxs[idValueBox].type == 'number') {
-            this.valueBoxs[idValueBox].value = Number(htmlInput.value);
+            this.valueBoxs[idValueBox].value = Decimal(htmlInput.value);
         }
     }
 
@@ -304,12 +304,12 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 }
 
-function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: number, enableInput: boolean }>){
+function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: Decimal, enableInput: boolean }>){
     let countIdValueBox = 0;
     let countIdSocket = 0;
     for (const valueBox of valueBoxs){
         const idValueBox:IdValueBox = `valuebox_${countIdValueBox}`;
-        node.valueBoxs[idValueBox] = new ValueBox(idValueBox, valueBox.type, valueBox.value, valueBox.enableInput);
+        node.valueBoxs[idValueBox] = new ValueBox(idValueBox, valueBox.type, Decimal(String(valueBox.value)), valueBox.enableInput);
         if (valueBox.enableInput) {
             const inputIdSocket:IdInputSocket = `inputsocket_${countIdSocket}`;
             node.valueBoxs[idValueBox].setSocket(inputIdSocket);
@@ -320,11 +320,11 @@ function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: nu
     }
 }
 
-function initOutputSocket(node:Node, outputSockets: Array<{ type: DataTypeNode, value: number }>){
+function initOutputSocket(node:Node, outputSockets: Array<{ type: DataTypeNode, value: Decimal }>){
     let countIdSocket = 0;
     for (const outputSocket of outputSockets){
         const IdSocket:IdOutputSocket = `outputsocket_${countIdSocket}`;
-        node.outputSockets.set(IdSocket, new OutputSocket(IdSocket,outputSocket.type,outputSocket.value));
+        node.outputSockets.set(IdSocket, new OutputSocket(IdSocket,outputSocket.type, Decimal(String(outputSocket.value))));
         node.connection.outgoingNodes[IdSocket] = new Map()
         countIdSocket++;
     }

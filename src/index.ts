@@ -165,15 +165,15 @@ editValueNode(world2d, databaseNode, editValueNodeState,mouseState, torpologiSor
 Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
 // window.addEventListener('mousedown', () => {
-//     console.log("mouse down");
+//     c onsole.log("mouse down");
 //     mouseState.log();
 // })
 // window.addEventListener('mousemove', () => {
-//     console.log("mouse move");
+//     c onsole.log("mouse move");
 //     mouseState.log();
 // });
 // window.addEventListener('mouseup', () => {
-//     console.log("mouse up");
+//     c onsole.log("mouse up");
 //     mouseState.log();
 // })
 

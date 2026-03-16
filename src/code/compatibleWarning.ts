@@ -36,8 +36,8 @@ export function actionCheckCompatible() {
         }
     };
 
-    updateSupportStatus('#cw-info-check-keyboard',check.hasKeyboardSupport);
-    updateSupportStatus('#cw-info-check-mouse',check.hasMouseSupport);
+    updateSupportStatus('#cw-info-check-keyboard',check.hasHoverCapability);
+    updateSupportStatus('#cw-info-check-mouse',check.hasPrecisePointer);
 
     const buttonContinue = htmlCompatibleWarning.querySelector('#cw-info-button-continue') as HTMLButtonElement;
     const handleButtonEnter = () => {

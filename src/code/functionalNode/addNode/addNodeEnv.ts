@@ -6,6 +6,7 @@ export class AddNodeEnvironment {
     private popupStack: { element: HTMLElement; level: number }[] = [];
     private rootContainer: HTMLElement;
     private onCall: (event:MouseEvent, name:string, type: TypeNode ) => void;
+    private space = 3;
 
     constructor(rootContainer: HTMLElement, onCall: (event:MouseEvent, name:string, type: TypeNode) => void) {
         this.rootContainer = rootContainer;
@@ -48,11 +49,10 @@ export class AddNodeEnvironment {
             position.y -= overflowOffset;
             popup.style.setProperty('--position-y',`${position.y}px`)
         }
-        console.log(popupRect.x + popupRect.width, rootContainerRect.x + rootContainerRect.width);
         
         if (popupRect.x + popupRect.width > rootContainerRect.x + rootContainerRect.width) {
             if (childMode) {
-                position.x -= (popupRect.width*2) + 6;
+                position.x -= ((popupRect.width + this.space)*2);
             }else{
                 const overflowOffset = (popupRect.x + popupRect.width) - (rootContainerRect.x + rootContainerRect.width);
                 position.x -= overflowOffset;
@@ -72,7 +72,7 @@ export class AddNodeEnvironment {
                 Array.from(items.entries()).map(([key, value]) =>
                     this._buildItem(key, value, level)
                 ): [
-                    SetElement('div',{class:['item-empty']},"Empty (ó_ò。 )")
+                    SetElement('div',{class:['item-empty']},SetElement('span',{},"Empty (ó_ò。 )▶A"))
                 ])
             )
         );
@@ -93,10 +93,13 @@ export class AddNodeEnvironment {
 
 
                 timeOut = setTimeout(() => {
-                    const popupRect = item.getBoundingClientRect();
-                    const rootContainerRect = this.rootContainer.getBoundingClientRect();
+                    console.log(item);
                     
-                    this._openPopup( value.action as Map<string, GroupAddNode>, { x: popupRect.right - rootContainerRect.left + 6, y: popupRect.top - rootContainerRect.top - 6}, level + 1, true);
+                    const popupRect = item.getBoundingClientRect();
+
+                    const position:Vector2 = {x: (popupRect.x + popupRect.width) + (this.space * 2), y: popupRect.y - (this.space * 12) - 2};
+                    
+                    this._openPopup( value.action as Map<string, GroupAddNode>, position, level + 1, true);
                 },150);
             }
         });

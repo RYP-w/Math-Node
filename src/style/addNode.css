@@ -36,6 +36,7 @@
 }
 
 .title-add_node {
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,6 +46,7 @@
 }
 
 .container-items-add_node {
+    box-sizing: border-box;
     padding: var(--space) 0px;
     border-radius: 4px;
 
@@ -81,18 +83,18 @@
 }
 
 .item-empty {
-    height: var(--item-height);
+    /* height: var(--item-height); */
     box-sizing: border-box;
 
-    margin: 0 calc(var(--title-height) / 4);
+    padding: var(--space);
+
+    margin: 0px var(--space);
 
     border-width: 1px;
     border-style: solid;
     border-color:  transparent;
 
     border-radius: 2px;
-
-    padding: 0 var(--space);
 
     display: flex;
     justify-content: space-between;

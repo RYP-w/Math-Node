@@ -100,7 +100,7 @@ export function editValueNode(world2d:World2d, database:DatabaseNode, editValueN
             if (!htmlValueBox) return;
             const step = new Decimal('10')
             if (node.valueBoxs[htmlValueBox.id as IdValueBox].type == 'number') {
-                node.valueBoxs[htmlValueBox.id as IdValueBox].value = editValueNodeState.getInitialValue().plus(editValueNodeState.getOffsetX().dividedBy(step).floor()).toNumber();
+                node.valueBoxs[htmlValueBox.id as IdValueBox].value = editValueNodeState.getInitialValue().plus(editValueNodeState.getOffsetX().dividedBy(step).floor());
             }
             node.UpdateHtmlValueBoxsByNode(htmlValueBox.id as IdValueBox);
             torpologicalSort.setTorpologycal(node);

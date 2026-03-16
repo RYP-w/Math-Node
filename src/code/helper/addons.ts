@@ -1,3 +1,4 @@
+import type Decimal from "decimal.js"
 
 //<?> Set Element 
 export type ElementTypes = 'div' | 'span' | 'img' | 'input' | 'i'
@@ -5,7 +6,7 @@ export type AttributesElement = {
     id?: string,
     class?: Array<string>,
     style?: Array<string>,
-    value?: number,
+    value?: Decimal,
     src?: string,
     attr?: { [key: string]: string }
 }
@@ -38,7 +39,7 @@ export function SetElement(type: ElementTypes, attributes: AttributesElement = {
         element.style.cssText = attributes.style.join('; ') + ';';
     }
     if (attributes.value !== undefined && element instanceof HTMLInputElement) {
-        element.value = String(attributes.value);
+        element.value = attributes.value.toString();
     }
     if (attributes.src && element instanceof HTMLImageElement) {
         element.src = attributes.src;

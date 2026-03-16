@@ -7,7 +7,8 @@ export function createNodeElement(node: Node) {
         SetElement('div', { class: ['node-container-region'] },
             SetElement('div', { class: ['node-title'] },
                 SetElement('div', { class: ['no-event'], style: ['display: flex', 'align-items: center', 'height: 100%', 'margin-left: 3px'] },
-                    SetElement('img', { class: ['no-event'], style: ['width:20px'], src: "./src/assets/logo.webp" }),
+                    //SetElement('img', { class: ['no-event'], style: ['width:20px'], src: "./src/assets/logo.webp" }),
+                    SetElement('i', {class:["svgfont-tournament"],style:['font-size: x-large']}),
                     SetElement('span', {}, node.name)
                 )
             ),

@@ -1,6 +1,8 @@
+import type Decimal from "decimal.js";
+
 export type DataTypeNode = 'number';
 export type ValueByType = {
-    'number': number;
+    'number': Decimal;
 };
 
 export type IdSocket = string;
@@ -184,4 +186,3 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
     ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
 ])
-
