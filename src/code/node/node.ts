@@ -267,7 +267,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 
     UpdateHtmlPathPosition() { //? update path line position dari Html
-        const length_horizontal_line = 15;
+        const length_horizontal_line = 11.5;
         for (const [key, path] of this.OutgoingPathLines) {
             let [_, idOutputSocket, idInputNode, idInputSocket] = key.split(',') as [IdNode, IdOutputSocket, IdNode, IdInputSocket];
             const outgoingNode = this.connection.outgoingNodes[idOutputSocket].get(`${idInputNode}:${idInputSocket}`);

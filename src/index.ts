@@ -81,7 +81,7 @@ const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 // );
 
 //<?> init 
-actionCheckCompatible()
+actionCheckCompatible() //? cek apakah device bisa menjalankan editor ini
 
 //<?> Events
 //<- Document Events

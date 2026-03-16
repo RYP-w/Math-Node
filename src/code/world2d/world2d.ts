@@ -32,9 +32,21 @@ export class World2d {
     updateHTML() {
         this.RectHTML = this.HtmlElement.getBoundingClientRect();
         this.applyHTML();
+        updateGrid(this.scale, this.HtmlElement);
     }
 
 
+}
+
+function updateGrid(scale:number, world2dElement:HTMLElement) {
+    const screenSize = 25 * scale; // ukuran cell level A dalam pixel layar
+
+    const opacityA = Math.min(1, Math.max(0, (screenSize - 8) / (20 - 8))) * 0.4;
+
+    const opacityB = Math.min(1, Math.max(0, (screenSize * 4 - 8) / (20 - 8))) * 0.4;
+
+    world2dElement.style.setProperty('--dot-opacity-a', `${opacityA}`);
+    world2dElement.style.setProperty('--dot-opacity-b', `${opacityB}`);
 }
 
 // jika dipikir lagi, dulu guah kok niat kali buat dokumentasi

@@ -1,8 +1,8 @@
 #world2d {
     --world2d-target-x: 0px;
     --world2d-target-y: 0px;
-    --world2d-offset-y: 100px;
     --world2d-offset-x: 0px;
+    --world2d-offset-y: 0px;
     --world2d-scale: 1;
 
     --world2d-zero-line-w: 0px;
@@ -17,6 +17,20 @@
     position: absolute;
     overflow: hidden;
 
+    --cell-size: 50px;
+    
+    --size-a: calc(var(--cell-size) * var(--world2d-scale));
+    --size-b: calc(var(--cell-size) * 4 * var(--world2d-scale));
+
+    background-image:
+        radial-gradient(circle, rgba(120,120,120, var(--dot-opacity-a)) 1px, transparent 1px),
+        radial-gradient(circle, rgba(120,120,120, var(--dot-opacity-b)) 1px, transparent 1px);
+    background-size:
+        var(--size-a) var(--size-a),
+        var(--size-b) var(--size-b);
+    background-position: 
+        calc(var(--world2d-target-x) + var(--world2d-offset-x) + (var(--size-a) / 2)) calc(var(--world2d-target-y) + var(--world2d-offset-y) + (var(--size-a) / 2)),
+        calc(var(--world2d-target-x) + var(--world2d-offset-x) + (var(--size-b) / 2)) calc(var(--world2d-target-y) + var(--world2d-offset-y) + (var(--size-b) / 2));
 }
 
 #svg_world2d {

@@ -175,7 +175,7 @@ export class DatabaseNode {
 
     private createPathLine(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }){
         
-        const length_horizontal_line = 15;
+        const length_horizontal_line = 11.5;
         const positionSocketFrom = fromNode.node.getPositionSocketOutput(fromNode.idSocket);
         const positionSocketTo = toNode.node.getPositionSocketInput(toNode.idSocket);
         const path = SetElementPath({

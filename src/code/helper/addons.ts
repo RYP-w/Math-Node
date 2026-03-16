@@ -142,7 +142,7 @@ export class Queue<T> implements IQueue<T> {
 }
 
 type ShortcutOptions = {
-    key: string;
+    key?: string;
     ctrl?: boolean;
     shift?: boolean;
     alt?: boolean;
@@ -150,7 +150,10 @@ type ShortcutOptions = {
 
 function createShortcut(options: ShortcutOptions, callback: (ev:KeyboardEvent) => void) {
     const handler = (event: KeyboardEvent) => {
-        const isKeyMatch = event.key.toLowerCase() === options.key.toLowerCase();
+        let isKeyMatch = true;
+        if (options.key) {
+            isKeyMatch = event.key.toLowerCase() === options.key.toLowerCase();
+        }
         
         const isCtrlMatch = !!options.ctrl === event.ctrlKey;
         const isShiftMatch = !!options.shift === event.shiftKey;
