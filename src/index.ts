@@ -79,8 +79,6 @@ const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
 //         ],
 //     ),
 // );
-createNode('ADD',{x:-180, y:0},databaseNode)
-createNode('MULTIPLY',{x:30, y:0},databaseNode)
 
 //<?> init 
 actionCheckCompatible() //? cek apakah device bisa menjalankan editor ini
