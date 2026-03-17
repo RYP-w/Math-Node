@@ -2,7 +2,7 @@ import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
 import { rBushRectSelection } from "./rBushRectSelection";
 import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
-import type { Node } from "./node";
+import { HORIZONTAL_SEGMENT_LENGTH, type Node } from "./node";
 
 export class DatabaseNode {
     private database:Map<IdNode, Node>; //? list Nodes
@@ -175,11 +175,13 @@ export class DatabaseNode {
 
     private createPathLine(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }){
         
-        const length_horizontal_line = 11.5;
         const positionSocketFrom = fromNode.node.getPositionSocketOutput(fromNode.idSocket);
         const positionSocketTo = toNode.node.getPositionSocketInput(toNode.idSocket);
         const path = SetElementPath({
-            d: `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + length_horizontal_line} ${positionSocketFrom.y} L ${positionSocketTo.x - length_horizontal_line} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`,
+            d: `M ${positionSocketFrom.x} ${positionSocketFrom.y} 
+                L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} 
+                L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} 
+                L ${positionSocketTo.x} ${positionSocketTo.y}`,
             stroke: 'white',
             strokeWidth: '2',
             strokeLinejoin: 'round',

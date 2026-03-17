@@ -1,8 +1,9 @@
 import {  TorpologySortNode } from "../functionalNode/torpologicalSortNode";
+import { SetElementPath } from "../helper/addons";
 import type { MouseButtonState } from "../mouseButtonState";
-import type { World2d } from "../world2d/world2d";
+import { GetScreenToWorld2d, type World2d } from "../world2d/world2d";
 import type { DatabaseNode } from "./database";
-import { Node } from "./node";
+import { getSocketPosition_world2d, HORIZONTAL_SEGMENT_LENGTH, Node } from "./node";
 import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
 
 export class ConnectionManager{
@@ -17,6 +18,14 @@ export class ConnectionManager{
         this.nodePair = {};
     }
 
+    getFromNode() : {node: Node, idSocket:IdOutputSocket} | undefined {
+        return this.nodePair.from_node;
+    }
+
+    getToNode() : {node: Node, idSocket:IdInputSocket} | undefined {
+        return this.nodePair.to_node;
+    }
+
     setConnectionStart(event: MouseEvent): boolean {
         const collisionElement = event.target as HTMLElement;
         const target = collisionElement.previousElementSibling as HTMLElement;
@@ -24,9 +33,6 @@ export class ConnectionManager{
         if (!collisionElement.classList.contains("node-item-socket-radius") || !target.classList.contains("node-item-socket") || !target.classList.contains("output")) {
             return false;
         }
-
-        console.log("berhasil");
-        
 
         const HtmlNode = target.closest('[id^="node_"]') as HTMLElement;
         if (!HtmlNode) {
@@ -139,11 +145,81 @@ export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mous
         if (ev.buttons == 1 && mouseState.getSignal('left') == 'world2d') {
             const success = database.connectedSystem.setConnectionStart(ev);
             if (success) {
+                const atributeOutputNode = database.connectedSystem.getFromNode();
+                if (!atributeOutputNode) {
+                    console.log('BUG');
+                    return;
+                }
+
+                const positionMouse_world2d = GetScreenToWorld2d({x:ev.clientX, y:ev.clientY}, world2d);
+                const positionSocketOutput =  getSocketPosition_world2d(atributeOutputNode.node, atributeOutputNode.idSocket);
+
+                if (!positionSocketOutput) {
+                    console.log('BUG');
+                    return;
+                }
+
+                database.HtmlPlaceCurve.appendChild(
+                    SetElementPath({
+                        id:'tempConnectionPath',
+                        d: `M ${positionSocketOutput.x} ${positionSocketOutput.y} L ${positionSocketOutput.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketOutput.y} L ${positionMouse_world2d.x - HORIZONTAL_SEGMENT_LENGTH} ${positionMouse_world2d.y} L ${positionMouse_world2d.x} ${positionMouse_world2d.y}`,
+                        stroke: 'white',
+                        strokeWidth: '2',
+                        strokeLinejoin: 'round',
+                        fill: 'none'
+                    })
+                )
+
                 mouseState.setAlt(ev, 'left', 'socketSelected');
             }
         }
         if (ev.buttons == 1 && mouseState.getSignal('left') == 'socketSelected') {
-            
+            const atributeOutputNode = database.connectedSystem.getFromNode();
+            if (!atributeOutputNode) {
+                console.log('BUG');
+                return;
+            }
+
+            let positionTo_world2d = GetScreenToWorld2d({x:ev.clientX, y:ev.clientY}, world2d);
+            const positionSocketOutput = getSocketPosition_world2d(atributeOutputNode.node, atributeOutputNode.idSocket);
+
+            if (!positionSocketOutput) {
+                console.log('BUG');
+                return;
+            }
+
+            const pathElement = document.getElementById('tempConnectionPath');
+
+            if (!pathElement) {
+                console.log("BUG");
+                return;
+            }
+
+            const target = ev.target as HTMLElement
+            const inputSocket = target.previousElementSibling
+            if (target.classList.contains('node-item-socket-radius') && inputSocket?.id.startsWith('inputsocket_')) {
+                
+                const nodeElement = target.closest('[id^="node_"]')
+
+                const node = nodeElement ? database.getById(nodeElement.id as IdNode) : undefined;
+
+                if (!node) {
+                    console.log('BUG');
+                    return
+                }
+
+                const positionSocketInput = getSocketPosition_world2d(node, inputSocket.id as IdInputSocket);
+
+                if (!positionSocketInput) {
+                    console.log('BUG');
+                    return;
+                }
+
+                positionTo_world2d = positionSocketInput;
+
+            }
+
+            pathElement.setAttribute('d', `M ${positionSocketOutput.x} ${positionSocketOutput.y} L ${positionSocketOutput.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketOutput.y} L ${positionTo_world2d.x - HORIZONTAL_SEGMENT_LENGTH} ${positionTo_world2d.y} L ${positionTo_world2d.x} ${positionTo_world2d.y}`)
         }
 
 
@@ -151,6 +227,13 @@ export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mous
 
     window.addEventListener("mouseup", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'socketSelected') {
+            const tempConnectionPath = document.getElementById('tempConnectionPath');
+            if (!tempConnectionPath) {
+                console.log("BUG");
+                return;
+            }
+            
+            tempConnectionPath.remove();
             database.connectedSystem.setConnectionEnd(ev);
             database.connectedSystem.processConnection(torpologiSortNode);
             mouseState.setAlt(ev, 'left', '');

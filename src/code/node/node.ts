@@ -7,7 +7,7 @@ import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
 import {isNumericBinary, isNumericUnary, isNumericUnique, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./typesDefinition";
 
-
+export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
 //? class Socket
 //? berisi id dan tipe socket
@@ -267,7 +267,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 
     UpdateHtmlPathPosition() { //? update path line position dari Html
-        const length_horizontal_line = 11.5;
         for (const [key, path] of this.OutgoingPathLines) {
             let [_, idOutputSocket, idInputNode, idInputSocket] = key.split(',') as [IdNode, IdOutputSocket, IdNode, IdInputSocket];
             const outgoingNode = this.connection.outgoingNodes[idOutputSocket].get(`${idInputNode}:${idInputSocket}`);
@@ -275,7 +274,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 const positionSocketFrom = this.getPositionSocketOutput(idOutputSocket);
                 const positionSocketTo = outgoingNode.otherNode.getPositionSocketInput(idInputSocket);
                 //
-                path.setAttribute('d', `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + length_horizontal_line} ${positionSocketFrom.y} L ${positionSocketTo.x - length_horizontal_line} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`)
+                path.setAttribute('d', `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`)
             } else console.log('Bug');
         }
         for (const thisIdSocket in this.connection.incomingNodes) {
@@ -284,7 +283,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 if (HtmlPathIncomingNode != undefined) {
                     const positionSocketFrom = incomingNodes.otherNode.getPositionSocketOutput(incomingNodes.otherIdSocket);
                     const positionSocketTo = this.getPositionSocketInput(thisIdSocket as IdInputSocket);
-                    HtmlPathIncomingNode.setAttribute('d', `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + length_horizontal_line} ${positionSocketFrom.y} L ${positionSocketTo.x - length_horizontal_line} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`)
+                    HtmlPathIncomingNode.setAttribute('d', `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`)
                 }
             }
         }
@@ -394,4 +393,22 @@ function setAttributePositionSocket(node:Node) {
         count++;
     }
 
+}
+
+export function getSocketPosition_world2d(node:Node, socket:IdInputSocket | IdOutputSocket) : Vector2 | undefined {
+    const positionNode:Vector2 = node.position;
+    const socketHtml = isInputSocket(socket) ? node.HtmlSockets.inputSockets[socket] : node.HtmlSockets.outputSockets[socket];
+    const positionSocketX = socketHtml.getAttribute('position-socket-x');
+    const positionSocketY = socketHtml.getAttribute('position-socket-y');
+
+    if (!positionSocketX || !positionSocketY) {
+        console.log("BUG");
+        return undefined
+    }
+
+    return { x: positionNode.x + parseFloat(positionSocketX), y: positionNode.y + parseFloat(positionSocketY)};
+}
+
+function isInputSocket(socket: IdInputSocket | IdOutputSocket): socket is IdInputSocket {
+    return socket.startsWith('inputsocket_');
 }

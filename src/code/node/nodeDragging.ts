@@ -62,7 +62,6 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, r
 
                     node.position.x = Math.floor(((currentPrevNodePosition.x + (multiplyClamp/2)) / multiplyClamp)) * multiplyClamp;
                     node.position.y = Math.floor(((currentPrevNodePosition.y + (multiplyClamp/2)) / multiplyClamp)) * multiplyClamp;
-                    console.log(node.position.x, node.position.y);
                     
                     node.UpdateHTMLPosition();
                 }
