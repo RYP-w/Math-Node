@@ -93,8 +93,6 @@ export class AddNodeEnvironment {
 
 
                 timeOut = setTimeout(() => {
-                    console.log(item);
-                    
                     const popupRect = item.getBoundingClientRect();
 
                     const position:Vector2 = {x: (popupRect.x + popupRect.width) + (this.space * 2), y: popupRect.y - (this.space * 12) - 2};

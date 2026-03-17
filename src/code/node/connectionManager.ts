@@ -84,7 +84,7 @@ export class ConnectionManager{
                         { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                         { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                     )
-                    console.log('Check Signal 1');
+                    //c onsole.log('Check Signal 1');
                 } else if (checkSignal == 2) {
                     const incomingNode_ToNode = this.nodePair.to_node.node.connection.incomingNodes[this.nodePair.to_node.idSocket].values().next();
                     if (!incomingNode_ToNode.done) {
@@ -97,17 +97,17 @@ export class ConnectionManager{
                             { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                         )
 
-                    } else console.log('ada yang kosong');
+                    } else console.log('BUG: ada yang kosong');
 
                     torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
-                    console.log('Check Signal 2');
+                    // c onsole.log('Check Signal 2');
                 } else {
                     if (this.nodePair.to_node.node.connection.incomingNodes[this.nodePair.to_node.idSocket].size == 0) {
                         this.parent.SystemConnectingNode(
                             { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                             { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                         )
-                        console.log('Check Signal 3 1');
+                        //c onsole.log('Check Signal 3 1');
                     } else {
                         const incomingNode_ToNode = this.nodePair.to_node.node.connection.incomingNodes[this.nodePair.to_node.idSocket].values().next();
                         if (!incomingNode_ToNode.done) {
@@ -119,10 +119,10 @@ export class ConnectionManager{
                                 { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                                 { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                             )
-                        } else console.log('Bug');
+                        } else console.log('BUG');
 
 
-                        console.log('Check Signal 3 2');
+                        //c onsole.log('Check Signal 3 2');
                     }
                     torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
                 }

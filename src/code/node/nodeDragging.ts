@@ -23,7 +23,6 @@ export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, r
             newClamp |= 2; 
         }
         currentLevelClamp = newClamp;
-        console.log(currentLevelClamp);
     };
 
     world2D.HtmlElement.addEventListener('mousemove', (ev) => {
