@@ -1,16 +1,13 @@
-import { checkEditorCompatibility, randomRange } from "./helper/addons";
+import { checkEditorCompatibility, randomRange, SetElement } from "./helper/addons";
 
 export function actionCheckCompatible() {
     let check = checkEditorCompatibility();
     
-    const htmlCompatibleWarning = document.getElementById('compatible-warning')!;
-    
     if (check.isSuitableForEditor) {
-        htmlCompatibleWarning.remove();
         return;
     }
 
-    htmlCompatibleWarning.style.display = 'flex';
+    const htmlCompatibleWarning = document.getElementById('body')!.appendChild(createCompatibleWarningHtml()); 
 
     const htmlExpressionIcon = htmlCompatibleWarning.querySelector('#cw-info-expression-icon') as HTMLDivElement;
     let times: ReturnType<typeof setTimeout>;
@@ -57,4 +54,29 @@ export function actionCheckCompatible() {
         htmlCompatibleWarning.remove();
 
     }
+}
+
+function createCompatibleWarningHtml() {
+    return SetElement('div', {id:'compatible-warning'},
+        SetElement('div', {id:'cw-container-info'}, 
+            SetElement('div', {id:'cw-info-expression-icon'}, "(｡ó﹏ò)"),
+            SetElement('div', {}, 'Device mungkin tidak kompatibel dengan editor ini.'),
+            SetElement('div', {class:['cw-text-detail']}, 'Detail:'),
+            SetElement('table', {},
+                SetElement('tr', {},
+                    SetElement('td', {class:['cw-info-title']}, '• Keyboard support'),
+                    SetElement('td', {class:['cw-info-colon']}, ':'),
+                    SetElement('td', {id:'cw-info-check-keyboard', class:['cw-info-check']}),
+                ),
+                SetElement('tr', {},
+                    SetElement('td', {class:['cw-info-title']}, '• Mouse support'),
+                    SetElement('td', {class:['cw-info-colon']}, ':'),
+                    SetElement('td', {id:'cw-info-check-mouse', class:['cw-info-check']}),
+                )
+            ),
+            SetElement('div', {style:['display: flex;', 'justify-content: center;']},
+                SetElement('button', {id:'cw-info-button-continue', style:['margin-top: 10px;']}, 'Tetap Lanjutkan ▶')
+            )
+        )
+    );
 }

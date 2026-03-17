@@ -1,7 +1,7 @@
 import type Decimal from "decimal.js"
 
 //<?> Set Element 
-export type ElementTypes = 'div' | 'span' | 'img' | 'input' | 'i'
+export type ElementTypes = 'div' | 'span' | 'img' | 'input' | 'i' | 'table' | 'tr' | 'td' | 'button'
 export type AttributesElement = {
     id?: string,
     class?: Array<string>,

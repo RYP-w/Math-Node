@@ -46,7 +46,8 @@ export function createNodeElement(node: Node) {
                                                 if (checkEnebleInput) {
                                                     nodeContainerValueBox.push(
                                                         SetElement('div', { class: ['node-container-socket', 'input'] },
-                                                            SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id })
+                                                            SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id }),
+                                                            SetElement('div', {class:['node-item-socket-radius']}),
                                                         )
                                                     );
                                                 }
@@ -77,7 +78,8 @@ export function createNodeElement(node: Node) {
 
                                                 if (Count + 1 <= maxCountOutputSocket) {
                                                     nodeContainerSocketOutput.push(
-                                                        SetElement('div', { class: ['node-item-socket', 'output'], id: outputSockets[Count].id })
+                                                        SetElement('div', { class: ['node-item-socket', 'output'], id: outputSockets[Count].id }),
+                                                        SetElement('div', {class:['node-item-socket-radius']}),
                                                     );
                                                 }
                                                 return nodeContainerSocketOutput;

@@ -114,11 +114,22 @@
     background-color: var(--color-dark-03);
 
     transition: border-width 0.1s;
+    position: absolute;
 }
 
-.node-item-socket:hover {
-    border-width: 3px;
+.node-item-socket-radius {
+    width: var(--size-socket);
+    height: var(--size-socket);
+    border-radius: 50%;
+    /* background-color: #00ff0088; */
+    position: absolute;
     cursor: pointer;
+    transform: scale(2);
+}
+
+.node-item-socket:has(+ .node-item-socket-radius:hover) {
+    border-width: 3px;
+    
 }
 
 .node-container-item-value {

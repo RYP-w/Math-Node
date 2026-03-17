@@ -18,11 +18,15 @@ export class ConnectionManager{
     }
 
     setConnectionStart(event: MouseEvent): boolean {
-        const target = event.target as HTMLElement;
+        const collisionElement = event.target as HTMLElement;
+        const target = collisionElement.previousElementSibling as HTMLElement;
 
-        if (!target.classList.contains("node-item-socket") || !target.classList.contains("output")) {
+        if (!collisionElement.classList.contains("node-item-socket-radius") || !target.classList.contains("node-item-socket") || !target.classList.contains("output")) {
             return false;
         }
+
+        console.log("berhasil");
+        
 
         const HtmlNode = target.closest('[id^="node_"]') as HTMLElement;
         if (!HtmlNode) {
@@ -45,9 +49,10 @@ export class ConnectionManager{
     }
 
     setConnectionEnd(event: MouseEvent) {
-        const target = event.target as HTMLElement;
+        const collisionElement = event.target as HTMLElement;
+        const target = collisionElement.previousElementSibling as HTMLElement;
 
-        if (target.classList.contains("node-item-socket") && target.classList.contains("input")) {
+        if (collisionElement.classList.contains("node-item-socket-radius") && target.classList.contains('node-item-socket') && target.classList.contains("input")) {
             const HtmlNode = target.closest('[id^="node_"]') as HTMLElement;
 
             this.nodePair.to_node = {
