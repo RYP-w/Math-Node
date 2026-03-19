@@ -1,7 +1,7 @@
-import type { DatabaseNode } from "./database";
+import type { NodeDatabase } from "./database";
 import { NodeSelection } from "./nodeSelection";
 
-export function checkRemoveNodes(database:DatabaseNode, nodeSelection:NodeSelection) {
+export function checkRemoveNodes(database:NodeDatabase, nodeSelection:NodeSelection) {
     for (const node of nodeSelection.getElements()){
         database.SystemRemovingAllConnection(node);
         database.removeById(node.id);

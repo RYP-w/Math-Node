@@ -1,11 +1,11 @@
 import type { MouseButtonState } from "../mouseButtonState";
-import type { Rect } from "../TypeDefinition";
+import type { Rect } from "../globalTypes";
 import { GetScreenToWorld2d, GetWorld2dToScreen, type World2d } from "../world2d/world2d";
-import { DatabaseNode } from "./database";
+import { NodeDatabase } from "./database";
 import { Node } from "./node";
-import type { rBushRectSelection } from "./rBushRectSelection";
+import type { RBushRectSelection } from "./rBushRectSelection";
 import { SelectionBox } from "./selectionBox";
-import type { IdNode } from "./typesDefinition";
+import type { IdNode } from "./nodeTypes";
 
 export class NodeSelection { //? class untuk menyimpan node node yang di pilih
     private nodes: Map<string, Node>;
@@ -76,7 +76,7 @@ export class NodeSelection { //? class untuk menyimpan node node yang di pilih
 
 const selectionBox = new SelectionBox();
 
-export function SetSelectedNode(event: MouseEvent, dataNode: DatabaseNode, selectedNode: NodeSelection) {
+export function SetSelectedNode(event: MouseEvent, dataNode: NodeDatabase, selectedNode: NodeSelection) {
     if ((event.target as HTMLDivElement).classList.contains('node-title')) {
         const parent = (event.target as HTMLDivElement).closest('[id^="node_"]') as HTMLDivElement;
         const getNode = dataNode.getById(parent.id as IdNode);
@@ -88,7 +88,7 @@ export function SetSelectedNode(event: MouseEvent, dataNode: DatabaseNode, selec
 
 // fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
 // sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
-export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode, rBushSelection:rBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
+export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase, rBushSelection:RBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {
             let target = ev.target as HTMLElement;
@@ -142,7 +142,7 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:DatabaseNode
     })
 }
 
-function checkNodeInZoneSelection(rBushSelection:rBushRectSelection, selectionBox:SelectionBox, nodeSelection:NodeSelection) {
+function checkNodeInZoneSelection(rBushSelection:RBushRectSelection, selectionBox:SelectionBox, nodeSelection:NodeSelection) {
     const rectBox = selectionBox.get_rect();
     const result = rBushSelection.RectSelection(rectBox);
     if (result.length == 0) return;

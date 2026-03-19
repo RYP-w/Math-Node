@@ -1,16 +1,16 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
-import { rBushRectSelection } from "./rBushRectSelection";
-import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
+import { RBushRectSelection } from "./rBushRectSelection";
+import type { IdInputSocket, IdNode, IdOutputSocket } from "./nodeTypes";
 import { HORIZONTAL_SEGMENT_LENGTH, type Node } from "./node";
 
-export class DatabaseNode {
+export class NodeDatabase {
     private database:Map<IdNode, Node>; //? list Nodes
     connectedSystem: ConnectionManager;
-    rBushSelection: rBushRectSelection;
+    rBushSelection: RBushRectSelection;
     HtmlPlaceCurve: HTMLElement;
 
-    constructor(HtmlPlaceCurve: HTMLElement, rBushSelection:rBushRectSelection){
+    constructor(HtmlPlaceCurve: HTMLElement, rBushSelection:RBushRectSelection){
         this.database = new Map<IdNode, Node>()
         this.connectedSystem = new ConnectionManager(this);
         this.HtmlPlaceCurve = HtmlPlaceCurve;

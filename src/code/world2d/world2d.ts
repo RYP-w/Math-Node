@@ -1,4 +1,4 @@
-import type { Vector2 } from '../TypeDefinition.ts'
+import type { Vector2 } from '../globalTypes.ts'
 
 export class World2d {
     target: Vector2;

@@ -1,4 +1,4 @@
-import type { Rect, Vector2 } from "../TypeDefinition";
+import type { Rect, Vector2 } from "../globalTypes";
 import type { World2d } from "../world2d/world2d";
 
 export class SelectionBox{

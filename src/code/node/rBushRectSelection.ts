@@ -1,7 +1,7 @@
-import type { Rect } from "../TypeDefinition";
+import type { Rect } from "../globalTypes";
 import { Node } from "./node"
 import RBush from "rbush";
-import type { IdNode } from "./typesDefinition";
+import type { IdNode } from "./nodeTypes";
 
 interface NodeBushRect {
     minX:number;
@@ -11,7 +11,7 @@ interface NodeBushRect {
     node: Node;
 }
 
-export class rBushRectSelection {
+export class RBushRectSelection {
     private bush = new RBush<NodeBushRect>();
     private entryMap = new Map<IdNode, NodeBushRect>();
 

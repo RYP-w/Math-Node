@@ -1,11 +1,11 @@
 import type { TorpologySortNode } from "../functionalNode/torpologicalSortNode";
 import type { MouseButtonState } from "../mouseButtonState";
-import type { Vector2 } from "../TypeDefinition";
+import type { Vector2 } from "../globalTypes";
 import type { World2d } from "../world2d/world2d";
-import type { DatabaseNode } from "./database";
+import type { NodeDatabase } from "./database";
 import type { Node } from "./node";
 import { Decimal } from 'decimal.js';
-import type { IdNode, IdValueBox } from "./typesDefinition";
+import type { IdNode, IdValueBox } from "./nodeTypes";
 
 export class EditValueNodeState{
     private startPos:Vector2 = {x:0,y:0};
@@ -56,7 +56,7 @@ export class EditValueNodeState{
     }
 }
 
-export function editValueNode(world2d:World2d, database:DatabaseNode, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState, torpologicalSort:TorpologySortNode) {
+export function editValueNode(world2d:World2d, database:NodeDatabase, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState, torpologicalSort:TorpologySortNode) {
     world2d.HtmlElement.addEventListener('mousedown', (ev) => {
         let HtmlInput = ev.target as HTMLInputElement;
         if (HtmlInput.classList.contains('node-item-value')) {

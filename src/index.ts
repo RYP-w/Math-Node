@@ -1,5 +1,5 @@
 import "./style/index.css";
-import "./style/wondow-title_bar.css";
+import "./style/window-title_bar.css";
 import "./style/editor.css";
 import "./style/world2d.css";
 import "./style/node.css";
@@ -13,22 +13,22 @@ const toolkitContainer = document.getElementById('toolkit')!;
 //<?> Import Script / Module [*]
 //import { Node } from "./code/node/node";
 import { Live_SelectNodeSystem, NodeSelection, } from "./code/node/nodeSelection";
-import { DatabaseNode } from "./code/node/database";
+import { NodeDatabase } from "./code/node/database";
 import { setupNodeDragging } from "./code/node/nodeDragging";
-import { Clamp } from "./code/costum_function";
+import { Clamp } from "./code/customFunction";
 import { MouseButtonState } from "./code/mouseButtonState";
 import { World2d, GetScreenToWorld2d, GetWorld2dToScreen, } from "./code/world2d/world2d";
 import { dragViewWorld2d } from "./code/world2d/dragView";
-import { rBushRectSelection } from "./code/node/rBushRectSelection";
+import { RBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
 import { TorpologySortNode } from "./code/functionalNode/torpologicalSortNode";
 import { createNode } from "./code/functionalNode/setupNode";
 import { registerShortcut } from "./code/helper/addons";
 import { actionCheckCompatible } from "./code/compatibleWarning";
-import type { Vector2 } from "./code/TypeDefinition";
+import type { Vector2 } from "./code/globalTypes";
 import { AddNodeEnvironment } from "./code/functionalNode/addNode/addNodeEnv";
-import { groupingAddNodes } from "./code/node/typesDefinition";
+import { groupingAddNodes } from "./code/node/nodeTypes";
 import { checkRemoveNodes } from "./code/node/removeNodes";
 
 let _mousePosition:Vector2 = {x:0, y:0};
@@ -61,8 +61,8 @@ const editValueNodeState = new EditValueNodeState();
 const mouseState = new MouseButtonState();
 
 //<?> Create Database Nodes
-const rBushSelection = new rBushRectSelection();
-const databaseNode = new DatabaseNode(SVG_Place_World2D, rBushSelection);
+const rBushSelection = new RBushRectSelection();
+const databaseNode = new NodeDatabase(SVG_Place_World2D, rBushSelection);
 // databaseNode.add( //Testing adding node
 //     new Node(
 //         "coba coba",

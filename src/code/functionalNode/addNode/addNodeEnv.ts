@@ -1,6 +1,6 @@
 import { SetElement } from '../../helper/addons';
-import type { GroupAddNode, TypeNode } from '../../node/typesDefinition';
-import type { Vector2 } from '../../TypeDefinition';
+import type { GroupAddNode, TypeNode } from '../../node/nodeTypes';
+import type { Vector2 } from '../../globalTypes';
 
 export class AddNodeEnvironment {
     private popupStack: { element: HTMLElement; level: number }[] = [];

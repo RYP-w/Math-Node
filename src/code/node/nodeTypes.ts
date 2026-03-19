@@ -13,35 +13,33 @@ export type IdValueBox = `valuebox_${number}`;
 export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
-export type TypeNode =  Arithmetic | 'INPUT' | 'DUMMY';
+type Comparisons = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
+export type TypeNode =  Arithmetic | Comparisons | 'INPUT' | 'DUMMY';
 
-//? numeric binary type set
-const numericBinaryArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER'] as const;
-export type NumericBinary = typeof numericBinaryArray[number];
-const numericBinary = new Set<TypeNode>(numericBinaryArray);
-//* Function
-export function isNumericBinary(type:TypeNode): type is NumericBinary{
-    return numericBinary.has(type);
+//?type set
+export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
+export type MathThreeInOneOut = typeof mathThreeInOneOutArray[number];
+export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
+    return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-//? numeric unary type set
-const numericUnaryArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL'] as const;
-export type NumericUnary = typeof numericUnaryArray[number];
-const numericUnary = new Set<TypeNode>(numericUnaryArray);
-//* Function
-export function isNumericUnary(type:TypeNode):type is NumericUnary {
-    return numericUnary.has(type);
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE'] as const;
+export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
+export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
+    return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-//? numeric unique type set
-const numericUniqueArray = ['INPUT'] as const;
-export type NumericUnique = typeof numericUniqueArray[number];
-const numericUnique = new Set<TypeNode>(numericUniqueArray);
-//* Function
-export function isNumericUnique(type:TypeNode):type is NumericUnique {
-    return numericUnique.has(type);
+export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN'] as const;
+export type MathOneInOneOut = typeof mathOneInOneOutArray[number];
+export function isMathOneInOneOut(type: TypeNode): type is MathOneInOneOut {
+    return (mathOneInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
+export const zeroInOneOutArray = ['INPUT'] as const;
+export type ZeroInOneOut = typeof zeroInOneOutArray[number];
+export function isZeroInOneOut(type: TypeNode): type is ZeroInOneOut {
+    return (zeroInOneOutArray as readonly TypeNode[]).includes(type);
+}
 
 //? shortcut
 type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: Decimal, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: Decimal}>};
@@ -126,9 +124,106 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }]
 ])
 
+const tampleteComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comparisons,TamplateInputOutput>([
+    ['EQUAL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['NOT_EQUAL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['GREATER', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LESS', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['GREATER_EQ', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LESS_EQ', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['BETWEEN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['CLAMP', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['SIGN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['COMPARE', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    
+
+])
+
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
+    ...tampleteComparsionNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
@@ -178,7 +273,18 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Negate', new GroupAddNode('call', 'NEGATE')],
         ['Factorial', new GroupAddNode('call', 'FACTORIAL')],
     ]))],
-    ['Comparisons', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Comparisons', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Equal', new GroupAddNode('call', 'EQUAL')],
+        ['Not Equal', new GroupAddNode('call', 'NOT_EQUAL')],
+        ['Greater', new GroupAddNode('call', 'GREATER')],
+        ['Less', new GroupAddNode('call', 'LESS')],
+        ['Greater or Equal', new GroupAddNode('call', 'GREATER_EQ')],
+        ['Less or Equal', new GroupAddNode('call', 'LESS_EQ')],
+        ['Between', new GroupAddNode('call', 'BETWEEN')],
+        ['Clamp', new GroupAddNode('call', 'CLAMP')],
+        ['Sign', new GroupAddNode('call', 'SIGN')],
+        ['Compare', new GroupAddNode('call', 'COMPARE')],
+    ]))],
     ['Logic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Rounding', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],

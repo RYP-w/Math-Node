@@ -2,18 +2,18 @@ import {  TorpologySortNode } from "../functionalNode/torpologicalSortNode";
 import { SetElementPath } from "../helper/addons";
 import type { MouseButtonState } from "../mouseButtonState";
 import { GetScreenToWorld2d, type World2d } from "../world2d/world2d";
-import type { DatabaseNode } from "./database";
+import type { NodeDatabase } from "./database";
 import { getSocketPosition_world2d, HORIZONTAL_SEGMENT_LENGTH, Node } from "./node";
-import type { IdInputSocket, IdNode, IdOutputSocket } from "./typesDefinition";
+import type { IdInputSocket, IdNode, IdOutputSocket } from "./nodeTypes";
 
 export class ConnectionManager{
-    private parent: DatabaseNode; //? ikat database Node ke ConnectionManager
+    private parent: NodeDatabase; //? ikat database Node ke ConnectionManager
     private nodePair: { //? struktur data untuk memasang node output dan input
         from_node?: {node: Node, idSocket:IdOutputSocket},
         to_node?: {node: Node, idSocket: IdInputSocket}
     }
 
-    constructor(parent: DatabaseNode){
+    constructor(parent: NodeDatabase){
         this.parent = parent
         this.nodePair = {};
     }
@@ -134,7 +134,7 @@ export class ConnectionManager{
     }
 }
 
-export function CheckConnectedNode(world2d: World2d, database:DatabaseNode, mouseState:MouseButtonState, torpologiSortNode:TorpologySortNode) {
+export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mouseState:MouseButtonState, torpologiSortNode:TorpologySortNode) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0 && mouseState.getSignal('left') == 'world2d') {
 

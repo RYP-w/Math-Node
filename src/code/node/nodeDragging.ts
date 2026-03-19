@@ -1,12 +1,12 @@
 import { MouseButtonState } from "../mouseButtonState";
-import type { Vector2 } from "../TypeDefinition";
+import type { Vector2 } from "../globalTypes";
 import { World2d } from "../world2d/world2d";
-import { DatabaseNode } from "./database";
+import { NodeDatabase } from "./database";
 import { NodeSelection } from "./nodeSelection";
-import { rBushRectSelection } from "./rBushRectSelection";
-import type { IdNode } from "./typesDefinition";
+import { RBushRectSelection } from "./rBushRectSelection";
+import type { IdNode } from "./nodeTypes";
 
-export function setupNodeDragging(world2D: World2d, databaseNode:DatabaseNode, rBushSelection:rBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
+export function setupNodeDragging(world2D: World2d, databaseNode:NodeDatabase, rBushSelection:RBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     let previousNodePosition:Map<IdNode,Vector2> = new Map<IdNode,Vector2>();
     let levelClampDragging:Record<number,'25x'|'50x'> = {
         1 : '25x',

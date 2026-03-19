@@ -1,11 +1,11 @@
 //<!> file ini menjadi tempat untuk class node 
 
-import type { Vector2 } from "../TypeDefinition";
+import type { Vector2 } from "../globalTypes";
 import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import {isNumericBinary, isNumericUnary, isNumericUnique, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./typesDefinition";
+import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
 
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
@@ -154,7 +154,26 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     }
 
     updateOutputValue() {
-        if (isNumericBinary(this.type)) {
+        if (isMathThreeInOneOut(this.type)) {
+            const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
+            const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
+            const value_2 = Decimal(String(this.valueBoxs['valuebox_2'].value));
+            const output_0 = this.outputSockets.get("outputsocket_0");
+
+            if (!output_0) { console.log("BUG"); return;}
+
+            if (this.type == 'BETWEEN') {
+                output_0.value = value_1.lessThanOrEqualTo(value_0) && value_0.lessThanOrEqualTo(value_2)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'CLAMP') {
+                output_0.value = Decimal.max(value_1, Decimal.min(value_2, value_0)); return;
+
+            }else{
+                console.log("BUG: ", this.type);
+                return;
+            }
+
+        }else if (isMathTwoInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
@@ -162,67 +181,123 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'ADD') {
-                output_0.value = value_0.add(value_1);
+                output_0.value = value_0.add(value_1); return;
 
             }else if (this.type == 'SUBTRACT') {
-                output_0.value = value_0.sub(value_1);
+                output_0.value = value_0.sub(value_1); return;
 
             }else if (this.type == 'MULTIPLY') {
-                output_0.value = value_0.mul(value_1);
+                output_0.value = value_0.mul(value_1); return;
 
             }else if (this.type == 'DIVIDE') {
-                output_0.value = value_0.div(value_1);
+                output_0.value = value_0.div(value_1); return;
+
+            }else if (this.type == 'MOD') {
+                output_0.value = value_0.mod(value_0); return;
 
             }else if (this.type == 'POWER') {
-                output_0.value = value_0.pow(value_1);
+                output_0.value = value_0.pow(value_1); return;
             
+            }else if (this.type == 'EQUAL') {
+                output_0.value = value_0.equals(value_1)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'NOT_EQUAL') {
+                output_0.value = value_0.equals(value_1)? Decimal('0') : Decimal('1'); return;
+
+            }else if (this.type == 'GREATER') {
+                output_0.value = value_0.greaterThan(value_1)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'LESS') {
+                output_0.value = value_0.lessThan(value_1)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'GREATER_EQ') {
+                output_0.value = value_0.greaterThanOrEqualTo(value_1)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'LESS_EQ') {
+                output_0.value = value_0.lessThanOrEqualTo(value_1)? Decimal('1') : Decimal('0'); return;
+
+            }else if (this.type == 'COMPARE') {
+                const result = value_0.cmp(value_1);
+
+                if (result == 1) {
+                    output_0.value = Decimal('1'); return;
+                }else if (result == 0) {
+                    output_0.value = Decimal('0'); return;
+                }else if (result == -1) {
+                    output_0.value = Decimal('-1'); return;
+                }
+                output_0.value = Decimal('NaN');
+                return;
+
             }else{
                 console.log("BUG: ", this.type);
+                return;
             }
-        } else if (isNumericUnary(this.type)) {
+
+        } else if (isMathOneInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'SQRT') {
-                output_0.value = value_0.sqrt();
+                output_0.value = value_0.sqrt();  return;
 
             }else if (this.type == 'ABS') {
-                output_0.value = value_0.abs();
+                output_0.value = value_0.abs();  return;
 
             }else if (this.type == 'NEGATE') {
-                output_0.value = value_0.neg();
+                output_0.value = value_0.neg();  return;
 
             }else if (this.type == 'FACTORIAL') {
                 if (value_0.isNegative()) {
-                    output_0.value = Decimal('NaN');
+                    output_0.value = Decimal('NaN');  return;
                 }else{
                     let result = Decimal('1');
+
                     for (let i = Decimal('2'); i.lessThanOrEqualTo(value_0); i = i.add('1')) {
                         result = result.mul(i);
                     }
-                    output_0.value = result;
+
+                    output_0.value = result;  return;
                 }
 
-            }else{
+            }else if (this.type == 'SIGN') {
+                if (value_0.lessThan('0')) {
+                    output_0.value = Decimal('-1');  return;
+
+                }else if (value_0.equals('0')) {
+                    output_0.value = Decimal('0'); return;
+
+                }else if (value_0.greaterThan('0')) {
+                    output_0.value = Decimal('1'); return;
+
+                }else{
+                    console.log('BUG:', value_0.toString()); return;
+
+                }
+            } else{
                 console.log("BUG");
+                return;
             }
             
-        } else if (isNumericUnique(this.type)) {
+        } else if (isZeroInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
             if (!output_0) { console.log("BUG"); return;}
             
             if (this.type == 'INPUT') {
-                output_0.value = value_0;
+                output_0.value = value_0;  return;
+
             }else{
                 console.log("BUG: ", this.type);
+                 return;
             }
-        }
-        else{
+
+        }else{
             console.log("BUG");
+            return;
         }
     }
 

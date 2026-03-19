@@ -1,6 +1,6 @@
 import { SetElement } from "../../helper/addons";
-import { groupingAddNodes } from "../../node/typesDefinition";
-import type { Vector2 } from "../../TypeDefinition";
+import { groupingAddNodes } from "../../node/nodeTypes";
+import type { Vector2 } from "../../globalTypes";
 
 export function createHtmlAddNode(position:Vector2) {
     return SetElement('div', {class:["add_node", "add_node-style"], attr:{'--position-x':`${position.x}px`,'--position-y':`${position.y}px`}},
