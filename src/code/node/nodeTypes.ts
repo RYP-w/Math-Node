@@ -125,7 +125,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }]
 ])
 
-const tampleteComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comparisons,TamplateInputOutput>([
+const templateComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comparisons,TamplateInputOutput>([
     ['EQUAL', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
@@ -221,7 +221,7 @@ const tampleteComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comp
 
 ])
 
-const taampleteLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateInputOutput>([
+const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateInputOutput>([
     ['AND', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
@@ -280,8 +280,8 @@ const taampleteLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,Tamplate
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
-    ...tampleteComparsionNode,
-    ...taampleteLogicNode,
+    ...templateComparsionNode,
+    ...templateLogicNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
