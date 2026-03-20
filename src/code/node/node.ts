@@ -229,12 +229,44 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = Decimal('NaN');
                 return;
 
-            }else{
+            }else if (this.type == 'AND') {
+                if (convertValueLN(value_0) && convertValueLN(value_1)) {
+                    output_0.value = Decimal('1'); return;
+                }
+                output_0.value = Decimal('0'); return;
+
+            }else if (this.type == 'OR') {
+                if (convertValueLN(value_0) || convertValueLN(value_1)) {
+                    output_0.value = Decimal('1'); return;
+                }
+                output_0.value = Decimal('0'); return;
+
+            }else if (this.type == 'XOR') {
+                const rst_0 = convertValueLN(value_0);
+                const rst_1 = convertValueLN(value_1);
+                if ((rst_0 && !rst_1) || (!rst_0 && rst_1)) {
+                    output_0.value = Decimal('1'); return;
+                }
+                output_0.value = Decimal('0'); return;
+                
+            }else if (this.type == 'NAND') {
+                if (convertValueLN(value_0) && convertValueLN(value_1)) {
+                    output_0.value = Decimal('0'); return;
+                }
+                output_0.value = Decimal('1'); return;
+
+            }else if (this.type == 'NOR') {
+                if (convertValueLN(value_0) || convertValueLN(value_1)) {
+                    output_0.value = Decimal('0'); return;
+                }
+                output_0.value = Decimal('1'); return;
+
+            } else{
                 console.log("BUG: ", this.type);
                 return;
             }
 
-        } else if (isMathOneInOneOut(this.type)) {
+        }else if (isMathOneInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
@@ -276,12 +308,15 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                     console.log('BUG:', value_0.toString()); return;
 
                 }
+            }else if (this.type == 'NOT') {
+                output_0.value = convertValueLN(value_0)? Decimal('0') : Decimal('1'); return;
+
             } else{
                 console.log("BUG");
                 return;
             }
             
-        } else if (isZeroInOneOut(this.type)) {
+        }else if (isZeroInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
@@ -376,6 +411,14 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
     resetDirty(){
         this.dirty = false
     }
+}
+
+//**Convert Value For Logic Node
+function convertValueLN(value:Decimal){
+    if (value.equals(0)) {
+        return false;
+    }
+    return true;
 }
 
 function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: Decimal, enableInput: boolean }>){

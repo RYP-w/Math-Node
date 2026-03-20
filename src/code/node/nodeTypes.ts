@@ -14,7 +14,8 @@ export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
 type Comparisons = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
-export type TypeNode =  Arithmetic | Comparisons | 'INPUT' | 'DUMMY';
+type Logic = 'AND' | 'OR' | 'NOT' | 'XOR' | 'NAND' | 'NOR';
+export type TypeNode =  Arithmetic | Comparisons | Logic | 'INPUT' | 'DUMMY';
 
 //?type set
 export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
@@ -23,13 +24,13 @@ export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
     return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE'] as const;
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR'] as const;
 export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
 export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
     return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN'] as const;
+export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT'] as const;
 export type MathOneInOneOut = typeof mathOneInOneOutArray[number];
 export function isMathOneInOneOut(type: TypeNode): type is MathOneInOneOut {
     return (mathOneInOneOutArray as readonly TypeNode[]).includes(type);
@@ -220,10 +221,67 @@ const tampleteComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comp
 
 ])
 
+const taampleteLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateInputOutput>([
+    ['AND', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['OR', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['NOT', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['XOR', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['NAND', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['NOR', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
     ...tampleteComparsionNode,
+    ...taampleteLogicNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
@@ -231,7 +289,7 @@ export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,
     ['DUMMY', {
         input: [  ],
         output: [  ]
-    }]
+    }],
     
 ]);
 
@@ -285,7 +343,14 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Sign', new GroupAddNode('call', 'SIGN')],
         ['Compare', new GroupAddNode('call', 'COMPARE')],
     ]))],
-    ['Logic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Logic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['And', new GroupAddNode('call', 'AND')],
+        ['Or', new GroupAddNode('call', 'OR')],
+        ['Not', new GroupAddNode('call', 'NOT')],
+        ['Exclusive Or', new GroupAddNode('call', 'XOR')],
+        ['Not And', new GroupAddNode('call', 'NAND')],
+        ['Not Or', new GroupAddNode('call', 'NOR')],
+    ]))],
     ['Rounding', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
