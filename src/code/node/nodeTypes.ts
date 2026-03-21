@@ -16,7 +16,8 @@ type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' 
 type Comparisons = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
 type Logic = 'AND' | 'OR' | 'NOT' | 'XOR' | 'NAND' | 'NOR';
 type Rounding = 'ROUND' | 'FLOOR' | 'CEIL' | 'ROUND_MUL' | 'CEIL_MUL' | 'FLOOR_MUL' | 'TRUNC' | 'EVEN' | 'ODD';
-export type TypeNode =  Arithmetic | Comparisons | Logic | Rounding | 'INPUT' | 'DUMMY';
+type Trigonometry = 'SIN' | 'COS' | 'TAN' | 'ASIN' | 'ACOS' | 'ATAN' | 'ATAN2' | 'CSC' | 'SEC' | 'COT';
+export type TypeNode =  Arithmetic | Comparisons | Logic | Rounding | Trigonometry | 'INPUT' | 'DUMMY';
 
 //?type set
 export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
@@ -25,13 +26,13 @@ export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
     return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL'] as const;
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL', 'ATAN2'] as const;
 export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
 export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
     return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT', 'ROUND', 'FLOOR', 'CEIL', 'TRUNC', 'EVEN', 'ODD'] as const;
+export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT', 'ROUND', 'FLOOR', 'CEIL', 'TRUNC', 'EVEN', 'ODD', 'SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN', 'CSC', 'SEC', 'COT'] as const;
 export type MathOneInOneOut = typeof mathOneInOneOutArray[number];
 export function isMathOneInOneOut(type: TypeNode): type is MathOneInOneOut {
     return (mathOneInOneOutArray as readonly TypeNode[]).includes(type);
@@ -72,7 +73,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     ['DIVIDE',{
         input:[
             { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('0'), enableInput:true, }
+            { type:'number', value: Decimal('1'), enableInput:true, }
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
@@ -306,7 +307,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     ['ROUND_MUL', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('1'), enableInput:true},
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -315,7 +316,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     ['FLOOR_MUL', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('1'), enableInput:true},
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -324,7 +325,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     ['CEIL_MUL', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('1'), enableInput:true},
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -356,12 +357,97 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
 ])
 
+const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<Trigonometry,TamplateInputOutput>([
+    ['SIN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['COS', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['TAN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ASIN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ACOS', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ATAN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ATAN2', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['SEC', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['CSC', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['COT', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
     ...templateComparsionNode,
     ...templateLogicNode,
     ...templateRoundingNode,
+    ...templateTrigonometryNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
@@ -442,7 +528,18 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Even', new GroupAddNode('call', 'EVEN')],
         ['Odd', new GroupAddNode('call', 'ODD')],
     ]))],
-    ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Sinus', new GroupAddNode('call', 'SIN')],
+        ['Cosine', new GroupAddNode('call', 'COS')],
+        ['Tangent', new GroupAddNode('call', 'TAN')],
+        ['Arc Sine', new GroupAddNode('call', 'ASIN')],
+        ['Arc Cosine', new GroupAddNode('call', 'ACOS')],
+        ['Arc Tangent', new GroupAddNode('call', 'ATAN')],
+        ['Arc Tangent 2', new GroupAddNode('call', 'ATAN2')],
+        ['Cosecant', new GroupAddNode('call', 'CSC')],
+        ['Secant', new GroupAddNode('call', 'SEC')],
+        ['Cotangent', new GroupAddNode('call', 'COT')],
+    ]))],
     ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],

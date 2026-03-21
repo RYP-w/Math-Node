@@ -270,6 +270,9 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             }else if (this.type == 'CEIL_MUL') {
                 output_0.value = value_0.div(value_1).ceil().mul(value_1);
 
+            }else if (this.type == 'ATAN2') {
+                output_0.value = Decimal.atan2(value_0, value_1); return;
+
             } else{
                 console.log("BUG: ", this.type);
                 return;
@@ -346,6 +349,33 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 const c = abs.ceil();
                 output_0.value = (c.mod('2').equals('0')? c.add('1') : c).mul(sign)
 
+            }else if (this.type == 'SIN') {
+                output_0.value = value_0.sin(); return;
+
+            }else if (this.type == 'COS') {
+                output_0.value = value_0.cos(); return;
+
+            }else if (this.type == 'TAN') {
+                output_0.value = value_0.tan(); return;
+
+            }else if (this.type == 'ASIN') {
+                output_0.value = value_0.asin(); return;
+
+            }else if (this.type == 'ACOS') {
+                output_0.value = value_0.acos(); return;
+
+            }else if (this.type == 'ATAN') {
+                output_0.value = value_0.atan(); return;
+
+            }else if (this.type == 'SEC') {
+                output_0.value = Decimal('1').div(value_0.cos()); return;
+
+            }else if (this.type == 'CSC') {
+                output_0.value = Decimal('1').div(value_0.sin()); return;
+
+            }else if (this.type == 'COT') {
+                output_0.value = Decimal('1').div(value_0.tan()); return;
+                
             } else{
                 console.log("BUG");
                 return;
