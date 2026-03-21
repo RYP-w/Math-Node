@@ -5,7 +5,7 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, mathOneInOneOutArray, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
+import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
 
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
