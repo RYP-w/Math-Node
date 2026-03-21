@@ -15,7 +15,8 @@ export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
 type Comparisons = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
 type Logic = 'AND' | 'OR' | 'NOT' | 'XOR' | 'NAND' | 'NOR';
-export type TypeNode =  Arithmetic | Comparisons | Logic | 'INPUT' | 'DUMMY';
+type Rounding = 'ROUND' | 'FLOOR' | 'CEIL' | 'ROUND_MUL' | 'CEIL_MUL' | 'FLOOR_MUL' | 'TRUNC' | 'EVEN' | 'ODD';
+export type TypeNode =  Arithmetic | Comparisons | Logic | Rounding | 'INPUT' | 'DUMMY';
 
 //?type set
 export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
@@ -24,13 +25,13 @@ export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
     return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR'] as const;
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL'] as const;
 export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
 export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
     return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT'] as const;
+export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT', 'ROUND', 'FLOOR', 'CEIL', 'TRUNC', 'EVEN', 'ODD'] as const;
 export type MathOneInOneOut = typeof mathOneInOneOutArray[number];
 export function isMathOneInOneOut(type: TypeNode): type is MathOneInOneOut {
     return (mathOneInOneOutArray as readonly TypeNode[]).includes(type);
@@ -277,11 +278,90 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
 ])
 
+const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,TamplateInputOutput>([
+    ['ROUND', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['FLOOR', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['CEIL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ROUND_MUL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['FLOOR_MUL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['CEIL_MUL', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['TRUNC', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['EVEN', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['ODD', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
     ...templateComparsionNode,
     ...templateLogicNode,
+    ...templateRoundingNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
@@ -351,7 +431,17 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Not And', new GroupAddNode('call', 'NAND')],
         ['Not Or', new GroupAddNode('call', 'NOR')],
     ]))],
-    ['Rounding', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Rounding', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Round', new GroupAddNode('call', 'ROUND')],
+        ['Floor', new GroupAddNode('call', 'FLOOR')],
+        ['Ceil', new GroupAddNode('call', 'CEIL')],
+        ['Round Multiply', new GroupAddNode('call', 'ROUND_MUL')],
+        ['Floor Multiply', new GroupAddNode('call', 'FLOOR_MUL')],
+        ['Ceil Multiply', new GroupAddNode('call', 'CEIL_MUL')],
+        ['Trunc', new GroupAddNode('call', 'TRUNC')],
+        ['Even', new GroupAddNode('call', 'EVEN')],
+        ['Odd', new GroupAddNode('call', 'ODD')],
+    ]))],
     ['Trigonometry', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
     ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],

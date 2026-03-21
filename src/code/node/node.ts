@@ -5,7 +5,7 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
+import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, mathOneInOneOutArray, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
 
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
@@ -261,6 +261,15 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 }
                 output_0.value = Decimal('1'); return;
 
+            }else if (this.type == 'ROUND_MUL') {
+                output_0.value = value_0.div(value_1).round().mul(value_1);
+                
+            }else if (this.type == 'FLOOR_MUL') {
+                output_0.value = value_0.div(value_1).floor().mul(value_1);
+
+            }else if (this.type == 'CEIL_MUL') {
+                output_0.value = value_0.div(value_1).ceil().mul(value_1);
+
             } else{
                 console.log("BUG: ", this.type);
                 return;
@@ -310,6 +319,32 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 }
             }else if (this.type == 'NOT') {
                 output_0.value = convertValueLN(value_0)? Decimal('0') : Decimal('1'); return;
+
+            }else if (this.type == 'ROUND') {
+                output_0.value = value_0.round(); return;
+
+            }else if (this.type == 'FLOOR') {
+                output_0.value = value_0.floor(); return;
+
+            }else if (this.type == 'CEIL') {
+                output_0.value = value_0.ceil(); return;
+
+            }else if (this.type == 'TRUNC') {
+                output_0.value = value_0.trunc(); return;
+
+            }else if (this.type == 'EVEN') {
+                if (value_0.equals('0')) { output_0.value = Decimal('0'); return; }
+                const sign = value_0.greaterThan(0)? 1 : -1;
+                const abs = value_0.abs();
+                const c = abs.ceil();
+                output_0.value = (c.mod('2').equals('1')? c.add('1') : c).mul(sign);
+                
+            }else if (this.type == 'ODD') {
+                if (value_0.equals('0')) { output_0.value = Decimal('1'); return; }
+                const sign = value_0.greaterThan(0)? 1 : -1;
+                const abs = value_0.abs();
+                const c = abs.ceil();
+                output_0.value = (c.mod('2').equals('0')? c.add('1') : c).mul(sign)
 
             } else{
                 console.log("BUG");
