@@ -82,7 +82,6 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
             mouseState.setAlt(ev, 'left', 'inValueNode');
         };
     })
-
     window.addEventListener('mousemove', (ev) => {
         if (ev.buttons != 1) return;
         if (mouseState.getSignal('left') == 'inValueNode') {
@@ -120,7 +119,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                 inputElement.focus({ preventScroll: true });
                 inputElement.select();
                 editValueNodeState.hasTypingEditeMode = true;
-                
+
                 const handleInput = () => {
                     if (!editValueNodeState.hasTypingEditeMode) return;
                     
@@ -130,7 +129,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                         return;
                     }
                     
-                    node.UpdateNodeValueBoxsByHtml(inputElement);
+                    node.UpdateValueOfValueBoxsByHtml(inputElement);
                 };
                 
                 const handleKeydown = (e: KeyboardEvent) => {
@@ -158,7 +157,8 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                 inputElement.addEventListener('input', handleInput);
                 inputElement.addEventListener('keydown', handleKeydown);
                 inputElement.addEventListener('blur', handleBlur);
-                mouseState.addSpecialAlt(ev, 'left', 'inputTypingModeNode');
+
+                mouseState.addSpecialAlt(ev, 'left', 'inputTypingModeNode'); //<- mouse State 
             }
             mouseState.setAlt(ev,'left','');
         }

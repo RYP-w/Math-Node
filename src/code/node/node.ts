@@ -30,6 +30,7 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
     enableInput: boolean;
     readOnly: boolean;
     socket: Socket | null;
+    HtmlElement?:HTMLElement;
 
     constructor(id: IdValueBox, type: T, value:ValueByType[T], enableInput: boolean, readOnly: boolean) {
         this.id = id;
@@ -40,8 +41,52 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
         this.socket = null;
     }
 
+    changeStateReadonly(state:boolean){
+        if (!this.HtmlElement) return;
+
+        (this.HtmlElement.querySelectorAll('[class*="input_"]') as NodeListOf<HTMLInputElement>).forEach(HtmlInput => {
+            if (state) {
+                HtmlInput.type = 'text';
+                HtmlInput.disabled = true;
+
+            }else {
+                HtmlInput.type = 'number';
+                HtmlInput.disabled = false;
+                
+            }
+        })
+    }
+
+    isFinite(){
+        if (this.type == 'number') {
+            return this.value.isFinite();
+        }
+    }
+
+    isNaN(){
+        if (this.type == 'number') {
+            return this.value.isNaN();
+        }
+    }
+
+    setValueToZero(){
+        if (!this.HtmlElement) return;
+
+        if (this.type == 'number') {
+            this.value = Decimal('0');
+        }
+        
+        (this.HtmlElement.querySelectorAll('[class*="input_"]') as NodeListOf<HTMLInputElement>).forEach(HtmlInput => {
+            HtmlInput.value = '0';
+        })
+    }
+
     setSocket(id: IdSocket) {
         this.socket = new Socket(id, this.type);
+    }
+
+    setHtmlElelemt(e: HTMLElement){
+        this.HtmlElement = e;
     }
 }
 
@@ -79,7 +124,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         inputSockets: Record<IdInputSocket, HTMLElement>,
         outputSockets: Record<IdOutputSocket, HTMLElement>,
     };
-    HtmlValueBoxs:Record<IdValueBox,HTMLElement>;
     HtmlElement: HTMLDivElement; //? Container Html Node (self)
     OutgoingPathLines: Map<IdPath,SVGPathElement>; //? list Html Path lines
     zIndex: number; //? position z / layer
@@ -100,7 +144,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         this.valueBoxs = {};
         
         this.HtmlSockets = { inputSockets: {}, outputSockets: {} };
-        this.HtmlValueBoxs = {};
         this.OutgoingPathLines = new Map();
 
         initValueBox(this, valueBoxs);
@@ -442,20 +485,17 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
 
     UpdateHtmlValueBoxsByNode(idValueBox: IdValueBox){
         if (this.valueBoxs[idValueBox].type == 'number') {
-            const htmlInput = this.HtmlValueBoxs[idValueBox].querySelector('[class*="input_0"]') as HTMLInputElement;
+            const htmlInput = this.valueBoxs[idValueBox].HtmlElement?.querySelector('[class*="input_0"]');
             if (!htmlInput) {
                 console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
                 return;
             }
             let value = this.valueBoxs[idValueBox].value;
-            if (value.isNaN() || !value.isFinite()) {
-                value = Decimal('0');
-            }
-            htmlInput.value = value.toString();
+            (htmlInput as HTMLInputElement).value = value.toString();
         }
     }
 
-    UpdateNodeValueBoxsByHtml(htmlInput:HTMLInputElement){
+    UpdateValueOfValueBoxsByHtml(htmlInput:HTMLInputElement){
         if (!htmlInput.classList.contains('node-item-value')) {
             console.log("BUG");
             return;
@@ -468,9 +508,17 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             return;
         }
 
-        if (this.valueBoxs[idValueBox].type == 'number') {
+        if (this.valueBoxs[idValueBox].type == 'number' && htmlInput.value != '') {
             this.valueBoxs[idValueBox].value = Decimal(htmlInput.value);
         }
+    }
+
+    getValueboxByIdSocket(idSocket: IdInputSocket){
+        const htmlValuBox = this.HtmlSockets.inputSockets[idSocket].closest('[id^="valuebox_"]');
+        if (!htmlValuBox) {
+            return null;
+        }
+        return this.valueBoxs[htmlValuBox.id as IdValueBox];
     }
 
     UpdateHTMLPosition() { //? update position dari Html Node
@@ -500,7 +548,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 }
             }
         }
-
     }
 
     makeDirty(){
@@ -554,7 +601,7 @@ function initHtmlValueboxs(node: Node) {
     for (const key of Object.keys(node.valueBoxs) as IdValueBox[]){
         const htmlValueBox = node.HtmlElement.querySelector(`[id^="${key}"]`)
         if (htmlValueBox) {
-            node.HtmlValueBoxs[htmlValueBox.id as IdValueBox] = (htmlValueBox as HTMLElement);
+            node.valueBoxs[htmlValueBox.id as IdValueBox].setHtmlElelemt(htmlValueBox as HTMLElement);
         }else{
             console.log("Bug: Htmltidak di temukan:",key);
         }

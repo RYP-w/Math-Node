@@ -84,6 +84,11 @@ export class ConnectionManager{
                         { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                         { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                     )
+                    const valueBox_toNode = this.nodePair.to_node.node.getValueboxByIdSocket(this.nodePair.to_node.idSocket);
+                    if ( valueBox_toNode && (!valueBox_toNode.isFinite() || valueBox_toNode.isNaN()) ) {
+                        valueBox_toNode.setValueToZero();
+                        torpologySortNode.setTorpologycal(this.nodePair.to_node.node);
+                    }
                     //c onsole.log('Check Signal 1');
                 } else if (checkSignal == 2) {
                     const incomingNode_ToNode = this.nodePair.to_node.node.connection.incomingNodes[this.nodePair.to_node.idSocket].values().next();

@@ -1,8 +1,8 @@
 import { ConnectionManager } from "./connectionManager";
 import { SetElementPath } from "../helper/addons";
 import { RBushRectSelection } from "./rBushRectSelection";
-import type { IdInputSocket, IdNode, IdOutputSocket } from "./nodeTypes";
-import { HORIZONTAL_SEGMENT_LENGTH, type Node } from "./node";
+import type { IdInputSocket, IdNode, IdOutputSocket, IdValueBox } from "./nodeTypes";
+import { HORIZONTAL_SEGMENT_LENGTH, Node } from "./node";
 
 export class NodeDatabase {
     private database:Map<IdNode, Node>; //? list Nodes
@@ -72,18 +72,11 @@ export class NodeDatabase {
         const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
         
         if (!elementValueBox) {
-            console.log("BUG");
+            ("BUG");
             return;
         }
 
-        const elementInput = elementValueBox.querySelectorAll('[class*=input_]') as NodeListOf<HTMLInputElement>;
-        if (elementInput.length == 0) {
-            console.log("BUG");
-            return;
-        }
-        elementInput.forEach((e) => {
-            e.disabled = true;
-        })
+        toNode.node.valueBoxs[elementValueBox.id as IdValueBox].changeStateReadonly(true)
     }
 
     SystemRemovingConnection(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
@@ -107,7 +100,7 @@ export class NodeDatabase {
                 const pathSelector = `[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`;
                 const pathElement = this.HtmlPlaceCurve.querySelector(pathSelector);
                 if (pathElement === null) {
-                    console.log("BUG:",pathSelector);
+                    ("BUG:",pathSelector);
                     return;
                 }
                 pathElement.remove();
@@ -116,23 +109,23 @@ export class NodeDatabase {
 
                 const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
                 if (!elementValueBox) {
-                    console.log("BUG");
+                    ("BUG");
                     return;
                 }
-                
+                const valueBox = toNode.node.valueBoxs[elementValueBox.id as IdValueBox];
+
                 //? mengapa All? karena kemungkinan di masa depan valueBox group memiliki 2 (x,y) atau 3 (x,y,z) input. hhe "masa depan"
                 const elementInput = elementValueBox.querySelectorAll('[class*=input_]') as NodeListOf<HTMLInputElement>;
-                elementInput.length
+                
                 if (elementInput.length == 0) {
-                    console.log("BUG");
+                    ("BUG");
                     return;
                 }
-                elementInput.forEach((e) => {
-                    e.disabled = false;
-                })
+
+                valueBox.changeStateReadonly(false);
 
             }
-        } else console.log("Bug");
+        } else ("Bug");
     }
 
     SystemRemovingAllConnection(node:Node) {
