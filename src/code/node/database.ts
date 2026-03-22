@@ -70,7 +70,6 @@ export class NodeDatabase {
         this.createPathLine(fromNode,toNode);
 
         const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
-        //c onsole.log(elementValueBox);
         
         if (!elementValueBox) {
             console.log("BUG");

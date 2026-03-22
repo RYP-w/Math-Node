@@ -63,7 +63,6 @@ export class TorpologySortNode{
                 nodeDependence.node.dirty = false;
                 nodeDependence.node.updateValueNode()
                 this.visited.add(nodeDependence.node);
-                //c onsole.log("Finally: ", nodeDependence.node.id);
                 count++;
             } else {
                 stillPending.push(nodeDependence);
@@ -75,8 +74,6 @@ export class TorpologySortNode{
 
         if (this.nodeDependencies.length === 0) {
             this.isRunning = false;
-            // c onsole.log([...this.visited.values()]);
-            // c onsole.log("jumlah perulangan:", this.check_cycle);
         }
     }
 

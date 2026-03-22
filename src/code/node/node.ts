@@ -273,6 +273,9 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             }else if (this.type == 'ATAN2') {
                 output_0.value = Decimal.atan2(value_0, value_1); return;
 
+            }else if (this.type == 'LOG') {
+                output_0.value = Decimal.log(value_0, value_1); return;
+
             } else{
                 console.log("BUG: ", this.type);
                 return;
@@ -376,21 +379,47 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             }else if (this.type == 'COT') {
                 output_0.value = Decimal('1').div(value_0.tan()); return;
                 
+            }else if (this.type == 'LOG_N') {
+                output_0.value = value_0.ln(); return;
+
+            }else if (this.type == 'LOG2') {
+                output_0.value = Decimal.log2(value_0); return;
+
+            }else if (this.type == 'LOG10') {
+                output_0.value = Decimal.log10(value_0); return;
+
             } else{
                 console.log("BUG");
                 return;
             }
             
         }else if (isZeroInOneOut(this.type)) {
-            const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
             if (!output_0) { console.log("BUG"); return;}
             
             if (this.type == 'INPUT') {
+                const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
                 output_0.value = value_0;  return;
 
-            }else{
+            }else if (this.type == 'PI') {
+                output_0.value = Decimal.acos(-1); return;
+
+            }else if (this.type == 'E') {
+                output_0.value = Decimal(1).exp(); return;
+            }else if (this.type == 'SQRT2') {
+                output_0.value = Decimal.sqrt('2'); return;
+
+            }else if (this.type == 'LOG_N2') {
+                output_0.value = Decimal.ln('2'); return;
+                
+            }else if (this.type == 'LOG_N10') {
+                output_0.value = Decimal.ln('10'); return;
+
+            }else if (this.type == 'INF') {
+                output_0.value = Decimal('Infinity'); return;
+
+            } else{
                 console.log("BUG: ", this.type);
                  return;
             }
@@ -408,7 +437,6 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
                 return;
             }
-            //c onsole.log(this.id,'->',idValueBox,":",this.valueBoxs[idValueBox].value);
             let value = this.valueBoxs[idValueBox].value;
             if (value.isNaN() || !value.isFinite()) {
                 value = Decimal('0');

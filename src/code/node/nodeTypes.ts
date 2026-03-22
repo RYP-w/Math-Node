@@ -13,11 +13,15 @@ export type IdValueBox = `valuebox_${number}`;
 export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
-type Comparisons = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
+type Comparison = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
 type Logic = 'AND' | 'OR' | 'NOT' | 'XOR' | 'NAND' | 'NOR';
 type Rounding = 'ROUND' | 'FLOOR' | 'CEIL' | 'ROUND_MUL' | 'CEIL_MUL' | 'FLOOR_MUL' | 'TRUNC' | 'EVEN' | 'ODD';
 type Trigonometry = 'SIN' | 'COS' | 'TAN' | 'ASIN' | 'ACOS' | 'ATAN' | 'ATAN2' | 'CSC' | 'SEC' | 'COT';
-export type TypeNode =  Arithmetic | Comparisons | Logic | Rounding | Trigonometry | 'INPUT' | 'DUMMY';
+type Logarithm = 'LOG_N' | 'LOG' | 'LOG2' | 'LOG10';
+type Exponent = 'EXP' | 'POW2' | 'POW10';
+type Conversion = 'NORMALIZE' | 'TO_DEG' | 'TO_RAD';
+type Constant = 'PI' | 'E' | 'INF' | 'SQRT2' | 'LOG_N2' | 'LOG_N10';
+export type TypeNode =  Arithmetic | Comparison | Logic | Rounding | Trigonometry | Logarithm | Exponent | Conversion | Constant | 'INPUT' | 'DUMMY';
 
 //?type set
 export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
@@ -26,19 +30,19 @@ export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
     return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL', 'ATAN2'] as const;
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL', 'ATAN2', 'LOG'] as const;
 export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
 export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
     return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT', 'ROUND', 'FLOOR', 'CEIL', 'TRUNC', 'EVEN', 'ODD', 'SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN', 'CSC', 'SEC', 'COT'] as const;
+export const mathOneInOneOutArray = [ 'SQRT', 'ABS', 'NEGATE', 'FACTORIAL', 'SIGN', 'NOT', 'ROUND', 'FLOOR', 'CEIL', 'TRUNC', 'EVEN', 'ODD', 'SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN', 'CSC', 'SEC', 'COT', 'LOG_N', 'LOG2', 'LOG10', 'EXP', 'POW2', 'POW10', 'NORMALIZE', 'TO_DEG', 'TO_RAD'] as const;
 export type MathOneInOneOut = typeof mathOneInOneOutArray[number];
 export function isMathOneInOneOut(type: TypeNode): type is MathOneInOneOut {
     return (mathOneInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const zeroInOneOutArray = ['INPUT'] as const;
+export const zeroInOneOutArray = ['INPUT', 'PI', 'E', 'INF', 'SQRT2', 'LOG_N2', 'LOG_N10'] as const;
 export type ZeroInOneOut = typeof zeroInOneOutArray[number];
 export function isZeroInOneOut(type: TypeNode): type is ZeroInOneOut {
     return (zeroInOneOutArray as readonly TypeNode[]).includes(type);
@@ -127,7 +131,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }]
 ])
 
-const templateComparsionNode:Map<Comparisons,TamplateInputOutput> = new Map<Comparisons,TamplateInputOutput>([
+const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Comparison,TamplateInputOutput>([
     ['EQUAL', {
         input: [
             {type:'number', value:Decimal('0'), enableInput:true},
@@ -441,6 +445,136 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
 ])
 
+const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarithm,TamplateInputOutput>([
+    ['LOG_N', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LOG', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LOG2', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LOG10', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
+const templateExponentNode:Map<Exponent,TamplateInputOutput> = new Map<Exponent,TamplateInputOutput>([
+    ['EXP', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['POW2', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['POW10', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
+const templateConversionNode:Map<Conversion,TamplateInputOutput> = new Map<Conversion,TamplateInputOutput>([
+    ['NORMALIZE', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['TO_DEG', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['TO_RAD', {
+        input: [
+            {type:'number', value:Decimal('0'), enableInput:true},
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    
+])
+
+const templateConstantNode:Map<Constant,TamplateInputOutput> = new Map<Constant,TamplateInputOutput>([
+    ['PI', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['E', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['SQRT2', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LOG_N2', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['LOG_N10', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['INF', {
+        input: [],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+])
+
 //<?> Gabungkan semua template 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
@@ -448,6 +582,10 @@ export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,
     ...templateLogicNode,
     ...templateRoundingNode,
     ...templateTrigonometryNode,
+    ...templateLogarithmNode,
+    ...templateExponentNode,
+    ...templateConversionNode,
+    ...templateConstantNode,
     ['INPUT',{
         input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
         output: [ {type:'number', value: Decimal('0'),} ]
@@ -540,7 +678,28 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Secant', new GroupAddNode('call', 'SEC')],
         ['Cotangent', new GroupAddNode('call', 'COT')],
     ]))],
-    ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
-    ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
-    ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([]))],
+    ['Logarithms', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Natural logarithm', new GroupAddNode('call', 'LOG_N')],
+        ['logarithm', new GroupAddNode('call', 'LOG')],
+        ['logarithm base 2', new GroupAddNode('call', 'LOG2')],
+        ['logarithm base 10', new GroupAddNode('call', 'LOG10')],
+    ]))],
+    ['Exponents', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Exponent', new GroupAddNode('call', 'EXP')],
+        ['Power 2', new GroupAddNode('call', 'POW2')],
+        ['Power 10', new GroupAddNode('call', 'POW10')],
+    ]))],
+    ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['Normalize', new GroupAddNode('call', 'NORMALIZE')],
+        ['Radians to Degrees', new GroupAddNode('call', 'TO_DEG')],
+        ['Degrees to Radians', new GroupAddNode('call', 'TO_RAD')],
+    ]))],
+    ['Constant', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
+        ['PI', new GroupAddNode('call', 'PI')],
+        ['Euler', new GroupAddNode('call', 'E')],
+        ['Sqrt 2', new GroupAddNode('call', 'SQRT2')],
+        ['Natural logarithm 2', new GroupAddNode('call', 'LOG_N2')],
+        ['Natural logarithm 10', new GroupAddNode('call', 'LOG_N10')],
+        ['Infinity', new GroupAddNode('call', 'INF')],
+    ]))],
 ])
