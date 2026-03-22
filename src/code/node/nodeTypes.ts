@@ -21,7 +21,7 @@ type Logarithm = 'LOG_N' | 'LOG' | 'LOG2' | 'LOG10';
 type Exponent = 'EXP' | 'POW2' | 'POW10';
 type Conversion = 'NORMALIZE' | 'TO_DEG' | 'TO_RAD';
 type Constant = 'PI' | 'E' | 'INF' | 'SQRT2' | 'LOG_N2' | 'LOG_N10';
-export type TypeNode =  Arithmetic | Comparison | Logic | Rounding | Trigonometry | Logarithm | Exponent | Conversion | Constant | 'INPUT' | 'DUMMY';
+export type TypeNode =  Arithmetic | Comparison | Logic | Rounding | Trigonometry | Logarithm | Exponent | Conversion | Constant | 'INPUT' | 'Output' | 'DUMMY';
 
 //?type set
 export const mathThreeInOneOutArray = ['BETWEEN', 'CLAMP'] as const;
@@ -48,43 +48,49 @@ export function isZeroInOneOut(type: TypeNode): type is ZeroInOneOut {
     return (zeroInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
+export const oneInZeroOutArray = ['Output'] as const;
+export type OneInZeroOut = typeof oneInZeroOutArray[number];
+export function isOneInZeroOut(type: TypeNode): type is OneInZeroOut {
+    return (oneInZeroOutArray as readonly TypeNode[]).includes(type);
+}
+
 //? shortcut
-type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: Decimal, enableInput: boolean}>,output:Array<{type: DataTypeNode, value: Decimal}>};
+type TamplateInputOutput = {input:Array<{type: DataTypeNode, value: Decimal, enableInput?: boolean, readOnly?:boolean}>,output:Array<{type: DataTypeNode, value: Decimal}>};
 
 //? Arithmetic Template
 const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arithmetic,TamplateInputOutput>([
     ['ADD',{
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('0'), enableInput:true, }
+            { type:'number', value: Decimal('0'),},
+            { type:'number', value: Decimal('0'),}
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['SUBTRACT',{
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('0'), enableInput:true, }
+            { type:'number', value: Decimal('0'),},
+            { type:'number', value: Decimal('0'),}
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['MULTIPLY',{
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('0'), enableInput:true, }
+            { type:'number', value: Decimal('0'),},
+            { type:'number', value: Decimal('0'),}
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['DIVIDE',{
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('1'), enableInput:true, }
+            { type:'number', value: Decimal('0'),},
+            { type:'number', value: Decimal('1'),}
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['MOD', {
         input:[
-            {type:'number', value: Decimal('0'), enableInput:true},
-            {type:'number', value: Decimal('0'), enableInput:true},
+            {type:'number', value: Decimal('0'), },
+            {type:'number', value: Decimal('0'), },
         ],
         output:[
             {type:'number', value: Decimal('0')},
@@ -92,14 +98,14 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }],
     ['POWER',{
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
-            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'),},
+            { type:'number', value: Decimal('0'),},
         ],
         output:[ { type:'number', value: Decimal('0'),} ]
     }],
     ['SQRT', {
         input:[
-            { type:'number', value: Decimal('0'), enableInput:true, },
+            { type:'number', value: Decimal('0'),},
         ],
         output:[
             { type:'number', value: Decimal('0'),},
@@ -107,7 +113,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }],
     ['ABS', {
         input:[
-            {type:'number', value: Decimal('0'), enableInput:true, },
+            {type:'number', value: Decimal('0'),},
         ],
         output:[
             { type:'number', value: Decimal('0'),},
@@ -115,7 +121,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }],
     ['NEGATE', {
         input:[
-            {type:'number', value: Decimal('0'), enableInput:true, },
+            {type:'number', value: Decimal('0'),},
         ],
         output:[
             { type:'number', value: Decimal('0'),},
@@ -123,7 +129,7 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
     }],
     ['FACTORIAL', {
         input:[
-            {type:'number', value: Decimal('0'), enableInput:true, },
+            {type:'number', value: Decimal('0'),},
         ],
         output:[
             { type:'number', value: Decimal('0'),},
@@ -134,8 +140,8 @@ const templateArithmeticNode:Map<Arithmetic,TamplateInputOutput> = new Map<Arith
 const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Comparison,TamplateInputOutput>([
     ['EQUAL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -143,8 +149,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['NOT_EQUAL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -152,8 +158,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['GREATER', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -161,8 +167,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['LESS', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -170,8 +176,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['GREATER_EQ', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -179,8 +185,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['LESS_EQ', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -188,9 +194,9 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['BETWEEN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -198,9 +204,9 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['CLAMP', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -208,7 +214,7 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['SIGN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -216,8 +222,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     }],
     ['COMPARE', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -230,8 +236,8 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
 const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateInputOutput>([
     ['AND', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -239,8 +245,8 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
     ['OR', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -248,7 +254,7 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
     ['NOT', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -256,8 +262,8 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
     ['XOR', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -265,8 +271,8 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
     ['NAND', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -274,8 +280,8 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
     }],
     ['NOR', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -286,7 +292,7 @@ const templateLogicNode:Map<Logic,TamplateInputOutput> = new Map<Logic,TamplateI
 const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,TamplateInputOutput>([
     ['ROUND', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -294,7 +300,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['FLOOR', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -302,7 +308,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['CEIL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -310,8 +316,8 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['ROUND_MUL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('1'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('1'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -319,8 +325,8 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['FLOOR_MUL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('1'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('1'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -328,8 +334,8 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['CEIL_MUL', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('1'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('1'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -337,7 +343,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['TRUNC', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -345,7 +351,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['EVEN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -353,7 +359,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
     }],
     ['ODD', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -364,7 +370,7 @@ const templateRoundingNode:Map<Rounding,TamplateInputOutput> = new Map<Rounding,
 const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<Trigonometry,TamplateInputOutput>([
     ['SIN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -372,7 +378,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['COS', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -380,7 +386,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['TAN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -388,7 +394,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['ASIN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -396,7 +402,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['ACOS', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -404,7 +410,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['ATAN', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -412,8 +418,8 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['ATAN2', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -421,7 +427,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['SEC', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -429,7 +435,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['CSC', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -437,7 +443,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
     }],
     ['COT', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -448,7 +454,7 @@ const templateTrigonometryNode:Map<Trigonometry,TamplateInputOutput> = new Map<T
 const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarithm,TamplateInputOutput>([
     ['LOG_N', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -456,8 +462,8 @@ const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarit
     }],
     ['LOG', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -465,7 +471,7 @@ const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarit
     }],
     ['LOG2', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -473,7 +479,7 @@ const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarit
     }],
     ['LOG10', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -484,7 +490,7 @@ const templateLogarithmNode:Map<Logarithm,TamplateInputOutput> = new Map<Logarit
 const templateExponentNode:Map<Exponent,TamplateInputOutput> = new Map<Exponent,TamplateInputOutput>([
     ['EXP', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -492,7 +498,7 @@ const templateExponentNode:Map<Exponent,TamplateInputOutput> = new Map<Exponent,
     }],
     ['POW2', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -500,7 +506,7 @@ const templateExponentNode:Map<Exponent,TamplateInputOutput> = new Map<Exponent,
     }],
     ['POW10', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -511,7 +517,7 @@ const templateExponentNode:Map<Exponent,TamplateInputOutput> = new Map<Exponent,
 const templateConversionNode:Map<Conversion,TamplateInputOutput> = new Map<Conversion,TamplateInputOutput>([
     ['NORMALIZE', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -519,7 +525,7 @@ const templateConversionNode:Map<Conversion,TamplateInputOutput> = new Map<Conve
     }],
     ['TO_DEG', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -527,7 +533,7 @@ const templateConversionNode:Map<Conversion,TamplateInputOutput> = new Map<Conve
     }],
     ['TO_RAD', {
         input: [
-            {type:'number', value:Decimal('0'), enableInput:true},
+            {type:'number', value:Decimal('0'), },
         ],
         output: [
             {type:'number', value:Decimal('0')},
@@ -587,8 +593,12 @@ export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,
     ...templateConversionNode,
     ...templateConstantNode,
     ['INPUT',{
-        input: [ {type:'number', value: Decimal('0'), enableInput:false} ],
+        input: [ {type:'number', value: Decimal('0'),} ],
         output: [ {type:'number', value: Decimal('0'),} ]
+    }],
+    ['Output',{
+        input: [ {type:'number', value: Decimal('0'), readOnly: true, } ],
+        output: []
     }],
     ['DUMMY', {
         input: [  ],
@@ -623,6 +633,7 @@ export class GroupAddNode<T extends 'spawn' | 'call' = 'spawn' | 'call'> {
 
 export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupAddNode>([
     ['Input',new GroupAddNode('call','INPUT')],
+    ['Output',new GroupAddNode('call','Output')],
     ['Arithmetic', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
         ['Add',new GroupAddNode('call','ADD')],
         ['Subtract',new GroupAddNode('call','SUBTRACT')],
@@ -698,8 +709,8 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['PI', new GroupAddNode('call', 'PI')],
         ['Euler', new GroupAddNode('call', 'E')],
         ['Sqrt 2', new GroupAddNode('call', 'SQRT2')],
-        ['Natural logarithm 2', new GroupAddNode('call', 'LOG_N2')],
-        ['Natural logarithm 10', new GroupAddNode('call', 'LOG_N10')],
+        ['NL 2', new GroupAddNode('call', 'LOG_N2')],
+        ['NL 10', new GroupAddNode('call', 'LOG_N10')],
         ['Infinity', new GroupAddNode('call', 'INF')],
     ]))],
 ])

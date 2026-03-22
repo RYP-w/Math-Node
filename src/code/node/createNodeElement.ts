@@ -41,7 +41,7 @@ export function createNodeElement(node: Node) {
                                                     return nodeContainerValueBox;
                                                 }
 
-                                                const valueBox = node.valueBoxs[`valuebox_${Count}`];
+                                                const valueBox = node.valueBoxs[`valuebox_${Count}`]; //<- ValueBox 
                                                 const checkEnebleInput = valueBox.enableInput;
                                                 if (checkEnebleInput) {
                                                     nodeContainerValueBox.push(
@@ -59,7 +59,7 @@ export function createNodeElement(node: Node) {
 
                                                             if (valueBox.type == 'number') {
                                                                 nodeContainerItemValue.push(
-                                                                    SetElement('input', {class: ['node-item-value', 'input_0'], value: valueBox.value, attr: { 'type': 'number' } })
+                                                                    SetElement('input', {class: ['node-item-value', 'input_0', `${valueBox.readOnly? 'read_only' : ''}`], value: valueBox.value, attr: { 'type': 'number' } })
                                                                 )
                                                             }
                                                             return nodeContainerItemValue;

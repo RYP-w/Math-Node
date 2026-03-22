@@ -135,6 +135,7 @@
 .node-container-item-value {
     padding: 0 5px;
     width: 100%;
+    display: flex;
 }
 
 .node-item-value {
@@ -166,10 +167,18 @@
     color: #00ff00;
 }
 
-.node-item-value:disabled {
+.node-item-value:disabled:not(.read_only) {
     border-color: #808080;
     color: #808080;
     pointer-events: none;
+}
+
+.node-item-value.read_only {
+    border: 0px;
+    padding: 0px;
+    pointer-events: none;
+    font-size:x-large;
+    text-align: left;
 }
 
 

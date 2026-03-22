@@ -5,7 +5,7 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
+import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isOneInZeroOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
 
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
@@ -28,13 +28,15 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
     type: T;
     value: ValueByType[T];
     enableInput: boolean;
+    readOnly: boolean;
     socket: Socket | null;
 
-    constructor(id: IdValueBox, type: T, value:ValueByType[T], enableInput: boolean) {
+    constructor(id: IdValueBox, type: T, value:ValueByType[T], enableInput: boolean, readOnly: boolean) {
         this.id = id;
         this.type = type;
         this.value = value;
         this.enableInput = enableInput;
+        this.readOnly = readOnly;
         this.socket = null;
     }
 
@@ -84,7 +86,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
 
     dirty:boolean;
 
-    constructor(name: string,type:TypeNode, position: Vector2, valueBoxs: Array<{ type: T1, value: ValueByType[T1], enableInput: boolean }>, outputSockets: Array<{ type: T2, value: ValueByType[T2] }>){
+    constructor(name: string,type:TypeNode, position: Vector2, valueBoxs: Array<{ type: T1, value: ValueByType[T1], enableInput?: boolean, readOnly?: boolean }>, outputSockets: Array<{ type: T2, value: ValueByType[T2] }>){
         this.name = name;
         this.type = type;
         this.id = `node_${nodeIdCounter++}` as IdNode;
@@ -412,7 +414,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
 
             }else if (this.type == 'LOG_N2') {
                 output_0.value = Decimal.ln('2'); return;
-                
+
             }else if (this.type == 'LOG_N10') {
                 output_0.value = Decimal.ln('10'); return;
 
@@ -424,6 +426,14 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                  return;
             }
 
+        }else if (isOneInZeroOut(this.type)) {
+            
+            if (this.type == 'Output') {
+                return;
+            } else{
+                console.log("BUG: ", this.type);
+                return;
+            }
         }else{
             console.log("BUG");
             return;
@@ -514,13 +524,13 @@ function convertValueLN(value:Decimal){
     return true;
 }
 
-function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: Decimal, enableInput: boolean }>){
+function initValueBox(node:Node, valueBoxs:Array<{ type: DataTypeNode, value: Decimal, enableInput?: boolean, readOnly?: boolean }>){
     let countIdValueBox = 0;
     let countIdSocket = 0;
     for (const valueBox of valueBoxs){
         const idValueBox:IdValueBox = `valuebox_${countIdValueBox}`;
-        node.valueBoxs[idValueBox] = new ValueBox(idValueBox, valueBox.type, Decimal(String(valueBox.value)), valueBox.enableInput);
-        if (valueBox.enableInput) {
+        node.valueBoxs[idValueBox] = new ValueBox(idValueBox, valueBox.type, Decimal(String(valueBox.value)), valueBox.enableInput ?? true, valueBox.readOnly ?? false);
+        if (valueBox.enableInput ?? true) {
             const inputIdSocket:IdInputSocket = `inputsocket_${countIdSocket}`;
             node.valueBoxs[idValueBox].setSocket(inputIdSocket);
             node.connection.incomingNodes[inputIdSocket] = new Map();
