@@ -100,7 +100,7 @@ export class NodeDatabase {
                 const pathSelector = `[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`;
                 const pathElement = this.HtmlPlaceCurve.querySelector(pathSelector);
                 if (pathElement === null) {
-                    ("BUG:",pathSelector);
+                    console.log("BUG:",pathSelector);
                     return;
                 }
                 pathElement.remove();
