@@ -184,7 +184,6 @@ export class NodeDatabase {
                 L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} 
                 L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} 
                 L ${positionSocketTo.x} ${positionSocketTo.y}`,
-            stroke: 'white',
             strokeWidth: '2',
             strokeLinejoin: 'round',
             fill: 'none',
@@ -193,9 +192,18 @@ export class NodeDatabase {
                 'socket-from': `${fromNode.idSocket}`,
                 'node-to': `${toNode.node.id}`,
                 'socket-to': `${toNode.idSocket}`,
-            }
+            },
+            class:['path-properties']
         });
         this.HtmlPlaceCurve.appendChild(path);
         fromNode.node.OutgoingPathLines.set(`${fromNode.node.id},${fromNode.idSocket},${toNode.node.id},${toNode.idSocket}`, path);
+
+        // ubang langsung warna pada path sesuai dengan state socket output
+        const statePath = fromNode.node.outputSockets.get(fromNode.idSocket)?.state;
+        if (!statePath) {
+            console.log('BUG:','tidak ada socket pada node,', fromNode.idSocket);
+            return;
+        }
+        path.style.setProperty('stroke',`var(--${statePath})`);
     }
 }

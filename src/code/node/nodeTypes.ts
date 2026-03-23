@@ -5,6 +5,8 @@ export type ValueByType = {
     'number': Decimal;
 };
 
+export type StateOutputValueNode = 'normal' | 'infinity' | 'error';
+
 export type IdSocket = string;
 export type IdInputSocket = `inputsocket_${number}`;
 export type IdOutputSocket = `outputsocket_${number}`;

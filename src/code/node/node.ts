@@ -5,7 +5,7 @@ import { createNodeElement } from "./createNodeElement";
 
 import { getAtribute_number } from "../helper/addons";
 import Decimal from "decimal.js";
-import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isOneInZeroOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type TypeNode, type ValueByType } from "./nodeTypes";
+import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isOneInZeroOut, isZeroInOneOut, type DataTypeNode, type IdInputSocket, type IdNode, type IdOutputSocket, type IdPath, type IdSocket, type IdValueBox, type StateOutputValueNode, type TypeNode, type ValueByType } from "./nodeTypes";
 
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
@@ -91,11 +91,47 @@ class ValueBox<T extends DataTypeNode = DataTypeNode> {
 }
 
 class OutputSocket<T extends DataTypeNode = DataTypeNode> extends Socket {
+    state: StateOutputValueNode;
     value: ValueByType[T];
-    constructor(id: IdSocket, type: T, value:ValueByType[T]){
+    HtmlElement?: HTMLElement;
+    node: Node;
+
+    constructor(id: IdSocket, type: T, value:ValueByType[T], node: Node){
         super(id,type);
         this.value =  value;
+        this.state = 'normal';
+        this.node = node;
     }
+
+    setHtmlElement(element:HTMLElement) {
+        this.HtmlElement = element;
+    }
+
+    updateStateByValue(){
+        let new_state:StateOutputValueNode = 'normal';
+        if (this.value.isNaN()) {
+            new_state = 'error';
+        }else if (!this.value.isFinite()) {
+            new_state = 'infinity';
+        }
+
+        if (new_state == this.state) {
+            return false;
+        }
+        
+        this.state = new_state;
+        return true;
+    }
+
+    updatePathOutput(){
+        for (const [key, path] of this.node.OutgoingPathLines){
+            let [_, idOutputSocket, _idInputNode, _idInputSocket] = key.split(',') as [IdNode, IdOutputSocket, IdNode, IdInputSocket];
+            if (idOutputSocket == this.id) {
+                path.style.setProperty('stroke',`var(--${this.state})`)
+            }
+        }
+    }
+
 }
 
 let nodeIdCounter = 0;
@@ -208,14 +244,18 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'BETWEEN') {
-                output_0.value = value_1.lessThanOrEqualTo(value_0) && value_0.lessThanOrEqualTo(value_2)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_1.lessThanOrEqualTo(value_0) && value_0.lessThanOrEqualTo(value_2)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'CLAMP') {
-                output_0.value = Decimal.max(value_1, Decimal.min(value_2, value_0)); return;
+                output_0.value = Decimal.max(value_1, Decimal.min(value_2, value_0));
 
             }else{
                 console.log("BUG: ", this.type);
                 return;
+            }
+
+            if (output_0.updateStateByValue()) {
+                output_0.updatePathOutput()
             }
 
         }else if (isMathTwoInOneOut(this.type)) {
@@ -226,85 +266,90 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'ADD') {
-                output_0.value = value_0.add(value_1); return;
+                output_0.value = value_0.add(value_1);
 
             }else if (this.type == 'SUBTRACT') {
-                output_0.value = value_0.sub(value_1); return;
+                output_0.value = value_0.sub(value_1);
 
             }else if (this.type == 'MULTIPLY') {
-                output_0.value = value_0.mul(value_1); return;
+                output_0.value = value_0.mul(value_1);
 
             }else if (this.type == 'DIVIDE') {
-                output_0.value = value_0.div(value_1); return;
+                output_0.value = value_0.div(value_1);
 
             }else if (this.type == 'MOD') {
-                output_0.value = value_0.mod(value_0); return;
+                output_0.value = value_0.mod(value_0);
 
             }else if (this.type == 'POWER') {
-                output_0.value = value_0.pow(value_1); return;
+                output_0.value = value_0.pow(value_1);
             
             }else if (this.type == 'EQUAL') {
-                output_0.value = value_0.equals(value_1)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_0.equals(value_1)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'NOT_EQUAL') {
-                output_0.value = value_0.equals(value_1)? Decimal('0') : Decimal('1'); return;
+                output_0.value = value_0.equals(value_1)? Decimal('0') : Decimal('1');
 
             }else if (this.type == 'GREATER') {
-                output_0.value = value_0.greaterThan(value_1)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_0.greaterThan(value_1)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'LESS') {
-                output_0.value = value_0.lessThan(value_1)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_0.lessThan(value_1)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'GREATER_EQ') {
-                output_0.value = value_0.greaterThanOrEqualTo(value_1)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_0.greaterThanOrEqualTo(value_1)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'LESS_EQ') {
-                output_0.value = value_0.lessThanOrEqualTo(value_1)? Decimal('1') : Decimal('0'); return;
+                output_0.value = value_0.lessThanOrEqualTo(value_1)? Decimal('1') : Decimal('0');
 
             }else if (this.type == 'COMPARE') {
                 const result = value_0.cmp(value_1);
 
                 if (result == 1) {
-                    output_0.value = Decimal('1'); return;
+                    output_0.value = Decimal('1');
                 }else if (result == 0) {
-                    output_0.value = Decimal('0'); return;
+                    output_0.value = Decimal('0');
                 }else if (result == -1) {
-                    output_0.value = Decimal('-1'); return;
+                    output_0.value = Decimal('-1');
+                } else {
+                    output_0.value = Decimal('NaN');
                 }
-                output_0.value = Decimal('NaN');
-                return;
 
             }else if (this.type == 'AND') {
                 if (convertValueLN(value_0) && convertValueLN(value_1)) {
-                    output_0.value = Decimal('1'); return;
+                    output_0.value = Decimal('1');
+                } else {
+                    output_0.value = Decimal('0');
                 }
-                output_0.value = Decimal('0'); return;
 
             }else if (this.type == 'OR') {
                 if (convertValueLN(value_0) || convertValueLN(value_1)) {
-                    output_0.value = Decimal('1'); return;
+                    output_0.value = Decimal('1');
+                } else {
+                    output_0.value = Decimal('0');
                 }
-                output_0.value = Decimal('0'); return;
 
             }else if (this.type == 'XOR') {
                 const rst_0 = convertValueLN(value_0);
                 const rst_1 = convertValueLN(value_1);
                 if ((rst_0 && !rst_1) || (!rst_0 && rst_1)) {
-                    output_0.value = Decimal('1'); return;
+                    output_0.value = Decimal('1');
+                } else {
+                    output_0.value = Decimal('0');
                 }
-                output_0.value = Decimal('0'); return;
                 
             }else if (this.type == 'NAND') {
                 if (convertValueLN(value_0) && convertValueLN(value_1)) {
-                    output_0.value = Decimal('0'); return;
+                    output_0.value = Decimal('0');
+                } else {
+                    output_0.value = Decimal('1');
                 }
-                output_0.value = Decimal('1'); return;
 
             }else if (this.type == 'NOR') {
                 if (convertValueLN(value_0) || convertValueLN(value_1)) {
-                    output_0.value = Decimal('0'); return;
+                    output_0.value = Decimal('0');
+                } else {
+                    output_0.value = Decimal('1');
                 }
-                output_0.value = Decimal('1'); return;
 
             }else if (this.type == 'ROUND_MUL') {
                 output_0.value = value_0.div(value_1).round().mul(value_1);
@@ -316,14 +361,18 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = value_0.div(value_1).ceil().mul(value_1);
 
             }else if (this.type == 'ATAN2') {
-                output_0.value = Decimal.atan2(value_0, value_1); return;
+                output_0.value = Decimal.atan2(value_0, value_1);
 
             }else if (this.type == 'LOG') {
-                output_0.value = Decimal.log(value_0, value_1); return;
+                output_0.value = Decimal.log(value_0, value_1);
 
             } else{
                 console.log("BUG: ", this.type);
                 return;
+            }
+
+            if (output_0.updateStateByValue()) {
+                output_0.updatePathOutput()
             }
 
         }else if (isMathOneInOneOut(this.type)) {
@@ -333,17 +382,17 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (!output_0) { console.log("BUG"); return;}
 
             if (this.type == 'SQRT') {
-                output_0.value = value_0.sqrt();  return;
+                output_0.value = value_0.sqrt();
 
             }else if (this.type == 'ABS') {
-                output_0.value = value_0.abs();  return;
+                output_0.value = value_0.abs();
 
             }else if (this.type == 'NEGATE') {
-                output_0.value = value_0.neg();  return;
+                output_0.value = value_0.neg();
 
             }else if (this.type == 'FACTORIAL') {
                 if (value_0.isNegative()) {
-                    output_0.value = Decimal('NaN');  return;
+                    output_0.value = Decimal('NaN');
                 }else{
                     let result = Decimal('1');
 
@@ -351,91 +400,99 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                         result = result.mul(i);
                     }
 
-                    output_0.value = result;  return;
+                    output_0.value = result;
                 }
 
             }else if (this.type == 'SIGN') {
                 if (value_0.lessThan('0')) {
-                    output_0.value = Decimal('-1');  return;
+                    output_0.value = Decimal('-1');
 
                 }else if (value_0.equals('0')) {
-                    output_0.value = Decimal('0'); return;
+                    output_0.value = Decimal('0');
 
                 }else if (value_0.greaterThan('0')) {
-                    output_0.value = Decimal('1'); return;
+                    output_0.value = Decimal('1');
 
                 }else{
                     console.log('BUG:', value_0.toString()); return;
 
                 }
             }else if (this.type == 'NOT') {
-                output_0.value = convertValueLN(value_0)? Decimal('0') : Decimal('1'); return;
+                output_0.value = convertValueLN(value_0)? Decimal('0') : Decimal('1');
 
             }else if (this.type == 'ROUND') {
-                output_0.value = value_0.round(); return;
+                output_0.value = value_0.round();
 
             }else if (this.type == 'FLOOR') {
-                output_0.value = value_0.floor(); return;
+                output_0.value = value_0.floor();
 
             }else if (this.type == 'CEIL') {
-                output_0.value = value_0.ceil(); return;
+                output_0.value = value_0.ceil();
 
             }else if (this.type == 'TRUNC') {
-                output_0.value = value_0.trunc(); return;
+                output_0.value = value_0.trunc();
 
             }else if (this.type == 'EVEN') {
-                if (value_0.equals('0')) { output_0.value = Decimal('0'); return; }
-                const sign = value_0.greaterThan(0)? 1 : -1;
-                const abs = value_0.abs();
-                const c = abs.ceil();
-                output_0.value = (c.mod('2').equals('1')? c.add('1') : c).mul(sign);
+                if (value_0.equals('0')) { output_0.value = Decimal('0'); }
+                else {
+                    const sign = value_0.greaterThan(0)? 1 : -1;
+                    const abs = value_0.abs();
+                    const c = abs.ceil();
+                    output_0.value = (c.mod('2').equals('1')? c.add('1') : c).mul(sign);
+                }
                 
             }else if (this.type == 'ODD') {
-                if (value_0.equals('0')) { output_0.value = Decimal('1'); return; }
-                const sign = value_0.greaterThan(0)? 1 : -1;
-                const abs = value_0.abs();
-                const c = abs.ceil();
-                output_0.value = (c.mod('2').equals('0')? c.add('1') : c).mul(sign)
+                if (value_0.equals('0')) { output_0.value = Decimal('1'); }
+                else {
+                    const sign = value_0.greaterThan(0)? 1 : -1;
+                    const abs = value_0.abs();
+                    const c = abs.ceil();
+                    output_0.value = (c.mod('2').equals('0')? c.add('1') : c).mul(sign)
+                }
 
             }else if (this.type == 'SIN') {
-                output_0.value = value_0.sin(); return;
+                output_0.value = value_0.sin();
 
             }else if (this.type == 'COS') {
-                output_0.value = value_0.cos(); return;
+                output_0.value = value_0.cos();
 
             }else if (this.type == 'TAN') {
-                output_0.value = value_0.tan(); return;
+                output_0.value = value_0.tan();
 
             }else if (this.type == 'ASIN') {
-                output_0.value = value_0.asin(); return;
+                output_0.value = value_0.asin();
 
             }else if (this.type == 'ACOS') {
-                output_0.value = value_0.acos(); return;
+                output_0.value = value_0.acos();
 
             }else if (this.type == 'ATAN') {
-                output_0.value = value_0.atan(); return;
+                output_0.value = value_0.atan();
 
             }else if (this.type == 'SEC') {
-                output_0.value = Decimal('1').div(value_0.cos()); return;
+                output_0.value = Decimal('1').div(value_0.cos());
 
             }else if (this.type == 'CSC') {
-                output_0.value = Decimal('1').div(value_0.sin()); return;
+                output_0.value = Decimal('1').div(value_0.sin());
 
             }else if (this.type == 'COT') {
-                output_0.value = Decimal('1').div(value_0.tan()); return;
+                output_0.value = Decimal('1').div(value_0.tan());
                 
             }else if (this.type == 'LOG_N') {
-                output_0.value = value_0.ln(); return;
+                output_0.value = value_0.ln();
 
             }else if (this.type == 'LOG2') {
-                output_0.value = Decimal.log2(value_0); return;
+                output_0.value = Decimal.log2(value_0);
 
             }else if (this.type == 'LOG10') {
-                output_0.value = Decimal.log10(value_0); return;
+                output_0.value = Decimal.log10(value_0);
 
             } else{
                 console.log("BUG");
                 return;
+            }
+
+            if (output_0.updateStateByValue()) {
+                output_0.updatePathOutput()
             }
             
         }else if (isZeroInOneOut(this.type)) {
@@ -445,28 +502,32 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             
             if (this.type == 'INPUT') {
                 const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
-                output_0.value = value_0;  return;
+                output_0.value = value_0;
 
             }else if (this.type == 'PI') {
-                output_0.value = Decimal.acos(-1); return;
+                output_0.value = Decimal.acos(-1);
 
             }else if (this.type == 'E') {
-                output_0.value = Decimal(1).exp(); return;
+                output_0.value = Decimal(1).exp();
             }else if (this.type == 'SQRT2') {
-                output_0.value = Decimal.sqrt('2'); return;
+                output_0.value = Decimal.sqrt('2');
 
             }else if (this.type == 'LOG_N2') {
-                output_0.value = Decimal.ln('2'); return;
+                output_0.value = Decimal.ln('2');
 
             }else if (this.type == 'LOG_N10') {
-                output_0.value = Decimal.ln('10'); return;
+                output_0.value = Decimal.ln('10');
 
             }else if (this.type == 'INF') {
-                output_0.value = Decimal('Infinity'); return;
+                output_0.value = Decimal('Infinity');
 
             } else{
                 console.log("BUG: ", this.type);
-                 return;
+                return;
+            }
+
+            if (output_0.updateStateByValue()) {
+                output_0.updatePathOutput()
             }
 
         }else if (isOneInZeroOut(this.type)) {
@@ -591,7 +652,7 @@ function initOutputSocket(node:Node, outputSockets: Array<{ type: DataTypeNode, 
     let countIdSocket = 0;
     for (const outputSocket of outputSockets){
         const IdSocket:IdOutputSocket = `outputsocket_${countIdSocket}`;
-        node.outputSockets.set(IdSocket, new OutputSocket(IdSocket,outputSocket.type, Decimal(String(outputSocket.value))));
+        node.outputSockets.set(IdSocket, new OutputSocket(IdSocket,outputSocket.type, Decimal(String(outputSocket.value)), node));
         node.connection.outgoingNodes[IdSocket] = new Map()
         countIdSocket++;
     }

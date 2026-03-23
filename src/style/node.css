@@ -235,3 +235,12 @@
     pointer-events: none;
 
 }
+
+.path-properties {
+    --normal: #ffffff;
+    --infinity: #6f00ff;
+    --error: #ff0073;
+    stroke: var(--normal);
+
+    transition: stroke 0.2s;
+}
