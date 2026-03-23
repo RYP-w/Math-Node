@@ -69,6 +69,9 @@ export class NodeDatabase {
 
         this.createPathLine(fromNode,toNode);
 
+        fromNode.node.HtmlSockets.outputSockets[fromNode.idSocket].setAttribute('connected','true');
+        toNode.node.HtmlSockets.inputSockets[toNode.idSocket].setAttribute('connected','true');
+
         const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
         
         if (!elementValueBox) {
@@ -106,6 +109,13 @@ export class NodeDatabase {
                 pathElement.remove();
 
                 fromNode.node.OutgoingPathLines.delete(`${fromNode.node.id},${fromNode.idSocket},${toNode.node.id},${toNode.idSocket}`);
+
+                if (fromNode.node.connection.outgoingNodes[fromNode.idSocket].size == 0) {
+                    fromNode.node.HtmlSockets.outputSockets[fromNode.idSocket].setAttribute('connected','false');
+                }
+                if (toNode.node.connection.incomingNodes[toNode.idSocket].size == 0) {
+                    toNode.node.HtmlSockets.inputSockets[toNode.idSocket].setAttribute('connected','false');
+                }
 
                 const elementValueBox = toNode.node.HtmlSockets.inputSockets[toNode.idSocket].closest('[id^="valuebox_"]');
                 if (!elementValueBox) {

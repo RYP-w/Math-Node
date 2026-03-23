@@ -6,7 +6,7 @@
     --line-bold: 1px;
     --pading-node-region: 4px;
     --height-size-items: 20px;
-    --size-socket: 10px;
+    --size-socket: 10;
     --offsite-socket: -5.5px;
     --gap-vertical-node-body: 12.5px;
     --item-value-radius: 4px;
@@ -88,7 +88,7 @@
     align-items: center;
     position: relative;
     height: 100%;
-    min-width: var(--size-socket);
+    min-width: calc(var(--size-socket) * 1px);
 }
 
 .node-container-socket.input {
@@ -101,25 +101,46 @@
 
 }
 
+/* costum Variabel */
+@property --circle-normal {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+
+@property --circle-selected {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+}
+
 .node-item-socket {
-    --test: 0;
+    --one-percent-in-px: calc(sqrt(pow(var(--size-socket),2) + pow(var(--size-socket),2)));
+    --one-px-in-percent: calc(1 / var(--one-percent-in-px) * 100%);
+
+    --circle-normal: calc(var(--one-px-in-percent) * 8);
+    --circle-selected: 0%;
     box-sizing: border-box;
-    width: var(--size-socket);
-    height: var(--size-socket);
-    border-width: 1px;
-    border-style: solid;
-    border-color: white;
+    width: calc(var(--size-socket) * 1px);
+    height: calc(var(--size-socket) * 1px);
     border-radius: 50%;
 
-    background-color: var(--color-dark-03);
+    background: 
+        radial-gradient(circle, #ffffff calc(var(--circle-selected) - 1%), transparent var(--circle-selected)),
+        radial-gradient(circle, var(--color-dark-03) var(--circle-normal), #ffffff calc(var(--circle-normal) + 1%)
+    );
 
-    transition: border-width 0.1s;
+    transition: --circle-normal 0.1s, --circle-selected 0.1s;
     position: absolute;
 }
 
+.node-item-socket[connected='true']{
+    --circle-selected:42.42%;
+}
+
 .node-item-socket-radius {
-    width: var(--size-socket);
-    height: var(--size-socket);
+    width: calc(var(--size-socket) * 1px);
+    height: calc(var(--size-socket) * 1px);
     border-radius: 50%;
     /* background-color: #00ff0088; */
     position: absolute;
@@ -128,8 +149,11 @@
 }
 
 .node-item-socket:has(+ .node-item-socket-radius:hover) {
-    border-width: 3px;
-    
+    --circle-normal: calc(var(--one-px-in-percent) * 4);
+}
+
+.node-item-socket[connected='true']:has(+ .node-item-socket-radius:hover) {
+    --circle-selected: calc(var(--one-px-in-percent) * 2)
 }
 
 .node-container-item-value {
@@ -188,11 +212,11 @@
 }
 
 .left-margin-wrap-socket {
-    margin-left: var(--size-socket);
+    margin-left: calc(var(--size-socket) * 1px);
 }
 
 .right-margin-wrap-socket {
-    margin-right: var(--size-socket);
+    margin-right: calc(var(--size-socket) * 1px);
 }
 
 .icon-info{

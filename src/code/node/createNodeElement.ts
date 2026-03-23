@@ -46,7 +46,7 @@ export function createNodeElement(node: Node) {
                                                 if (checkEnebleInput) {
                                                     nodeContainerValueBox.push(
                                                         SetElement('div', { class: ['node-container-socket', 'input'] },
-                                                            SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id }),
+                                                            SetElement('div', { class: ['node-item-socket', 'input'], id: valueBox.socket?.id, attr:{'connected':'false'} }),
                                                             SetElement('div', {class:['node-item-socket-radius']}),
                                                         )
                                                     );
