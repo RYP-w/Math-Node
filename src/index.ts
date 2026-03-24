@@ -63,22 +63,6 @@ const mouseState = new MouseButtonState();
 //<?> Create Database Nodes
 const rBushSelection = new RBushRectSelection();
 const databaseNode = new NodeDatabase(SVG_Place_World2D, rBushSelection);
-// databaseNode.add( //Testing adding node
-//     new Node(
-//         "coba coba",
-//         'ADD',
-//         { x: 300, y: 0 },
-//         [
-//             { type: "number", value: 10, enableInput: true },
-//             { type: "number", value: 10, enableInput: false },
-//             { type: "number", value: 10, enableInput: true },
-//         ],
-//         [
-//             { type: "number", value: 0 },
-//             { type: "number", value: 0 },
-//         ],
-//     ),
-// );
 
 //<?> init 
 actionCheckCompatible() //? cek apakah device bisa menjalankan editor ini

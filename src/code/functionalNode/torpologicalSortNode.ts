@@ -2,33 +2,23 @@ import { Queue } from "../helper/addons";
 import type { Node } from "../node/node";
 import type { IdNode, IdOutputSocket } from "../node/nodeTypes";
 
-//TODO: aku akan membuat sebush sistem pemerosesan pada node,
-// misal jika node_1 di ubah value nya seluruh node yang bergantung/ bberhubungan dengan node tersebut akan menjadi dirty dan akan memperbarui value dan outputnya sesuai dengan urutannya
-// caranya bagaimana? 
+//TODO: torpologi sort sekarang bisa melakukan merge terhadap node yang sedang di proses, dan yang akan di proses,
+// 
 
 export class TorpologySortNode{
     nodeDependencies:NodeDependence[] = [];
     isRunning:boolean = false;
     visited:Set<Node> = new Set<Node>();
     maxChunck:number;
-    check_cycle = 0;
 
     constructor(maxChunck:number = 100){
         this.maxChunck = maxChunck;
     }
 
     setTorpologycal(node:Node){
-        this.nodeDependencies = this.makeDependence(node);
+        const newNodeDependencies = this.makeDependence(node);
+        this.mergeDependencies(newNodeDependencies)
         this.runTorpological()
-    }
-
-    runTorpological(){
-        this.visited.clear();
-        this.isRunning = true;
-        this.check_cycle = 0;
-        requestAnimationFrame(() => {
-            this.tick();
-        })
     }
 
     stop(){
@@ -39,8 +29,24 @@ export class TorpologySortNode{
         this.isRunning = true;
     }
 
+    private runTorpological(){
+        if (this.isRunning) {return;}
+        this.visited.clear();
+        this.isRunning = true;
+        requestAnimationFrame(() => {
+            this.tick();
+        })
+    }
+
+    private clear(){
+        this.isRunning = false;
+        this.visited.clear();
+    }
+
     private tick() {
         if (!this.isRunning) return;
+
+        // console.log(this.nodeDependencies.map(node => `${node.node.id}:[${node.getDependenties().size}]`));
 
         this.processChunk();
 
@@ -49,6 +55,7 @@ export class TorpologySortNode{
         })
     }
 
+    //
     private processChunk() {
         let count = 0;
         const stillPending: NodeDependence[] = [];
@@ -61,23 +68,24 @@ export class TorpologySortNode{
 
             if (!nodeDependence.haveDependence(this.visited)) {
                 nodeDependence.node.dirty = false;
-                nodeDependence.node.updateValueNode()
+                nodeDependence.node.updateValueNode();
                 this.visited.add(nodeDependence.node);
                 count++;
             } else {
                 stillPending.push(nodeDependence);
             }
-            this.check_cycle++;
         }
 
         this.nodeDependencies = stillPending;
 
         if (this.nodeDependencies.length === 0) {
-            this.isRunning = false;
+            this.clear()
         }
     }
 
-    private makeDependence(nodeRoot:Node){
+    //TODO ubah dokumentasi
+    /**return list node yang memiliki ketergantungan terhadap node lain => {node} {list other node} */
+    private makeDependence(nodeRoot:Node):Map<IdNode, NodeDependence>{
         let mapNodeDependencies:Map<IdNode,NodeDependence> = new Map<IdNode,NodeDependence>();
         let queue:Queue<Node> = new Queue<Node>();
 
@@ -86,8 +94,6 @@ export class TorpologySortNode{
         mapNodeDependencies.set(nodeRoot.id, rootNodeDependenties);
         queue.enqueue(nodeRoot);
 
-        let count = 0;
-        
         while (queue.size() > 0) {
             const node = queue.dequeue()!;
 
@@ -103,12 +109,36 @@ export class TorpologySortNode{
                     mapNodeDependencies.get(neighbor.otherNode.id)?.setDependenties(node);
                 }
             }
-            count ++;
         }
-        // c onsole.log('makeDependence membutuhkan perulangan: ', count, "kali");
-        // c onsole.log([...mapNodeDependencies.values()]);
         
-        return [...mapNodeDependencies.values()];
+        return mapNodeDependencies;
+    }
+
+    /**menggabungkan daftar node baru yang akan di peroses dengan node yang sedang di peroses di Torpological */
+    private mergeDependencies(newNodeDependencies: Map<IdNode, NodeDependence>){
+        if (this.nodeDependencies.length == 0) {
+            this.nodeDependencies = [...newNodeDependencies.values()]; return;
+        }
+
+        // menghapus node visited yang sama di newNodeDependencies
+        for (const nodeDependence of newNodeDependencies.values()) {
+            this.visited.delete(nodeDependence.node);
+        }
+
+        for (const nodeDependence of this.nodeDependencies) {
+            const mergeNodeDependence = newNodeDependencies.get(nodeDependence.node.id);
+
+            // jika nodeDependence tidak berada di newNodeDependencies, skip
+            if (!mergeNodeDependence) continue;
+
+            nodeDependence.setDependenties(...mergeNodeDependence.getDependenties())
+            newNodeDependencies.delete(nodeDependence.node.id);
+        }
+
+        // tambahkan node baru ke nodeDependencies
+        for (const nodeDependence of newNodeDependencies.values()){
+            this.nodeDependencies.push(nodeDependence);
+        }
     }
 }
 
@@ -120,20 +150,24 @@ class NodeDependence{
         this.dependencies = new Set<Node>();
     }
 
-    setDependenties(node:Node){
-        this.dependencies.add(node);
+    setDependenties(...nodes:Node[]){
+        for (const eNode of nodes) {
+            this.dependencies.add(eNode);
+        }
     }
 
+    /**cek apakah masih ada node *dependency* yang belum diproses */
     haveDependence(visited:Set<Node>){
         if (this.dependencies.size == 0) return false;
         for (const dependence of this.dependencies){
+            // apakah `dependency` ini belum ada di daftar yang sudah beres
             if (!visited.has(dependence)) {
                 return true;
             }
         }
         return false;
     }
-
+    
     getDependenties(){
         return this.dependencies;
     }

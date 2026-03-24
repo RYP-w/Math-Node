@@ -210,6 +210,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         return op
     }
 
+    /** perbarui value pada valueBox dengan outputSocket yang terhubung; */
     updateValueNode(){
         for (const idValueBox of Object.keys(this.valueBoxs) as IdValueBox[]){
             const valueBox = this.valueBoxs[idValueBox];
@@ -234,6 +235,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         this.updateOutputValue()
     }
 
+    /** perbarui value pada outputSocket sesuai dengan type node */
     updateOutputValue() {
         if (isMathThreeInOneOut(this.type)) {
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
