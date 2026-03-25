@@ -49,6 +49,17 @@ let infoMouseState:Partial<Record<MouseKey,Partial<Record<MouseSignal,string[][]
         'socketSelected':[
             [':mouse_left', '[DOWN] + {in socket input} = confirm connected node'],
         ]
+    },
+    'right':{
+        '':[
+            [':mouse_right', '[DOWN] ->', ':mouse_move', '[MOVE] = ubah posisi world2d']
+        ],
+        'world2d':[
+            [':mouse_move', '[MOVE] = Ubah posisi world2d']
+        ],
+        'dragView':[
+            [':mouse_right', '[UP] = Confirm posisi world2d']
+        ]
     }
 }
 
@@ -69,7 +80,7 @@ export function updateInfoMouseState(mouseState:MouseButtonState) {
 
     const signalLeft = mouseState.getSignal('left');
     // const signalMiddle = this.getSignal('middle');
-    // const signalRight = this.getSignal('right');
+    const signalRight = mouseState.getSignal('right');
 
     if (activeInfoMouseState.left != signalLeft) {
         const commands = infoMouseState.left?.[signalLeft]
@@ -100,28 +111,33 @@ export function updateInfoMouseState(mouseState:MouseButtonState) {
 
         activeInfoMouseState.left = signalLeft;
     }
-    // if (this.activeInfoMouseState.middle != signalMiddle) {
-    //     const commands = this.infoMouseState.middle?.[signalMiddle]
-    //     if (!commands) {return;}
+    if (activeInfoMouseState.right != signalRight) {
+        const commands = infoMouseState.right?.[signalRight]
+        
+        htmlRightMouseState.innerHTML = '';
 
-    //     htmlMiddleMouseState.innerHTML = '';
+        if (commands) {
+            for (const command of commands){
+                const htmlCommand = SetElement('div',{class:['info-mouse-state-container']});
+                for (let token of command){
+                    const setType = token.startsWith(':')
+                    token = token.replace(':','');
+                    const iconSvg = dataIconSvg[token as KeyIconSvg];
+                    if (setType) {
+                        
+                        htmlCommand.appendChild(
+                            SetElementSvg('svg',{class:['margin-right-one-char'], width:iconSvg.width * 0.8, height:iconSvg.height * 0.8, viewBox:iconSvg.viewBox, fill:'#ffffff'}, 
+                                SetElementSvg('path',{d:iconSvg.d})
+                            )
+                        );
+                    }else {
+                        htmlCommand.appendChild(SetElement('span', {class:['margin-right-one-char']}, token));
+                    }
+                }
+                htmlRightMouseState.appendChild(htmlCommand);
+            }
+        }
 
-    //     for (const command of commands){
-    //         htmlMiddleMouseState.appendChild(SetElement('span', {}, command));
-    //     }
-
-    //     this.activeInfoMouseState.middle = signalMiddle;
-    // }
-    // if (this.activeInfoMouseState.right != signalRight) {
-    //     const commands = this.infoMouseState.right?.[signalRight]
-    //     if (!commands) {return;}
-
-    //     htmlRightMouseState.innerHTML = '';
-
-    //     for (const command of commands){
-    //         htmlRightMouseState.appendChild(SetElement('span', {}, command));
-    //     }
-
-    //     this.activeInfoMouseState.right = signalRight;
-    // }
+        activeInfoMouseState.right = signalRight;
+    }
 }
