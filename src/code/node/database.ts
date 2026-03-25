@@ -1,5 +1,5 @@
 import { ConnectionManager } from "./connectionManager";
-import { SetElementPath } from "../helper/addons";
+import { SetElementSvg } from "../helper/addons";
 import { RBushRectSelection } from "./rBushRectSelection";
 import type { IdInputSocket, IdNode, IdOutputSocket, IdValueBox } from "./nodeTypes";
 import { HORIZONTAL_SEGMENT_LENGTH, Node } from "./node";
@@ -179,7 +179,7 @@ export class NodeDatabase {
         
         const positionSocketFrom = fromNode.node.getPositionSocketOutput(fromNode.idSocket);
         const positionSocketTo = toNode.node.getPositionSocketInput(toNode.idSocket);
-        const path = SetElementPath({
+        const path = SetElementSvg('path',{
             d: `M ${positionSocketFrom.x} ${positionSocketFrom.y} 
                 L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} 
                 L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} 

@@ -1,5 +1,5 @@
 import { SetElement } from '../../helper/addons';
-import type { GroupAddNode, TypeNode } from '../../node/nodeTypes';
+import type { GroupAddNode, TypeNode } from '../nodeTypes';
 import type { Vector2 } from '../../globalTypes';
 
 export class AddNodeEnvironment {

@@ -30,3 +30,18 @@
 .fog.active {
     background-color: #00000077;
 }
+
+#info-mouse-state{
+    position: absolute;
+    transform: translate(10px, 10px);
+}
+
+.margin-right-one-char{
+    margin-right: 1ch;
+}
+
+.info-mouse-state-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}

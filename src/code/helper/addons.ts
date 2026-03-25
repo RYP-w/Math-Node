@@ -1,52 +1,62 @@
 import type Decimal from "decimal.js"
 
 //<?> Set Element 
-export type ElementTypes = 'div' | 'span' | 'img' | 'input' | 'i' | 'table' | 'tr' | 'td' | 'button'
-export type AttributesElement = {
-    id?: string,
-    class?: Array<string>,
-    style?: Array<string>,
-    value?: Decimal,
-    src?: string,
-    attr?: { [key: string]: string }
+export type ElementTypes = 'div' | 'span' | 'img' | 'input' | 'i' | 'table' | 'tr' | 'td' | 'button';
+export type ElementNSTypes = 'path' | 'svg';
+
+type Attribute_1 = {id?: string, class?: Array<string>, style?: Array<string>, attr?: { [key: string]: string }};
+type Attribute_2 = {id?: string, class?: Array<string>, style?: Array<string>,src?: string, attr?: { [key: string]: string }};
+type Attribute_3 = {id?: string, class?: Array<string>, style?: Array<string>,value?: Decimal, attr?: { [key: string]: string }};
+type Attribute_4 = {id?: string, class?: Array<string>, style?: Array<string>, width?:number, height?:number, viewBox?:string, fill?:string, attr?: { [key: string]: string }};
+type Attribute_5 = {id?: string, class?: Array<string>, d?: string, stroke?: string, strokeWidth?: string, strokeLinejoin?: string, strokeLinecap?: string, fill?: string, attr?: { [key: string]: string }};
+
+export type AttributeElementByType = {
+    'div': Attribute_1,
+    'span': Attribute_1,
+    'img': Attribute_2,
+    'input': Attribute_3,
+    'i': Attribute_1,
+    'table': {},
+    'tr': {},
+    'td': Attribute_1,
+    'button': Attribute_1,
+    'svg': Attribute_4,
+    'path': Attribute_5,
 }
 
-export type AttributesElementPath = {
-    id?: string,
-    class?: Array<string>,
-    d?: string,
-    stroke?: string,
-    strokeWidth?: string,
-    strokeLinejoin?: string,
-    strokeLinecap?: string,
-    fill?: string,
-    attr?: { [key: string]: string }
-}
-
-export function SetElement(type: ElementTypes, attributes: AttributesElement = {}, ...children: (HTMLElement | string | (() => HTMLElement[]))[]): HTMLElement {
+export function SetElement<T extends ElementTypes>( type: T, attributes: AttributeElementByType[T] = {}, ...children: (HTMLElement | string | (() => HTMLElement[]))[]): HTMLElement {
     const element = document.createElement(type);
 
-    if (attributes.id) {
-        element.id = attributes.id;
+    const attrs = attributes as Partial<{
+        id: string;
+        class: Array<string>;
+        style: Array<string>;
+        value: any;
+        src: string;
+        attr: { [key: string]: string };
+    }>;
+
+    if (attrs.id) {
+        element.id = attrs.id;
     }
-    if (attributes.class?.length) {
-        const filterClass = attributes.class.filter(cls => cls !== '');
+    if (attrs.class?.length) {
+        const filterClass = attrs.class.filter(cls => cls !== '');
         if (filterClass.length > 0) {
             element.classList.add(...filterClass);
         }
     }
-    if (attributes.style?.length) {
-        element.style.cssText = attributes.style.join('; ') + ';';
+    if (attrs.style?.length) {
+        element.style.cssText = attrs.style.join('; ') + ';';
     }
-    if (attributes.value !== undefined && element instanceof HTMLInputElement) {
-        element.value = attributes.value.toString();
+    if (attrs.value !== undefined && element instanceof HTMLInputElement) {
+        element.value = attrs.value.toString();
     }
-    if (attributes.src && element instanceof HTMLImageElement) {
-        element.src = attributes.src;
+    if (attrs.src && element instanceof HTMLImageElement) {
+        element.src = attrs.src;
     }
-    if (attributes.attr) {
-        for (const key in attributes.attr) {
-            element.setAttribute(key, attributes.attr[key]);
+    if (attrs.attr) {
+        for (const key in attrs.attr) {
+            element.setAttribute(key, attrs.attr[key]);
         }
     }
 
@@ -62,42 +72,79 @@ export function SetElement(type: ElementTypes, attributes: AttributesElement = {
         }
     });
 
-    return element
+    return element;
 }
 
-export function SetElementPath(attributes: AttributesElementPath = {}) {
+export function SetElementSvg<T extends ElementNSTypes>(type:T, attributes: AttributeElementByType[T] = {}, ...children: (SVGElement | (() => SVGElement[]))[]) {
     const SVG_NS = "http://www.w3.org/2000/svg";
-    const Path = document.createElementNS(SVG_NS, 'path');
+    const Path = document.createElementNS(SVG_NS, type);
 
-    if (attributes.id) {
-        Path.id = attributes.id;
+    const attrs = attributes as Partial<{
+        id?: string,
+        class?: Array<string>,
+        d?: string,
+        stroke?: string,
+        strokeWidth?: string,
+        strokeLinejoin?: string,
+        strokeLinecap?: string,
+        fill?: string,
+        width:number, 
+        height:number, 
+        viewBox:string,
+        attr?: { [key: string]: string },
+        
+    }>;
+
+    if (attrs.id) {
+        Path.id = attrs.id;
     }
-    if (attributes.class?.length) {
-        const filterClass = attributes.class.filter(cls => cls !== '');
+    if (attrs.class?.length) {
+        const filterClass = attrs.class.filter(cls => cls !== '');
         if (filterClass.length > 0) {
             Path.classList.add(...filterClass);
         }
     }
-    if (attributes.d) {
-        Path.setAttribute('d', attributes.d);
+    if (attrs.d) {
+        Path.setAttribute('d', attrs.d);
     }
-    if (attributes.stroke) {
-        Path.setAttribute('stroke', attributes.stroke);
+    if (attrs.stroke) {
+        Path.setAttribute('stroke', attrs.stroke);
     }
-    if (attributes.strokeWidth) {
-        Path.setAttribute('stroke-width', attributes.strokeWidth)
+    if (attrs.strokeWidth) {
+        Path.setAttribute('stroke-width', attrs.strokeWidth)
     }
-    if (attributes.strokeLinejoin) {
-        Path.setAttribute('stroke-linejoin', attributes.strokeLinejoin)
+    if (attrs.strokeLinejoin) {
+        Path.setAttribute('stroke-linejoin', attrs.strokeLinejoin)
     }
-    if (attributes.fill) {
-        Path.setAttribute('fill', attributes.fill)
+    if (attrs.fill) {
+        Path.setAttribute('fill', attrs.fill)
     }
-    if (attributes.attr) {
-        for (const key in attributes.attr) {
-            Path.setAttribute(key, attributes.attr[key]);
+    if (attrs.width) {
+        Path.setAttribute('width', String(attrs.width));
+    }
+    if (attrs.height) {
+        Path.setAttribute('height', String(attrs.height));
+    }
+    if (attrs.viewBox) {
+        Path.setAttribute('viewBox', String(attrs.viewBox));
+    }
+    if (attrs.attr) {
+        for (const key in attrs.attr) {
+            Path.setAttribute(key, attrs.attr[key]);
         }
     }
+
+    children.forEach(child => {
+        if (typeof child === 'function') {
+            child().forEach(fnChild => {
+                Path.appendChild(fnChild)
+            });
+        } else if (typeof child === 'string') {
+            Path.appendChild(document.createTextNode(child));
+        } else {
+            Path.appendChild(child);
+        }
+    });
 
     return Path
 }

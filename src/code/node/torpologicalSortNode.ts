@@ -1,9 +1,6 @@
 import { Queue } from "../helper/addons";
-import type { Node } from "../node/node";
-import type { IdNode, IdOutputSocket } from "../node/nodeTypes";
-
-//TODO: torpologi sort sekarang bisa melakukan merge terhadap node yang sedang di proses, dan yang akan di proses,
-// 
+import type { Node } from "./node";
+import type { IdNode, IdOutputSocket } from "./nodeTypes";
 
 export class TorpologySortNode{
     nodeDependencies:NodeDependence[] = [];
@@ -83,8 +80,7 @@ export class TorpologySortNode{
         }
     }
 
-    //TODO ubah dokumentasi
-    /**return list node yang memiliki ketergantungan terhadap node lain => {node} {list other node} */
+    /**return list node yang memiliki ketergantungan terhadap node lain => {idNode} {list other nodeDepencies} */
     private makeDependence(nodeRoot:Node):Map<IdNode, NodeDependence>{
         let mapNodeDependencies:Map<IdNode,NodeDependence> = new Map<IdNode,NodeDependence>();
         let queue:Queue<Node> = new Queue<Node>();

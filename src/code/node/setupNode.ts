@@ -1,6 +1,6 @@
-import type { NodeDatabase } from "../node/database";
-import { Node } from "../node/node";
-import { templatesNode, type TypeNode } from "../node/nodeTypes";
+import type { NodeDatabase } from "./database";
+import { Node } from "./node";
+import { templatesNode, type TypeNode } from "./nodeTypes";
 import type { Vector2 } from "../globalTypes";
 
 

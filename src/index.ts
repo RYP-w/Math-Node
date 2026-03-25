@@ -5,8 +5,6 @@ import "./style/world2d.css";
 import "./style/node.css";
 import './style/addNode.css'
 
-import "../node_modules/bootstrap-icons/font/bootstrap-icons.min.css";
-
 const SVG_Place_World2D = document.getElementById( "svg_place_world2d") as HTMLElement;
 const toolkitContainer = document.getElementById('toolkit')!;
 
@@ -22,14 +20,15 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { RBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
-import { TorpologySortNode } from "./code/functionalNode/torpologicalSortNode";
-import { createNode } from "./code/functionalNode/setupNode";
+import { TorpologySortNode } from "./code/node/torpologicalSortNode";
+import { createNode } from "./code/node/setupNode";
 import { registerShortcut } from "./code/helper/addons";
 import { actionCheckCompatible } from "./code/compatibleWarning";
 import type { Vector2 } from "./code/globalTypes";
-import { AddNodeEnvironment } from "./code/functionalNode/addNode/addNodeEnv";
+import { AddNodeEnvironment } from "./code/node/addNode/addNodeEnv";
 import { groupingAddNodes } from "./code/node/nodeTypes";
 import { checkRemoveNodes } from "./code/node/removeNodes";
+import { updateInfoMouseState } from "./code/infoMouseState";
 
 let _mousePosition:Vector2 = {x:0, y:0};
 window.addEventListener('mousemove', (ev) => {
@@ -59,6 +58,7 @@ const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
 const editValueNodeState = new EditValueNodeState();
 const mouseState = new MouseButtonState();
+updateInfoMouseState(mouseState);
 
 //<?> Create Database Nodes
 const rBushSelection = new RBushRectSelection();
@@ -152,9 +152,9 @@ setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseSta
 //     c onsole.log("mouse down");
 //     mouseState.log();
 // })
-// window.addEventListener('mousemove', () => {
-//     c onsole.log("mouse move");
-//     mouseState.log();
+// window.addEventListener('mousemove', (e) => {
+//     console.log("mouse move");
+//     mouseState.log();    
 // });
 // window.addEventListener('mouseup', () => {
 //     c onsole.log("mouse up");

@@ -1,5 +1,5 @@
 import { SetElement } from "../../helper/addons";
-import { groupingAddNodes } from "../../node/nodeTypes";
+import { groupingAddNodes } from "../nodeTypes";
 import type { Vector2 } from "../../globalTypes";
 
 export function createHtmlAddNode(position:Vector2) {

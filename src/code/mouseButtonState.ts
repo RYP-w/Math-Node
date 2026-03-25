@@ -1,6 +1,8 @@
-type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | '';
-type SpecialSignal = 'inputTypingModeNode' | 'addNode';
-type MouseKey = 'left' | 'middle' | 'right';
+import { updateInfoMouseState } from "./infoMouseState";
+
+export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | '' | 'none';
+export type SpecialSignal = 'inputTypingModeNode' | 'addNode';
+export type MouseKey = 'left' | 'middle' | 'right';
 
 // Mapping untuk ev.button (index tombol yang memicu event)
 const buttonMap: Record<number, MouseKey> = {
@@ -13,7 +15,7 @@ const buttonBits: Record<MouseKey, number> = {
     left: 1,
     middle: 4,
     right: 2,
-}; 
+};
 
 export class MouseButtonState {
     private keys: Record<MouseKey, MouseSignal> = {
@@ -47,12 +49,14 @@ export class MouseButtonState {
         if (key) {
             this.keys[key] = signal;
         }
+        updateInfoMouseState(this);
     }
 
     setAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: MouseSignal) {
         if (this.isButtonPressed(mouseEvent, mouse)) {
             this.keys[mouse] = signal;
         }
+        updateInfoMouseState(this);
     }
 
     getSignal(mouse: MouseKey): MouseSignal {

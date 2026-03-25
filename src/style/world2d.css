@@ -103,6 +103,7 @@
     border-color: #ff00007f;
     top: -1px;
     transform: translate(0px, calc(var(--world2d-target-y) + var(--world2d-offset-y)));
+    pointer-events: none;
 }
 
 #width-zero-line {
@@ -112,4 +113,5 @@
     border-color: #00ff007f;
     left: -1px;
     transform: translate(calc(var(--world2d-target-x) + var(--world2d-offset-x)), 0px);
+    pointer-events: none;
 }

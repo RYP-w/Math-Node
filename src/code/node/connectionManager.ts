@@ -1,5 +1,5 @@
-import {  TorpologySortNode } from "../functionalNode/torpologicalSortNode";
-import { SetElementPath } from "../helper/addons";
+import {  TorpologySortNode } from "./torpologicalSortNode";
+import { SetElementSvg } from "../helper/addons";
 import type { MouseButtonState } from "../mouseButtonState";
 import { GetScreenToWorld2d, type World2d } from "../world2d/world2d";
 import type { NodeDatabase } from "./database";
@@ -165,7 +165,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
                 }
 
                 database.HtmlPlaceCurve.appendChild(
-                    SetElementPath({
+                    SetElementSvg('path',{
                         id:'tempConnectionPath',
                         d: `M ${positionSocketOutput.x} ${positionSocketOutput.y} L ${positionSocketOutput.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketOutput.y} L ${positionMouse_world2d.x - HORIZONTAL_SEGMENT_LENGTH} ${positionMouse_world2d.y} L ${positionMouse_world2d.x} ${positionMouse_world2d.y}`,
                         stroke: 'white',

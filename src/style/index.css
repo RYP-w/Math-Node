@@ -3,6 +3,11 @@
     src: url("../assets/font/CozetteVector.ttf") format("truetype");
 }
 
+@font-face {
+    font-family: "Icon-Keyboard-Mouse";
+    src: url("../assets/font/kenney_input_keyboard_&_mouse.ttf") format("truetype");
+}
+
 :root{
     --color-dark-00: #000000;
     --color-dark-01: #0f0f0f;
@@ -38,6 +43,10 @@ body {
 img {
     -webkit-user-drag: none;
     pointer-events: auto;
+}
+
+.font-icon{
+    font-family: 'Icon-Keyboard-Mouse';
 }
 
 .window-controls-container{

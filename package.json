@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "@types/rbush": "^4.0.0",
-        "bootstrap-icons": "^1.13.1",
         "decimal.js": "^10.6.0",
         "rbush": "^4.0.1"
     }
