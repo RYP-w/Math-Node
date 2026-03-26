@@ -34,6 +34,7 @@
 #info-mouse-state{
     position: absolute;
     transform: translate(10px, 10px);
+    z-index: 1;
 }
 
 .margin-right-one-char{

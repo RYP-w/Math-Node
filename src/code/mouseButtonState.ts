@@ -1,6 +1,6 @@
 import { updateInfoMouseState } from "./infoMouseState";
 
-export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | '' | 'none';
+export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | 'idle' | 'none';
 export type SpecialSignal = 'inputTypingModeNode' | 'addNode';
 export type MouseKey = 'left' | 'middle' | 'right';
 
@@ -19,9 +19,9 @@ const buttonBits: Record<MouseKey, number> = {
 
 export class MouseButtonState {
     private keys: Record<MouseKey, MouseSignal> = {
-        left: '',
-        middle: '',
-        right: '',
+        left: 'idle',
+        middle: 'idle',
+        right: 'idle',
     }
 
     private specialKeys: Record<MouseKey, Set<SpecialSignal>> = {

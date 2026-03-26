@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/Math-Node-Web/',
+  base: '/Math-Node/',
   server: {
     port: 3000,
     open: false

@@ -160,7 +160,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
 
                 mouseState.addSpecialAlt(ev, 'left', 'inputTypingModeNode'); //<- mouse State 
             }
-            mouseState.setAlt(ev,'left','');
+            mouseState.setAlt(ev,'left','idle');
         }
         if (mouseState.getSignal('left') == 'editValueNode') {
             const node = editValueNodeState.getTargetNode();
@@ -169,7 +169,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                 return;
             }
             editValueNodeState.clean()
-            mouseState.setAlt(ev,'left','');
+            mouseState.setAlt(ev,'left','idle');
         }
     })
 }

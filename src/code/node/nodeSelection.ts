@@ -131,12 +131,12 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase
     window.addEventListener('mouseup', (ev) => {
         if (ev.button == 0) {
             if (mouseState.getSignal('left') == 'NodeTitle') {
-                mouseState.setAlt(ev, 'left', '');
+                mouseState.setAlt(ev, 'left', 'idle');
             }
             if (mouseState.getSignal('left') == 'RectSelect') {
                 checkNodeInZoneSelection(rBushSelection, selectionBox, nodeSelection);
                 selectionBox.closeRectElement(world2d);
-                mouseState.setAlt(ev, 'left', '');
+                mouseState.setAlt(ev, 'left', 'idle');
             }
         }
     })

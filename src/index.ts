@@ -108,10 +108,10 @@ world2d.HtmlElement.addEventListener("wheel", (ev) => {
 //<- Window Events
 window.addEventListener("mouseup", (ev) => {
     if (mouseState.getSignal('left') == 'world2d') {
-        mouseState.setAlt(ev, 'left', '');
+        mouseState.setAlt(ev, 'left', 'idle');
     }
     if (mouseState.getSignal('right') == 'world2d') {
-        mouseState.setAlt(ev, 'right', '');
+        mouseState.setAlt(ev, 'right', 'idle');
     }
 });
 

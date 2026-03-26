@@ -18,47 +18,50 @@ const dataIconSvg:Record<KeyIconSvg,{width:number, height:number, viewBox:string
 
 let infoMouseState:Partial<Record<MouseKey,Partial<Record<MouseSignal,string[][]>>>> = {
     'left':{
-        '': [
-            [':keyboard_shift', '+', ':keyboard_a','= Show list node'],
-            [':mouse_left','[DOWN] + World2d = Selected world2d'],
-            [':mouse_left','[DOWN] + Title node = Selected node'],
-            [':mouse_left','[DOWN] + Value node = Select value node'],
+        'idle': [
+            [':keyboard_shift', '+', ':keyboard_a', '→ Open node list'],
+            [':mouse_left', '[DOWN] on empty area', '→ Start area selection'],
+            [':mouse_left', '[DOWN] on node header', '→ Move or select node'],
+            [':mouse_left', '[DOWN] on value bar', '→ Start editing value'],
         ],
         'world2d':[
-            [':mouse_move', '[MOVE] = Set selected zone']
+            [':mouse_move', '→ Drag to draw selection box']
         ],
         'RectSelect':[
-            [':mouse_left', '[UP] = Confirm selected zone']
+            [':mouse_left', '[UP] → Select all nodes inside box']
         ],
         'NodeTitle':[
-            [':mouse_left', '[UP] = Confirm select node'],
-            [':mouse_move', '[MOVE] = change position node']
+            [':mouse_left', '[UP] → Select node'],
+            [':mouse_move', '→ Drag to move node']
         ],
         'DragNode':[
-            [':mouse_left', '[UP] = Confirm change position'],
-            [':keyboard_ctrl', '[DOWN] = Clap 25'],
-            [':keyboard_ctrl', '+', ':keyboard_shift', '[DOWN] = Clap 50'],
+            [':mouse_left', '[UP] → Drop and save node position'],
+            [':keyboard_ctrl', '[HOLD]  → Snap to 25px grid'],
+            [':keyboard_ctrl', '+', ':keyboard_shift', '[HOLD] → Snap to 50px grid'],
         ],
         'inValueNode':[
             [':mouse_left', '[DOWN] = Set edit valueA'],
-            [':mouse_horizontal', '[MOVE] = Change value by moving'],
+            [':mouse_horizontal', '→ Drag left / right to change value'],
         ],
         'editValueNode':[
-            [':mouse_left', '[UP] = Confirm Change value'],
+            [':mouse_left', '[UP] → Save new value'],
         ],
         'socketSelected':[
-            [':mouse_left', '[DOWN] + {in socket input} = confirm connected node'],
+            [':mouse_left', '[DOWN] on input socket → Connect wire to node'],
         ]
     },
     'right':{
-        '':[
-            [':mouse_right', '[DOWN] ->', ':mouse_move', '[MOVE] = ubah posisi world2d']
+        'idle':[
+            [':mouse_right', '[DOWN] →',':mouse_move', '→ Move canvas']
         ],
         'world2d':[
-            [':mouse_move', '[MOVE] = Ubah posisi world2d']
+            [':mouse_move', '→ Move canvas'],
+            [':mouse_right', '[UP] → Release canvas']
+
         ],
         'dragView':[
-            [':mouse_right', '[UP] = Confirm posisi world2d']
+            [':mouse_move', '→ Move canvas'],
+            [':mouse_right', '[UP] → Release canvas']
         ]
     }
 }

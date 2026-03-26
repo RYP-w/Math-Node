@@ -241,7 +241,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
             tempConnectionPath.remove();
             database.connectedSystem.setConnectionEnd(ev);
             database.connectedSystem.processConnection(torpologiSortNode);
-            mouseState.setAlt(ev, 'left', '');
+            mouseState.setAlt(ev, 'left', 'idle');
         }
     });
 }

@@ -20,7 +20,7 @@ export function dragViewWorld2d(world2d:World2d, mouseState:MouseButtonState){
     })
     window.addEventListener('mouseup', (ev) => {
         if (mouseState.getSignal('right') == 'dragView') {
-            mouseState.setAlt(ev, 'right', '');
+            mouseState.setAlt(ev, 'right', 'idle');
         }
     })
 

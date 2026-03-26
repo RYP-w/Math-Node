@@ -76,7 +76,7 @@ export function setupNodeDragging(world2D: World2d, databaseNode:NodeDatabase, r
                 }
             })
             previousNodePosition.clear();
-            mouseState.setAlt(ev, 'left', '');
+            mouseState.setAlt(ev, 'left', 'idle');
         }
     });
 
