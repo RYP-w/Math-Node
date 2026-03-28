@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data:;
+    connect-src 'self';
+    font-src 'self';
+    frame-src 'none';
+    ">
+    <title>Math-Node</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="module" crossorigin src="/Math-Node/app.js"></script>
+  <link rel="stylesheet" crossorigin href="/Math-Node/style.css">
+</head>
+
+<body style="user-select: none;" id="body">
+    <div id="title-bar-region">
+        <div id="title-bar-left">
+            <div id="icon-app">
+                <span>Math-Node</span>
+            </div>
+        </div>
+        <div id="title-bar-centre">
+            <!-- <span>Still on progress...</span> -->
+        </div>
+        <div id="title-bar-right">
+            <span>（。＾▽＾）</span>
+            <!-- <div class="window-controls-container"></div> -->
+        </div>
+    </div>
+    <div id="editor">
+        <div id="world2d">
+
+            <svg id="svg_world2d">
+                <g id="svg_offsite_world2d">
+                    <g id="svg_place_world2d"></g>
+                </g>
+            </svg>
+            <div id="offsite_world2d">
+                <div id="place_world2d"></div>
+            </div>
+            <div id="container-zero-line">
+                <div id="height-zero-line"
+                    style="width: calc(100% - var(--world2d-zero-line-w)); border-style: solid; right: 0; "></div>
+                <div id="width-zero-line"
+                    style="height: calc(100% - var(--world2d-zero-line-h)); border-style: solid; bottom: 0px; "></div>
+                <div id="height-zero-line"
+                    style="width: calc(var(--world2d-zero-line-w)); border-style: dashed; left: 0; "></div>
+                <div id="width-zero-line"
+                    style="height: calc(var(--world2d-zero-line-h)); border-style: dashed; top: 0px; "></div>
+            </div>
+            <div id="world2d-tools">
+                <div id="rect-selection"></div>
+            </div>
+        </div>
+        <div id="toolkit">
+            <div id="info-mouse-state">
+                <div type="left"></div>
+                <div type="middle"></div>
+                <div type="right"></div>
+            </div>
+            <div class="fog"></div>
+        </div>
+    </div>
+</body>
+
+</html>
