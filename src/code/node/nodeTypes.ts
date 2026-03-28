@@ -595,7 +595,7 @@ export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,
     ...templateConversionNode,
     ...templateConstantNode,
     ['INPUT',{
-        input: [ {type:'number', value: Decimal('0'),} ],
+        input: [ {type:'number', value: Decimal('0'), enableInput:false}],
         output: [ {type:'number', value: Decimal('0'),} ]
     }],
     ['Output',{
@@ -672,10 +672,10 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Round', new GroupAddNode('call', 'ROUND')],
         ['Floor', new GroupAddNode('call', 'FLOOR')],
         ['Ceil', new GroupAddNode('call', 'CEIL')],
+        ['Trunc', new GroupAddNode('call', 'TRUNC')],
         ['Round Multiply', new GroupAddNode('call', 'ROUND_MUL')],
         ['Floor Multiply', new GroupAddNode('call', 'FLOOR_MUL')],
         ['Ceil Multiply', new GroupAddNode('call', 'CEIL_MUL')],
-        ['Trunc', new GroupAddNode('call', 'TRUNC')],
         ['Even', new GroupAddNode('call', 'EVEN')],
         ['Odd', new GroupAddNode('call', 'ODD')],
     ]))],
@@ -703,9 +703,9 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Power 10', new GroupAddNode('call', 'POW10')],
     ]))],
     ['Conversion ', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
-        ['Normalize', new GroupAddNode('call', 'NORMALIZE')],
         ['Radians to Degrees', new GroupAddNode('call', 'TO_DEG')],
         ['Degrees to Radians', new GroupAddNode('call', 'TO_RAD')],
+        ['Normalize', new GroupAddNode('call', 'NORMALIZE')],
     ]))],
     ['Constant', new GroupAddNode('spawn', new Map<string, GroupAddNode>([
         ['PI', new GroupAddNode('call', 'PI')],

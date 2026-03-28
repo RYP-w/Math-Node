@@ -32,12 +32,14 @@ let infoMouseState:Partial<Record<MouseKey,Partial<Record<MouseSignal,string[][]
         ],
         'NodeTitle':[
             [':mouse_left', '[UP] → Select node'],
-            [':mouse_move', '→ Drag to move node']
+            [':mouse_move', '→ Drag to move node'],
+            [':keyboard_x', '→ Remove Node'],
         ],
         'DragNode':[
             [':mouse_left', '[UP] → Drop and save node position'],
             [':keyboard_ctrl', '[HOLD]  → Snap to 25px grid'],
             [':keyboard_ctrl', '+', ':keyboard_shift', '[HOLD] → Snap to 50px grid'],
+            [':keyboard_x', '→ Remove Node'],
         ],
         'inValueNode':[
             [':mouse_left', '[DOWN] = Set edit valueA'],

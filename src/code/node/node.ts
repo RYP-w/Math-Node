@@ -280,7 +280,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = value_0.div(value_1);
 
             }else if (this.type == 'MOD') {
-                output_0.value = value_0.mod(value_0);
+                output_0.value = value_0.mod(value_1);
 
             }else if (this.type == 'POWER') {
                 output_0.value = value_0.pow(value_1);
@@ -393,16 +393,20 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = value_0.neg();
 
             }else if (this.type == 'FACTORIAL') {
-                if (value_0.isNegative()) {
+                if (value_0.isNegative() || !value_0.isFinite()) {
                     output_0.value = Decimal('NaN');
-                }else{
-                    let result = Decimal('1');
+                } else{
+                    if (value_0.greaterThanOrEqualTo('1000')) {
+                        output_0.value = Decimal('Infinity');
+                    }else{
+                        let result = Decimal('1');
 
-                    for (let i = Decimal('2'); i.lessThanOrEqualTo(value_0); i = i.add('1')) {
-                        result = result.mul(i);
+                        for (let i = Decimal('2'); i.lessThanOrEqualTo(value_0); i = i.add('1')) {
+                            result = result.mul(i);
+                        }
+
+                        output_0.value = result;
                     }
-
-                    output_0.value = result;
                 }
 
             }else if (this.type == 'SIGN') {
