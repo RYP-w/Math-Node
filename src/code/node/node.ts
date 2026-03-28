@@ -368,6 +368,12 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             }else if (this.type == 'LOG') {
                 output_0.value = Decimal.log(value_0, value_1);
 
+            }else if (this.type == 'MIN') {
+                output_0.value = Decimal.min(value_0, value_1);
+
+            }else if (this.type == 'MAX') {
+                output_0.value = Decimal.max(value_0, value_1);
+                
             } else{
                 console.log("BUG: ", this.type);
                 return;

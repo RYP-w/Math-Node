@@ -36,6 +36,8 @@ Math-Node is a node-based calculator simulation, where nodes can be connected to
 | `Greater or Equal` | `a >= b` | Returns 1 if a ≥ b, else 0 |
 | `Less or Equal` | `a <= b` | Returns 1 if a ≤ b, else 0 |
 | `Between` | `b <= a <= c` | Returns 1 if a is within range, else 0 |
+| `Minimal` | `min(a, b)` | Returns the smallest value |
+| `Maximal` | `max(a, b)` | Returns the largest value |
 | `Clamp` | `max(b, min(c, a))` | Constrain a between b and c |
 | `Sign` | `1 / 0 / -1` | Returns sign of a |
 | `Compare` | `1 / 0 / -1` | Returns 1 if a > b, -1 if a < b, 0 if equal |

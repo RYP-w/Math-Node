@@ -15,7 +15,7 @@ export type IdValueBox = `valuebox_${number}`;
 export type IdPath = `${IdNode},${IdOutputSocket},${IdNode},${IdInputSocket}`;
 
 type Arithmetic = 'ADD' | 'SUBTRACT' | 'MULTIPLY'  | 'DIVIDE' | 'MOD' | 'POWER' | 'SQRT' | 'ABS' | 'NEGATE' | 'FACTORIAL';
-type Comparison = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'CLAMP' | 'SIGN' | 'COMPARE';
+type Comparison = 'EQUAL' | 'NOT_EQUAL' | 'GREATER' | 'LESS' | 'GREATER_EQ' | 'LESS_EQ' | 'BETWEEN' | 'MIN' | 'MAX' | 'CLAMP' | 'SIGN' | 'COMPARE';
 type Logic = 'AND' | 'OR' | 'NOT' | 'XOR' | 'NAND' | 'NOR';
 type Rounding = 'ROUND' | 'FLOOR' | 'CEIL' | 'ROUND_MUL' | 'CEIL_MUL' | 'FLOOR_MUL' | 'TRUNC' | 'EVEN' | 'ODD';
 type Trigonometry = 'SIN' | 'COS' | 'TAN' | 'ASIN' | 'ACOS' | 'ATAN' | 'ATAN2' | 'CSC' | 'SEC' | 'COT';
@@ -32,7 +32,7 @@ export function isMathThreeInOneOut(type: TypeNode): type is MathThreeInOneOut {
     return (mathThreeInOneOutArray as readonly TypeNode[]).includes(type);
 }
 
-export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL', 'ATAN2', 'LOG'] as const;
+export const mathTwoInOneOutArray = ['ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'MOD', 'POWER', 'EQUAL', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQ', 'LESS_EQ', 'MIN', 'MAX', 'COMPARE', 'AND', 'OR', 'XOR', 'NAND', 'NOR', 'ROUND_MUL', 'CEIL_MUL', 'FLOOR_MUL', 'ATAN2', 'LOG'] as const;
 export type MathTwoInOneOut = typeof mathTwoInOneOutArray[number];
 export function isMathTwoInOneOut(type: TypeNode): type is MathTwoInOneOut {
     return (mathTwoInOneOutArray as readonly TypeNode[]).includes(type);
@@ -197,6 +197,24 @@ const templateComparsionNode:Map<Comparison,TamplateInputOutput> = new Map<Compa
     ['BETWEEN', {
         input: [
             {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['MIN', {
+        input: [
+            {type:'number', value:Decimal('0'), },
+            {type:'number', value:Decimal('0'), },
+        ],
+        output: [
+            {type:'number', value:Decimal('0')},
+        ]
+    }],
+    ['MAX', {
+        input: [
             {type:'number', value:Decimal('0'), },
             {type:'number', value:Decimal('0'), },
         ],
@@ -656,6 +674,8 @@ export const groupingAddNodes:Map<string, GroupAddNode> = new Map<string, GroupA
         ['Greater or Equal', new GroupAddNode('call', 'GREATER_EQ')],
         ['Less or Equal', new GroupAddNode('call', 'LESS_EQ')],
         ['Between', new GroupAddNode('call', 'BETWEEN')],
+        ['Minimal', new GroupAddNode('call', 'MIN')],
+        ['Maximal', new GroupAddNode('call', 'MAX')],
         ['Clamp', new GroupAddNode('call', 'CLAMP')],
         ['Sign', new GroupAddNode('call', 'SIGN')],
         ['Compare', new GroupAddNode('call', 'COMPARE')],
