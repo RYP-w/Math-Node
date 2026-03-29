@@ -1,4 +1,4 @@
-import {  TorpologySortNode } from "./torpologicalSortNode";
+import {  NodeProcessor } from "./nodeProcessor ";
 import { SetElementSvg } from "../helper/addons";
 import type { MouseButtonState } from "../mouseButtonState";
 import { GetScreenToWorld2d, type World2d } from "../world2d/world2d";
@@ -70,7 +70,7 @@ export class ConnectionManager{
         }
     }
 
-    processConnection(torpologySortNode:TorpologySortNode) {
+    processConnection(torpologySortNode:NodeProcessor) {
         if (this.nodePair.from_node !== undefined && this.nodePair.to_node !== undefined) {
             // logic koneksi (7 aturan basic)
             if (!this.parent.SystemCheckChild(this.nodePair.from_node.node, this.nodePair.to_node.node)) {
@@ -139,7 +139,7 @@ export class ConnectionManager{
     }
 }
 
-export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mouseState:MouseButtonState, torpologiSortNode:TorpologySortNode) {
+export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mouseState:MouseButtonState, torpologiSortNode:NodeProcessor) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button != 0 || mouseState.getSignal('left') != 'world2d') {
             return;

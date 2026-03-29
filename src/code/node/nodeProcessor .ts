@@ -2,7 +2,7 @@ import { Queue } from "../helper/addons";
 import type { Node } from "./node";
 import type { IdNode, IdOutputSocket } from "./nodeTypes";
 
-export class TorpologySortNode{
+export class NodeProcessor{
     nodeDependencies:NodeDependence[] = [];
     isRunning:boolean = false;
     visited:Set<Node> = new Set<Node>();

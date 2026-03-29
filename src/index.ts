@@ -20,7 +20,7 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { RBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
-import { TorpologySortNode } from "./code/node/torpologicalSortNode";
+import { NodeProcessor } from "./code/node/nodeProcessor ";
 import { createNode } from "./code/node/setupNode";
 import { registerShortcut } from "./code/helper/addons";
 import { actionCheckCompatible } from "./code/compatibleWarning";
@@ -55,7 +55,7 @@ const addNodeEnv = new AddNodeEnvironment(toolkitContainer, (ev, name, type) => 
     mouseState.setAlt(ev,'left','NodeTitle');
     mouseState.addSpecialAlt(ev, 'left', 'nodeSelected')
 });
-const torpologiSortNode = new TorpologySortNode();
+const torpologiSortNode = new NodeProcessor();
 const nodeSelection = new NodeSelection();
 const editValueNodeState = new EditValueNodeState();
 const mouseState = new MouseButtonState();

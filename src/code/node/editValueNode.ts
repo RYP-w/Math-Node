@@ -1,4 +1,4 @@
-import type { TorpologySortNode } from "./torpologicalSortNode";
+import type { NodeProcessor } from "./nodeProcessor ";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../globalTypes";
 import type { World2d } from "../world2d/world2d";
@@ -56,7 +56,7 @@ export class EditValueNodeState{
     }
 }
 
-export function editValueNode(world2d:World2d, database:NodeDatabase, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState, torpologicalSort:TorpologySortNode) {
+export function editValueNode(world2d:World2d, database:NodeDatabase, editValueNodeState:EditValueNodeState, mouseState: MouseButtonState, torpologicalSort:NodeProcessor) {
     world2d.HtmlElement.addEventListener('mousedown', (ev) => {
         let HtmlInput = ev.target as HTMLInputElement;
         if (HtmlInput.classList.contains('node-item-value')) {

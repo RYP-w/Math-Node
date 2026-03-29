@@ -157,5 +157,11 @@ npm run build
 | [Cozette - the-moonwitch](https://github.com/the-moonwitch/Cozette) | Main project font |
 | [Input Prompts - Kenney](https://kenney.nl/assets/input-prompts) | Input icons and prompts |
 
+## What's Next?
+I usually add new features randomly based on what I feel like exploring, rather than strictly following this list. But here are some ideas floating around:
+- [ ] Add horizontal node resizing
+- [ ] Refactor node execution to use a proper topological sort algorithm
+- [ ] data type Boolean, Vector2, Vector3, and Vector4
+
 ## Note
 > First project — code is messy, docs are sparse. Learning in progress ✌️
