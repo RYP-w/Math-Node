@@ -151,14 +151,14 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                     inputElement.removeEventListener('input', handleInput);
                     inputElement.removeEventListener('keydown', handleKeydown);
                     inputElement.removeEventListener('blur', handleBlur);
-                    mouseState.removeSpecial('left','inputTypingModeNode');
+                    mouseState.removeSpecial('left','typingModeInputNode');
                 };
                 
                 inputElement.addEventListener('input', handleInput);
                 inputElement.addEventListener('keydown', handleKeydown);
                 inputElement.addEventListener('blur', handleBlur);
 
-                mouseState.addSpecialAlt(ev, 'left', 'inputTypingModeNode'); //<- mouse State 
+                mouseState.addSpecialAlt(ev, 'left', 'typingModeInputNode'); //<- mouse State 
             }
             mouseState.setAlt(ev,'left','idle');
         }

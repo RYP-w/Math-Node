@@ -1,7 +1,7 @@
-import { updateInfoMouseState } from "./infoMouseState";
+import { updateInfoMouseState, updateUniqueInfoMouseState } from "./infoMouseState";
 
-export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'socketSelected' | 'editValueNode' | 'inValueNode' | 'idle' | 'none';
-export type SpecialSignal = 'inputTypingModeNode' | 'addNode';
+export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'inSocketOutput' | 'socketSelected' | 'editValueNode' | 'inValueNode' | 'idle' | 'none';
+export type SpecialSignal = 'typingModeInputNode' | 'addNode' | 'nodeSelected';
 export type MouseKey = 'left' | 'middle' | 'right';
 
 // Mapping untuk ev.button (index tombol yang memicu event)
@@ -48,15 +48,15 @@ export class MouseButtonState {
         const key = buttonMap[this.normalize(mouseEvent)];
         if (key) {
             this.keys[key] = signal;
+            updateInfoMouseState(this);
         }
-        updateInfoMouseState(this);
     }
 
     setAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: MouseSignal) {
         if (this.isButtonPressed(mouseEvent, mouse)) {
             this.keys[mouse] = signal;
+            updateInfoMouseState(this);
         }
-        updateInfoMouseState(this);
     }
 
     getSignal(mouse: MouseKey): MouseSignal {
@@ -68,12 +68,14 @@ export class MouseButtonState {
         if (key) {
             this.specialKeys[key].add(signal);
         }
+        updateUniqueInfoMouseState(this);
     }
 
-    addSpecialAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: SpecialSignal) {
+    addSpecialAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: SpecialSignal) {        
         if (this.isButtonPressed(mouseEvent, mouse)) {
             this.specialKeys[mouse].add(signal);
         }
+        updateUniqueInfoMouseState(this);
     }
 
     hasSpecial(mouse: MouseKey, signal: SpecialSignal){
@@ -85,7 +87,18 @@ export class MouseButtonState {
     }
 
     removeSpecial(mouse: MouseKey, signal: SpecialSignal){
-        return this.specialKeys[mouse].delete(signal);
+        const result = this.specialKeys[mouse].delete(signal);
+        updateUniqueInfoMouseState(this);
+        return result
+    }
+
+    removeSpecialAlt(mouseEvent: MouseEvent, mouse: MouseKey, signal: SpecialSignal){
+        let result = false
+        if (this.isButtonPressed(mouseEvent, mouse)) {
+            result = this.specialKeys[mouse].delete(signal);
+        }
+        updateUniqueInfoMouseState(this);
+        return result
     }
 
     specialExist(mouse: MouseKey){

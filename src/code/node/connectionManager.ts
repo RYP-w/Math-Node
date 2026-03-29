@@ -141,13 +141,20 @@ export class ConnectionManager{
 
 export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mouseState:MouseButtonState, torpologiSortNode:TorpologySortNode) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
-        if (ev.button == 0 && mouseState.getSignal('left') == 'world2d') {
-
+        if (ev.button != 0 || mouseState.getSignal('left') != 'world2d') {
+            return;
         }
+
+        const sockeyRadiusElement = (ev.target as HTMLElement | null);
+        if (!sockeyRadiusElement?.classList.contains('node-item-socket-radius') || !sockeyRadiusElement.closest('[class*="output"]')) {
+            return;
+        }
+        
+        mouseState.setAlt(ev, 'left', 'inSocketOutput');
     });
 
     window.addEventListener('mousemove', (ev) => {
-        if (ev.buttons == 1 && mouseState.getSignal('left') == 'world2d') {
+        if (ev.buttons == 1 && mouseState.getSignal('left') == 'inSocketOutput') {
             const success = database.connectedSystem.setConnectionStart(ev);
             if (success) {
                 const atributeOutputNode = database.connectedSystem.getFromNode();
@@ -241,6 +248,9 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
             tempConnectionPath.remove();
             database.connectedSystem.setConnectionEnd(ev);
             database.connectedSystem.processConnection(torpologiSortNode);
+            mouseState.setAlt(ev, 'left', 'idle');
+        }
+        if (ev.button == 0 && mouseState.getSignal('left') == 'inSocketOutput') {
             mouseState.setAlt(ev, 'left', 'idle');
         }
     });

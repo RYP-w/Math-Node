@@ -10,7 +10,7 @@ const toolkitContainer = document.getElementById('toolkit')!;
 
 //<?> Import Script / Module [*]
 //import { Node } from "./code/node/node";
-import { Live_SelectNodeSystem, NodeSelection, } from "./code/node/nodeSelection";
+import { checkSelectNode, NodeSelection, } from "./code/node/nodeSelection";
 import { NodeDatabase } from "./code/node/database";
 import { setupNodeDragging } from "./code/node/nodeDragging";
 import { Clamp } from "./code/customFunction";
@@ -44,15 +44,16 @@ world2d.offset = {
 world2d.updateHTML();
 
 //<?> Init Class
-const env = new AddNodeEnvironment(toolkitContainer, (ev, name, type) => {
+const addNodeEnv = new AddNodeEnvironment(toolkitContainer, (ev, name, type) => {
     const pointPosition = GetScreenToWorld2d({x: _mousePosition.x, y: _mousePosition.y + 33}, world2d)
     const node = createNode(type, {x:pointPosition.x - 75, y: pointPosition.y - 16.5}, databaseNode, name);
-    env.closeAll();
+    addNodeEnv.closeAll();
 
     // paksa node baru ke mode selected dan mouse state left ke mode "NodeTitle"
     nodeSelection.clear();
     nodeSelection.add(node);
     mouseState.setAlt(ev,'left','NodeTitle');
+    mouseState.addSpecialAlt(ev, 'left', 'nodeSelected')
 });
 const torpologiSortNode = new TorpologySortNode();
 const nodeSelection = new NodeSelection();
@@ -122,22 +123,25 @@ document.addEventListener("contextmenu", (e) => {
 //<- Shortcut Keys 
 
 registerShortcut({'key':'a','shift': true}, world2d.HtmlElement, () => {
-    const rect = toolkitContainer.getBoundingClientRect();
-    env.openRoot(groupingAddNodes, {
-        x: _mousePosition.x - rect.left,
-        y: _mousePosition.y - rect.top + 33,
-    });
+    if (mouseState.getSignal('left') == 'idle' && mouseState.getSignal('right') == 'idle') {
+        const rect = toolkitContainer.getBoundingClientRect();
+        addNodeEnv.openRoot(groupingAddNodes, {
+            x: _mousePosition.x - rect.left,
+            y: _mousePosition.y - rect.top + 33,
+        });
+    }
 })
 
 registerShortcut({key:'x'},world2d.HtmlElement, () => {
     checkRemoveNodes(databaseNode,nodeSelection);
+    mouseState.removeSpecial('left', 'nodeSelected')
 })
 
 world2d.HtmlElement.addEventListener('mousedown', (e) => {
     const target = e.target as HTMLElement;
     const clickedInsidePopup = target.closest('.add_node');
     if (!clickedInsidePopup) {
-        env.closeAll();
+        addNodeEnv.closeAll();
     }
 });
 
@@ -146,7 +150,7 @@ world2d.HtmlElement.addEventListener('mousedown', (e) => {
 dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode(world2d, databaseNode, mouseState, torpologiSortNode)//? Runtime ConnectedNode System
 editValueNode(world2d, databaseNode, editValueNodeState,mouseState, torpologiSortNode);
-Live_SelectNodeSystem(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
+checkSelectNode(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
 // window.addEventListener('mousedown', () => {
 //     c onsole.log("mouse down");

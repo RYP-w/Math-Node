@@ -88,7 +88,7 @@ export function SetSelectedNode(event: MouseEvent, dataNode: NodeDatabase, selec
 
 // fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
 // sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
-export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase, rBushSelection:RBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
+export function checkSelectNode(world2d:World2d, databaseNode:NodeDatabase, rBushSelection:RBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {
             let target = ev.target as HTMLElement;
@@ -98,16 +98,18 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase
                 if (getNode) {
                     nodeSelection.set(getNode);
                     mouseState.setAlt(ev, 'left', 'NodeTitle');
+                    mouseState.addSpecialAlt(ev, 'left', 'nodeSelected');
                 }
             }else {
                 nodeSelection.clear();
+                mouseState.removeSpecialAlt(ev, 'left', 'nodeSelected');
             }
             selectionBox.set_startPosition(GetScreenToWorld2d({x:ev.clientX, y:ev.clientY},world2d)); //? set start position
         }
     })
     window.addEventListener('mousemove', (ev) => {
         if (ev.button == 0) {
-            if (mouseState.getSignal('left') == 'world2d' && !mouseState.hasSpecial('left','inputTypingModeNode')) {
+            if (mouseState.getSignal('left') == 'world2d' && !mouseState.hasSpecial('left', 'nodeSelected')) {
                 mouseState.setAlt(ev, 'left', 'RectSelect');
                 selectionBox.showRectElement(world2d);
             }
@@ -134,7 +136,10 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase
                 mouseState.setAlt(ev, 'left', 'idle');
             }
             if (mouseState.getSignal('left') == 'RectSelect') {
-                checkNodeInZoneSelection(rBushSelection, selectionBox, nodeSelection);
+                const result = checkNodeInZoneSelection(rBushSelection, selectionBox, nodeSelection);
+                if (result) {
+                    mouseState.addSpecialAlt(ev, 'left', 'nodeSelected');
+                }
                 selectionBox.closeRectElement(world2d);
                 mouseState.setAlt(ev, 'left', 'idle');
             }
@@ -143,10 +148,14 @@ export function Live_SelectNodeSystem(world2d:World2d, databaseNode:NodeDatabase
 }
 
 function checkNodeInZoneSelection(rBushSelection:RBushRectSelection, selectionBox:SelectionBox, nodeSelection:NodeSelection) {
+    
     const rectBox = selectionBox.get_rect();
     const result = rBushSelection.RectSelection(rectBox);
-    if (result.length == 0) return;
+    if (result.length == 0) return false;
+    let isNodeInZone = false;
     for (const node of result){
         nodeSelection.add(node);
+        isNodeInZone = true;
     }
+    return isNodeInZone;
 }
