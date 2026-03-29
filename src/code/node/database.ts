@@ -103,7 +103,7 @@ export class NodeDatabase {
                 const pathSelector = `[node-from="${fromNode.node.id}"][socket-from="${fromNode.idSocket}"][node-to="${toNode.node.id}"][socket-to="${toNode.idSocket}"]`;
                 const pathElement = this.HtmlPlaceCurve.querySelector(pathSelector);
                 if (pathElement === null) {
-                    console.log("BUG:",pathSelector);
+                    console.error("BUG:",pathSelector);
                     return;
                 }
                 pathElement.remove();
@@ -201,7 +201,7 @@ export class NodeDatabase {
         // ubang langsung warna pada path sesuai dengan state socket output
         const statePath = fromNode.node.outputSockets.get(fromNode.idSocket)?.state;
         if (!statePath) {
-            console.log('BUG:','tidak ada socket pada node,', fromNode.idSocket);
+            console.error('BUG:','tidak ada socket pada node,', fromNode.idSocket);
             return;
         }
         path.style.setProperty('stroke',`var(--${statePath})`);

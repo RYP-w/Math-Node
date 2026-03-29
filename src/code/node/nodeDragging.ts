@@ -44,7 +44,7 @@ export function setupNodeDragging(world2D: World2d, databaseNode:NodeDatabase, r
                 if (node) {
                     const currentPrevNodePosition = previousNodePosition.get(el.id)
                     if (!currentPrevNodePosition) {
-                        console.log('BUG');
+                        console.error('BUG');
                         return;
                     }
 

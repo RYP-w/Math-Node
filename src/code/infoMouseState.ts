@@ -85,7 +85,7 @@ export function updateInfoMouseState(mouseState:MouseButtonState) {
     const htmlRightMouseState = htmlMouseState?.querySelector('[type="right"]');
     const htmlMiddleMouseState = htmlMouseState?.querySelector('[type="middle"]');
 
-    if (!htmlMouseState || !htmlLeftMouseState || !htmlMiddleMouseState || !htmlRightMouseState) {console.log("BUG"); return;}
+    if (!htmlMouseState || !htmlLeftMouseState || !htmlMiddleMouseState || !htmlRightMouseState) {console.error("BUG"); return;}
 
     const signalLeft = mouseState.getSignal('left');
     const signalRight = mouseState.getSignal('right');
@@ -176,11 +176,10 @@ export function updateUniqueInfoMouseState( mouseState:MouseButtonState ) {
     const htmlLeftMouse = htmlMouseState?.querySelector('[type="unique-left"]');
     const htmlRightMouse = htmlMouseState?.querySelector('[type="unique-right"]');
 
-    if (!htmlMouseState || !htmlLeftMouse || !htmlRightMouse) {console.log("BUG"); return;}
+    if (!htmlMouseState || !htmlLeftMouse || !htmlRightMouse) {console.error("BUG"); return;}
 
     const listSignalLeft = mouseState.getListSpecials('left');
     const listSignalRight = mouseState.getListSpecials('right');
-    console.log(listSignalLeft);
 
     for (const {htmlElement, listSignal} of [{htmlElement: htmlLeftMouse, listSignal: listSignalLeft}, {htmlElement: htmlRightMouse, listSignal: listSignalRight}]){
         (htmlElement.childNodes as NodeListOf<HTMLElement>).forEach(element => {

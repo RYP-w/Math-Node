@@ -20,7 +20,7 @@ import { dragViewWorld2d } from "./code/world2d/dragView";
 import { RBushRectSelection } from "./code/node/rBushRectSelection";
 import { CheckConnectedNode } from "./code/node/connectionManager";
 import { editValueNode, EditValueNodeState } from "./code/node/editValueNode";
-import { NodeProcessor } from "./code/node/nodeProcessor ";
+import { NodeProcessor } from "./code/node/nodeProcessor";
 import { createNode } from "./code/node/setupNode";
 import { registerShortcut } from "./code/helper/addons";
 import { actionCheckCompatible } from "./code/compatibleWarning";
@@ -152,16 +152,3 @@ CheckConnectedNode(world2d, databaseNode, mouseState, torpologiSortNode)//? Runt
 editValueNode(world2d, databaseNode, editValueNodeState,mouseState, torpologiSortNode);
 checkSelectNode(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime selected Node System
 setupNodeDragging(world2d, databaseNode, rBushSelection, nodeSelection, mouseState); //? Runtime Moving Node System
-// window.addEventListener('mousedown', () => {
-//     c onsole.log("mouse down");
-//     mouseState.log();
-// })
-// window.addEventListener('mousemove', (e) => {
-//     console.log("mouse move");
-//     mouseState.log();    
-// });
-// window.addEventListener('mouseup', () => {
-//     c onsole.log("mouse up");
-//     mouseState.log();
-// })
-

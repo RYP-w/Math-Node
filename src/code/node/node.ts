@@ -218,7 +218,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 if (valueBox.enableInput){
                     const inputConnected = this.connection.incomingNodes[valueBox.socket!.id as IdInputSocket];
                     if (inputConnected.size > 1) {
-                        console.log("BUG:");
+                        console.error("BUG:");
                         break;
                     }
                     if (inputConnected.size == 1) {
@@ -243,7 +243,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             const value_2 = Decimal(String(this.valueBoxs['valuebox_2'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
-            if (!output_0) { console.log("BUG"); return;}
+            if (!output_0) { console.error("BUG"); return;}
 
             if (this.type == 'BETWEEN') {
                 output_0.value = value_1.lessThanOrEqualTo(value_0) && value_0.lessThanOrEqualTo(value_2)? Decimal('1') : Decimal('0');
@@ -252,7 +252,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = Decimal.max(value_1, Decimal.min(value_2, value_0));
 
             }else{
-                console.log("BUG: ", this.type);
+                console.error("BUG: ", this.type);
                 return;
             }
 
@@ -265,7 +265,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             const value_1 = Decimal(String(this.valueBoxs['valuebox_1'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
-            if (!output_0) { console.log("BUG"); return;}
+            if (!output_0) { console.error("BUG"); return;}
 
             if (this.type == 'ADD') {
                 output_0.value = value_0.add(value_1);
@@ -375,7 +375,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = Decimal.max(value_0, value_1);
                 
             } else{
-                console.log("BUG: ", this.type);
+                console.error("BUG: ", this.type);
                 return;
             }
 
@@ -387,7 +387,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
             const output_0 = this.outputSockets.get("outputsocket_0");
 
-            if (!output_0) { console.log("BUG"); return;}
+            if (!output_0) { console.error("BUG"); return;}
 
             if (this.type == 'SQRT') {
                 output_0.value = value_0.sqrt();
@@ -426,7 +426,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                     output_0.value = Decimal('1');
 
                 }else{
-                    console.log('BUG:', value_0.toString()); return;
+                    console.error('BUG:', value_0.toString()); return;
 
                 }
             }else if (this.type == 'NOT') {
@@ -499,7 +499,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = Decimal.log10(value_0);
 
             } else{
-                console.log("BUG");
+                console.error("BUG");
                 return;
             }
 
@@ -510,7 +510,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         }else if (isZeroInOneOut(this.type)) {
             const output_0 = this.outputSockets.get("outputsocket_0");
 
-            if (!output_0) { console.log("BUG"); return;}
+            if (!output_0) { console.error("BUG"); return;}
             
             if (this.type == 'INPUT') {
                 const value_0 = Decimal(String(this.valueBoxs['valuebox_0'].value));
@@ -534,7 +534,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 output_0.value = Decimal('Infinity');
 
             } else{
-                console.log("BUG: ", this.type);
+                console.error("BUG: ", this.type);
                 return;
             }
 
@@ -547,11 +547,11 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             if (this.type == 'Output') {
                 return;
             } else{
-                console.log("BUG: ", this.type);
+                console.error("BUG: ", this.type);
                 return;
             }
         }else{
-            console.log("BUG");
+            console.error("BUG");
             return;
         }
     }
@@ -560,7 +560,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         if (this.valueBoxs[idValueBox].type == 'number') {
             const htmlInput = this.valueBoxs[idValueBox].HtmlElement?.querySelector('[class*="input_0"]');
             if (!htmlInput) {
-                console.log("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
+                console.error("BUG: elemen input tidak di temukan: input_0, di:", idValueBox);
                 return;
             }
             let value = this.valueBoxs[idValueBox].value;
@@ -570,14 +570,14 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
 
     UpdateValueOfValueBoxsByHtml(htmlInput:HTMLInputElement){
         if (!htmlInput.classList.contains('node-item-value')) {
-            console.log("BUG");
+            console.error("BUG");
             return;
         }
 
         const idValueBox = htmlInput.closest('[id^="valuebox_"]')?.id as IdValueBox | undefined;
 
         if (idValueBox == undefined) {
-            console.log("BUG");
+            console.error("BUG");
             return;
         }
 
@@ -609,7 +609,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
                 const positionSocketTo = outgoingNode.otherNode.getPositionSocketInput(idInputSocket);
                 //
                 path.setAttribute('d', `M ${positionSocketFrom.x} ${positionSocketFrom.y} L ${positionSocketFrom.x + HORIZONTAL_SEGMENT_LENGTH} ${positionSocketFrom.y} L ${positionSocketTo.x - HORIZONTAL_SEGMENT_LENGTH} ${positionSocketTo.y} L ${positionSocketTo.x} ${positionSocketTo.y}`)
-            } else console.log('Bug');
+            } else console.error('BUG');
         }
         for (const thisIdSocket in this.connection.incomingNodes) {
             for (const incomingNodes of this.connection.incomingNodes[thisIdSocket as IdInputSocket].values()) {
@@ -676,7 +676,7 @@ function initHtmlValueboxs(node: Node) {
         if (htmlValueBox) {
             node.valueBoxs[htmlValueBox.id as IdValueBox].setHtmlElelemt(htmlValueBox as HTMLElement);
         }else{
-            console.log("Bug: Htmltidak di temukan:",key);
+            console.error("BUG: Htmltidak di temukan:",key);
         }
     }
 }
@@ -743,7 +743,7 @@ export function getSocketPosition_world2d(node:Node, socket:IdInputSocket | IdOu
     const positionSocketY = socketHtml.getAttribute('position-socket-y');
 
     if (!positionSocketX || !positionSocketY) {
-        console.log("BUG");
+        console.error("BUG");
         return undefined
     }
 

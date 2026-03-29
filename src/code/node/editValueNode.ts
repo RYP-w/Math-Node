@@ -1,4 +1,4 @@
-import type { NodeProcessor } from "./nodeProcessor ";
+import type { NodeProcessor } from "./nodeProcessor";
 import type { MouseButtonState } from "../mouseButtonState";
 import type { Vector2 } from "../globalTypes";
 import type { World2d } from "../world2d/world2d";
@@ -73,7 +73,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
             const idNode = (HtmlInput.closest('[id^="node_"]') as HTMLDivElement).id as IdNode;
             const node = database.getById(idNode)
             if (!node) {
-                console.log("BUG: node not in database: ",idNode);
+                console.error("BUG: node not in database: ",idNode);
                 return;
             }
             editValueNodeState.setStartPos({x: ev.clientX, y:ev.clientY},node,HtmlInput);
@@ -92,7 +92,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
             const node = editValueNodeState.getTargetNode();
             const htmlInput = editValueNodeState.getTargetInput();
             if (!node || !htmlInput) { 
-                console.log("BUG: Tidak ada Html Input Dan Node");
+                console.error("BUG: Tidak ada Html Input Dan Node");
                 return;
             }
             const htmlValueBox = htmlInput.closest(`[id^="valuebox_"]`);
@@ -113,7 +113,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
             if (!editValueNodeState.hasPositionChanged()) {
                 const inputElement = editValueNodeState.getTargetInput();
                 if (!inputElement) {
-                    console.log("BUG: inputElement not found");
+                    console.error("BUG: inputElement not found");
                     return;
                 }
                 inputElement.focus({ preventScroll: true });
@@ -125,7 +125,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                     
                     const node = editValueNodeState.getTargetNode();
                     if (!node) {
-                        console.log("BUG: node not found");
+                        console.error("BUG: node not found");
                         return;
                     }
                     
@@ -141,7 +141,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
                 const handleBlur = () => {
                     const node = editValueNodeState.getTargetNode();
                     if (!node) {
-                        console.log("BUG");
+                        console.error("BUG");
                         return;
                     }
                     torpologicalSort.setTorpologycal(node);
@@ -165,7 +165,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
         if (mouseState.getSignal('left') == 'editValueNode') {
             const node = editValueNodeState.getTargetNode();
             if (!node) {
-                console.log("BUG");
+                console.error("BUG");
                 return;
             }
             editValueNodeState.clean()

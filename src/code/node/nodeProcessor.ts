@@ -43,8 +43,6 @@ export class NodeProcessor{
     private tick() {
         if (!this.isRunning) return;
 
-        // console.log(this.nodeDependencies.map(node => `${node.node.id}:[${node.getDependenties().size}]`));
-
         this.processChunk();
 
         requestAnimationFrame(() => {
@@ -171,7 +169,7 @@ class NodeDependence{
     removeDependenties(node:Node){
         const signal = this.dependencies.delete(node);
         if (!signal) {
-            console.log("BUG: ini bug kah?");
+            console.error("BUG: ini bug kah?");
         }
         return signal;
     }

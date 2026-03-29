@@ -108,8 +108,4 @@ export class MouseButtonState {
         return true;
     }
 
-    log(){
-        console.log('keys:','\nleft:',this.keys.left,'middle:',this.keys.middle,'right:',this.keys.right,'\nspecialKeys:', '\nleft:',...this.specialKeys.left, 'middle:',...this.specialKeys.middle, 'right:',...this.specialKeys.right)
-    }
-
 }

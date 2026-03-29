@@ -1,4 +1,4 @@
-import {  NodeProcessor } from "./nodeProcessor ";
+import {  NodeProcessor } from "./nodeProcessor";
 import { SetElementSvg } from "../helper/addons";
 import type { MouseButtonState } from "../mouseButtonState";
 import { GetScreenToWorld2d, type World2d } from "../world2d/world2d";
@@ -102,7 +102,7 @@ export class ConnectionManager{
                             { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                         )
 
-                    } else console.log('BUG: ada yang kosong');
+                    } else console.error('BUG: ada yang kosong');
 
                     torpologySortNode.setTorpologycal(this.nodePair.from_node.node);
                     // c onsole.log('Check Signal 2');
@@ -124,7 +124,7 @@ export class ConnectionManager{
                                 { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },
                                 { node: this.nodePair.to_node.node, idSocket: this.nodePair.to_node.idSocket },
                             )
-                        } else console.log('BUG');
+                        } else console.error('BUG');
 
 
                         //c onsole.log('Check Signal 3 2');
@@ -159,7 +159,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
             if (success) {
                 const atributeOutputNode = database.connectedSystem.getFromNode();
                 if (!atributeOutputNode) {
-                    console.log('BUG');
+                    console.error('BUG');
                     return;
                 }
 
@@ -167,7 +167,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
                 const positionSocketOutput =  getSocketPosition_world2d(atributeOutputNode.node, atributeOutputNode.idSocket);
 
                 if (!positionSocketOutput) {
-                    console.log('BUG');
+                    console.error('BUG');
                     return;
                 }
 
@@ -188,7 +188,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
         if (ev.buttons == 1 && mouseState.getSignal('left') == 'socketSelected') {
             const atributeOutputNode = database.connectedSystem.getFromNode();
             if (!atributeOutputNode) {
-                console.log('BUG');
+                console.error('BUG');
                 return;
             }
 
@@ -196,14 +196,14 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
             const positionSocketOutput = getSocketPosition_world2d(atributeOutputNode.node, atributeOutputNode.idSocket);
 
             if (!positionSocketOutput) {
-                console.log('BUG');
+                console.error('BUG');
                 return;
             }
 
             const pathElement = document.getElementById('tempConnectionPath');
 
             if (!pathElement) {
-                console.log("BUG");
+                console.error("BUG");
                 return;
             }
 
@@ -216,14 +216,14 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
                 const node = nodeElement ? database.getById(nodeElement.id as IdNode) : undefined;
 
                 if (!node) {
-                    console.log('BUG');
+                    console.error('BUG');
                     return
                 }
 
                 const positionSocketInput = getSocketPosition_world2d(node, inputSocket.id as IdInputSocket);
 
                 if (!positionSocketInput) {
-                    console.log('BUG');
+                    console.error('BUG');
                     return;
                 }
 
@@ -241,7 +241,7 @@ export function CheckConnectedNode(world2d: World2d, database:NodeDatabase, mous
         if (ev.button == 0 && mouseState.getSignal('left') == 'socketSelected') {
             const tempConnectionPath = document.getElementById('tempConnectionPath');
             if (!tempConnectionPath) {
-                console.log("BUG");
+                console.error("BUG");
                 return;
             }
             
