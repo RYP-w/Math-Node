@@ -162,6 +162,8 @@ I usually add new features randomly based on what I feel like exploring, rather 
 - [ ] Add horizontal node resizing
 - [ ] Refactor node execution to use a proper topological sort algorithm
 - [ ] data type Boolean, Vector2, Vector3, and Vector4
+- [ ] copy and paste system for node
+- [ ] save and load system for node
 
 ## Note
 > First project — code is messy, docs are sparse. Learning in progress ✌️
