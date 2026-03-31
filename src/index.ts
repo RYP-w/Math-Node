@@ -49,7 +49,7 @@ const addNodeEnv = new AddNodeEnvironment(toolkitContainer, (ev, name, type) => 
     const node = createNode(type, {x:pointPosition.x - 75, y: pointPosition.y - 16.5}, databaseNode, name);
     addNodeEnv.closeAll();
 
-    // paksa node baru ke mode selected dan mouse state left ke mode "NodeTitle"
+    // force new node to selected mode and left mouse state to "NodeTitle" mode
     nodeSelection.clear();
     nodeSelection.add(node);
     mouseState.setAlt(ev,'left','NodeTitle');
@@ -66,7 +66,7 @@ const rBushSelection = new RBushRectSelection();
 const databaseNode = new NodeDatabase(SVG_Place_World2D, rBushSelection);
 
 //<?> init 
-actionCheckCompatible() //? cek apakah device bisa menjalankan editor ini
+actionCheckCompatible() //? check if device can run this editor
 
 //<?> Events
 //<- Document Events
@@ -146,7 +146,7 @@ world2d.HtmlElement.addEventListener('mousedown', (e) => {
 });
 
 
-//<- Group Events [prioritas utama paling atas] 
+//<- Group Events [highest priority at top] 
 dragViewWorld2d(world2d, mouseState);
 CheckConnectedNode(world2d, databaseNode, mouseState, torpologiSortNode)//? Runtime ConnectedNode System
 editValueNode(world2d, databaseNode, editValueNodeState,mouseState, torpologiSortNode);

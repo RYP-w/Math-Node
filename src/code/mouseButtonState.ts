@@ -4,7 +4,7 @@ export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 
 export type SpecialSignal = 'typingModeInputNode' | 'addNode' | 'nodeSelected';
 export type MouseKey = 'left' | 'middle' | 'right';
 
-// Mapping untuk ev.button (index tombol yang memicu event)
+// Mapping for ev.button (button index triggering event)
 const buttonMap: Record<number, MouseKey> = {
     0: 'left',
     1: 'middle',

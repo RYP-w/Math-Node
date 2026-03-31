@@ -1,4 +1,4 @@
-//<!> file ini menjadi tempat untuk class node 
+//<!> this file is the place for node class 
 
 import type { Vector2 } from "../globalTypes";
 import { createNodeElement } from "./createNodeElement";
@@ -10,7 +10,7 @@ import {isMathOneInOneOut, isMathThreeInOneOut, isMathTwoInOneOut, isOneInZeroOu
 export const HORIZONTAL_SEGMENT_LENGTH = 11.5
 
 //? class Socket
-//? berisi id dan tipe socket
+//? contains id and socket type
 class Socket { 
     id: IdSocket;
     type: DataTypeNode;
@@ -22,7 +22,7 @@ class Socket {
 }
 
 //? Class ValueBox
-//? berisi idValue Box, tipe boxValue, literal value, flag enable boxValue dan Class Socket
+//? contains idValue Box, boxValue type, literal value, enable boxValue flag and Class Socket
 class ValueBox<T extends DataTypeNode = DataTypeNode> {
     id: IdValueBox;
     type: T;
@@ -137,13 +137,13 @@ class OutputSocket<T extends DataTypeNode = DataTypeNode> extends Socket {
 let nodeIdCounter = 0;
 
 export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNode = DataTypeNode> {
-    name: string; //? nama node
+    name: string; //? node name
     type:TypeNode;
     id: IdNode ; //? id node (unique)
-    position: Vector2; //? posisi node di world
-    selected: boolean; //? flag apakah Node dipilih
-    connection: { //? menyimpan semua koneksi node
-        incomingNodes:Record<IdInputSocket, Map<`${IdNode}:${IdOutputSocket}`, { //? daftar dari setiap socket input, setiap socket bisa menerima koneksi lebih dari 0 (ya walaupun saat ini tidak boleh)
+    position: Vector2; //? node position in world
+    selected: boolean; //? flag whether Node is selected
+    connection: { //? save all node connections
+        incomingNodes:Record<IdInputSocket, Map<`${IdNode}:${IdOutputSocket}`, { //? list of every input socket, each socket can receive more than 0 connections (although not allowed currently)
             otherNode: Node;
             otherIdSocket: IdOutputSocket;
         }>>,
@@ -151,10 +151,10 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
             otherNode: Node;
             otherIdSocket: IdInputSocket;
         }>>,
-        //? struktur map dengan value dictionary digunakan untuk memudahkan penghapusan node
+        //? map structure with dictionary value used to ease node deletion
     };
     outputSockets:Map<IdOutputSocket,OutputSocket>; //? list Socket output
-    //! memakai valueBoxs harus di grouping sesuai dengan type pada valuebox, lihat `UpdateHtmlValueBoxs`
+    //! using valueBoxs must be grouped by type in valueBox, see `UpdateHtmlValueBoxs`
     valueBoxs: Record<IdValueBox, ValueBox>; //? list ValueBox
     HtmlSockets: { //? list Container HTML Input / Output Socket
         inputSockets: Record<IdInputSocket, HTMLElement>,
@@ -194,7 +194,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         setAttributePositionSocket(this);
     }
 
-    getPositionSocketInput(idSocket: IdInputSocket) { //? dapatkan posisi dari Socket input
+    getPositionSocketInput(idSocket: IdInputSocket) { //? get position of input socket
         const op: Vector2 = {
             x: this.position.x + parseFloat(this.HtmlSockets.inputSockets[idSocket].getAttribute('position-socket-x') as string),
             y: this.position.y + parseFloat(this.HtmlSockets.inputSockets[idSocket].getAttribute('position-socket-y') as string),
@@ -202,7 +202,7 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         return op
     }
 
-    getPositionSocketOutput(idSocket: IdOutputSocket) { //? dapatkan posisi dari Socket output
+    getPositionSocketOutput(idSocket: IdOutputSocket) { //? get position of output socket
         const op: Vector2 = {
             x: this.position.x + parseFloat(this.HtmlSockets.outputSockets[idSocket].getAttribute('position-socket-x') as string),
             y: this.position.y + parseFloat(this.HtmlSockets.outputSockets[idSocket].getAttribute('position-socket-y') as string),
@@ -594,13 +594,13 @@ export class Node<T1 extends DataTypeNode = DataTypeNode, T2 extends DataTypeNod
         return this.valueBoxs[htmlValuBox.id as IdValueBox];
     }
 
-    UpdateHTMLPosition() { //? update position dari Html Node
+    UpdateHTMLPosition() { //? update position of Html Node
         this.HtmlElement.style.setProperty('--position-x', `${this.position.x}px`);
         this.HtmlElement.style.setProperty('--position-y', `${this.position.y}px`);
         this.UpdateHtmlPathPosition();
     }
 
-    UpdateHtmlPathPosition() { //? update path line position dari Html
+    UpdateHtmlPathPosition() { //? update path line position of Html
         for (const [key, path] of this.OutgoingPathLines) {
             let [_, idOutputSocket, idInputNode, idInputSocket] = key.split(',') as [IdNode, IdOutputSocket, IdNode, IdInputSocket];
             const outgoingNode = this.connection.outgoingNodes[idOutputSocket].get(`${idInputNode}:${idInputSocket}`);

@@ -7,7 +7,7 @@ import type { RBushRectSelection } from "./rBushRectSelection";
 import { SelectionBox } from "./selectionBox";
 import type { IdNode } from "./nodeTypes";
 
-export class NodeSelection { //? class untuk menyimpan node node yang di pilih
+export class NodeSelection { //? class to save selected nodes
     private nodes: Map<string, Node>;
 
     constructor() {
@@ -86,8 +86,8 @@ export function SetSelectedNode(event: MouseEvent, dataNode: NodeDatabase, selec
     }
 }
 
-// fungsi ini hanya menandai mouseState apakah jika di tekan node-title jika tidak ya udah nggak usah
-// sama fungsi ini juga akan memilih system secara individual jika mouse statenya adalah mouse state
+// this function only marks mouseState if node-title is pressed, otherwise skip
+// similarly this function will pick system individually if mouse state is mouse state
 export function checkSelectNode(world2d:World2d, databaseNode:NodeDatabase, rBushSelection:RBushRectSelection, nodeSelection:NodeSelection, mouseState:MouseButtonState) {
     world2d.HtmlElement.addEventListener("mousedown", (ev) => {
         if (ev.button == 0) {

@@ -124,7 +124,7 @@ export class NodeDatabase {
                 }
                 const valueBox = toNode.node.valueBoxs[elementValueBox.id as IdValueBox];
 
-                //? mengapa All? karena kemungkinan di masa depan valueBox group memiliki 2 (x,y) atau 3 (x,y,z) input. hhe "masa depan"
+                //? why All? because in the future valueBox group might have 2 (x,y) or 3 (x,y,z) inputs.
                 const elementInput = elementValueBox.querySelectorAll('[class*=input_]') as NodeListOf<HTMLInputElement>;
                 
                 if (elementInput.length == 0) {
@@ -198,7 +198,7 @@ export class NodeDatabase {
         this.HtmlPlaceCurve.appendChild(path);
         fromNode.node.OutgoingPathLines.set(`${fromNode.node.id},${fromNode.idSocket},${toNode.node.id},${toNode.idSocket}`, path);
 
-        // ubang langsung warna pada path sesuai dengan state socket output
+        // change path color directly according to socket output state
         const statePath = fromNode.node.outputSockets.get(fromNode.idSocket)?.state;
         if (!statePath) {
             console.error('BUG:','tidak ada socket pada node,', fromNode.idSocket);

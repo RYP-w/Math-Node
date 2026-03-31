@@ -114,7 +114,7 @@ export class NodeProcessor{
             this.nodeDependencies = [...newNodeDependencies.values()]; return;
         }
 
-        // menghapus node visited yang sama di newNodeDependencies
+        // remove same visited node in newNodeDependencies
         for (const nodeDependence of newNodeDependencies.values()) {
             this.visited.delete(nodeDependence.node);
         }
@@ -122,14 +122,14 @@ export class NodeProcessor{
         for (const nodeDependence of this.nodeDependencies) {
             const mergeNodeDependence = newNodeDependencies.get(nodeDependence.node.id);
 
-            // jika nodeDependence tidak berada di newNodeDependencies, skip
+            // if nodeDependence not in newNodeDependencies, skip
             if (!mergeNodeDependence) continue;
 
             nodeDependence.setDependenties(...mergeNodeDependence.getDependenties())
             newNodeDependencies.delete(nodeDependence.node.id);
         }
 
-        // tambahkan node baru ke nodeDependencies
+        // add new node to nodeDependencies
         for (const nodeDependence of newNodeDependencies.values()){
             this.nodeDependencies.push(nodeDependence);
         }
@@ -154,7 +154,7 @@ class NodeDependence{
     haveDependence(visited:Set<Node>){
         if (this.dependencies.size == 0) return false;
         for (const dependence of this.dependencies){
-            // apakah `dependency` ini belum ada di daftar yang sudah beres
+            // whether this `dependency` is not yet in completed list
             if (!visited.has(dependence)) {
                 return true;
             }
@@ -175,4 +175,4 @@ class NodeDependence{
     }
 }
 
-//? apakah sebaiknya class tetap ada (di deklarasikan ke root)? 
+//? should class remain (declared to root)? 

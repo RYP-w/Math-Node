@@ -39,7 +39,7 @@ export class World2d {
 }
 
 function updateGrid(scale:number, world2dElement:HTMLElement) {
-    const screenSize = 25 * scale; // ukuran cell level A dalam pixel layar
+    const screenSize = 25 * scale; // screen pixel size of cell level A
 
     const opacityA = Math.min(1, Math.max(0, (screenSize - 8) / (20 - 8))) * 0.4;
 
@@ -49,12 +49,12 @@ function updateGrid(scale:number, world2dElement:HTMLElement) {
     world2dElement.style.setProperty('--dot-opacity-b', `${opacityB}`);
 }
 
-// jika dipikir lagi, dulu guah kok niat kali buat dokumentasi
+// on second thought, why did I put so much effort into documentation back then
 /**
-* Konversi koordinat layar (screen space) menjadi koordinat dunia (world space) pada sistem World2D.
-* @param position - Koordinat dalam screen space
-* @param world2d - Objek konfigurasi dunia 2D 
-* @return Koordinat hasil dalam world space `Vector2d`
+* Convert screen coordinates (screen space) to world coordinates (world space) in the World2D system.
+* @param position - Coordinates in screen space
+* @param world2d - 2D world configuration object 
+* @return Resulting coordinates in world space `Vector2d`
 */
 export function GetScreenToWorld2d(position: Vector2, world2d: World2d): Vector2 {
     return {
@@ -64,10 +64,10 @@ export function GetScreenToWorld2d(position: Vector2, world2d: World2d): Vector2
 }
 
 /**
-* Konversi koordinat dunia (world space) menjadi koordinat layar (screen space) pada sistem World2D.
-* @param position - Koordinat dalam world space
-* @param world2d - Objek konfigurasi dunia 2D 
-* @return Koordinat hasil dalam screen space `Vector2d`
+* Convert world coordinates (world space) to screen coordinates (screen space) in the World2D system.
+* @param position - Coordinates in world space
+* @param world2d - 2D world configuration object 
+* @return Resulting coordinates in screen space `Vector2d`
 */
 export function GetWorld2dToScreen(position: Vector2, world2d: World2d): Vector2 {
     return {

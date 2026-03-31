@@ -601,7 +601,7 @@ const templateConstantNode:Map<Constant,TamplateInputOutput> = new Map<Constant,
     }],
 ])
 
-//<?> Gabungkan semua template 
+//<?> Merge all templates 
 export const templatesNode:Map<TypeNode,TamplateInputOutput> = new Map<TypeNode,TamplateInputOutput>([
     ...templateArithmeticNode,
     ...templateComparsionNode,

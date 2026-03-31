@@ -7,8 +7,8 @@ import { getSocketPosition_world2d, HORIZONTAL_SEGMENT_LENGTH, Node } from "./no
 import type { IdInputSocket, IdNode, IdOutputSocket } from "./nodeTypes";
 
 export class ConnectionManager{
-    private parent: NodeDatabase; //? ikat database Node ke ConnectionManager
-    private nodePair: { //? struktur data untuk memasang node output dan input
+    private parent: NodeDatabase; //? bind Node database to ConnectionManager
+    private nodePair: { //? data structure to connect output and input nodes
         from_node?: {node: Node, idSocket:IdOutputSocket},
         to_node?: {node: Node, idSocket: IdInputSocket}
     }
@@ -72,7 +72,7 @@ export class ConnectionManager{
 
     processConnection(torpologySortNode:NodeProcessor) {
         if (this.nodePair.from_node !== undefined && this.nodePair.to_node !== undefined) {
-            // logic koneksi (7 aturan basic)
+            // connection logic (7 basic rules)
             if (!this.parent.SystemCheckChild(this.nodePair.from_node.node, this.nodePair.to_node.node)) {
                 const checkSignal = this.parent.SystemCheckObjectConnectToObject(
                     { node: this.nodePair.from_node.node, idSocket: this.nodePair.from_node.idSocket },

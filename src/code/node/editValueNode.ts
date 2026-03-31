@@ -60,7 +60,7 @@ export function editValueNode(world2d:World2d, database:NodeDatabase, editValueN
     world2d.HtmlElement.addEventListener('mousedown', (ev) => {
         let HtmlInput = ev.target as HTMLInputElement;
         if (HtmlInput.classList.contains('node-item-value')) {
-            // Blur input sebelumnya jika klik input berbeda saat typing mode
+            // Blur previous input if clicking different input during typing mode
             if (editValueNodeState.hasTypingEditeMode && 
                 editValueNodeState.getTargetInput() !== HtmlInput) {
                 editValueNodeState.getTargetInput()?.blur();
