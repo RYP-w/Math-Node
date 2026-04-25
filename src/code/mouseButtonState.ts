@@ -1,6 +1,6 @@
 import { updateInfoMouseState, updateUniqueInfoMouseState } from "./infoMouseState";
 
-export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'inSocketOutput' | 'socketSelected' | 'editValueNode' | 'inValueNode' | 'idle' | 'none';
+export type MouseSignal = 'world2d' | 'DragNode' | 'RectSelect' | 'NodeTitle' | 'dragView' | 'editValueNode' | 'inValueNode' | 'idle' | 'none' | 'inSocketOutput'  | 'inSocketInput'  | 'socketSelected';
 export type SpecialSignal = 'typingModeInputNode' | 'addNode' | 'nodeSelected';
 export type MouseKey = 'left' | 'middle' | 'right';
 

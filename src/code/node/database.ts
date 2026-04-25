@@ -1,8 +1,9 @@
-import { ConnectionManager } from "./connectionManager";
+// import { ConnectionManager } from "./connectionManager";
 import { SetElementSvg } from "../helper/addons";
 import { RBushRectSelection } from "./rBushRectSelection";
 import type { IdInputSocket, IdNode, IdOutputSocket, IdValueBox } from "./nodeTypes";
 import { HORIZONTAL_SEGMENT_LENGTH, Node } from "./node";
+import { ConnectionManager } from "./connectionManager";
 
 export class NodeDatabase {
     private database:Map<IdNode, Node>; //? list Nodes
@@ -56,8 +57,31 @@ export class NodeDatabase {
         return 0;
     }
 
+    /**
+     * Checks the connection status between a specific output socket of a source node and a target input socket.
+     * 
+     * @param fromNode - Object containing the source `Node` instance and the ID of its output socket.
+     * @param toNode - Object containing the target `Node` instance and the ID of its input socket.
+     * @returns A status code representing the connection state:
+     * - ` 1`: The target input socket is occupied by a different node/socket connection.
+     * - ` 0`: The target input socket is currently empty.
+     * - `-1`: The connection already exists (exactly connected from `fromNode` to `toNode`).
+     */
+    SystemCheckSocketConnectToSocket(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }){
+        if (toNode.node.connection.incomingNodes[toNode.idSocket].size == 0) {
+            return 0;
+        }
+
+        for (const incomingNode of toNode.node.connection.incomingNodes[toNode.idSocket].values()) {
+            if (incomingNode.otherNode == fromNode.node && incomingNode.otherIdSocket == fromNode.idSocket) {
+                return -1;
+            }   
+        }
+        
+        return 1;
+    }
+
     SystemConnectingNode(fromNode: { node: Node, idSocket: IdOutputSocket }, toNode: { node: Node, idSocket: IdInputSocket }) {
-        //a
         fromNode.node.connection.outgoingNodes[fromNode.idSocket].set(`${toNode.node.id}:${toNode.idSocket}`, {
             otherNode: toNode.node,
             otherIdSocket: toNode.idSocket,

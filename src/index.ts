@@ -137,6 +137,11 @@ registerShortcut({key:'x'},world2d.HtmlElement, () => {
     mouseState.removeSpecial('left', 'nodeSelected')
 })
 
+registerShortcut({key: '/'}, world2d.HtmlElement, () => {
+    const infoMouseStateElement = toolkitContainer.querySelector('#info-mouse-state') as HTMLDivElement;
+    infoMouseStateElement.style.display = infoMouseStateElement.style.display == 'block'? 'none' : 'block';
+})
+
 world2d.HtmlElement.addEventListener('mousedown', (e) => {
     const target = e.target as HTMLElement;
     const clickedInsidePopup = target.closest('.add_node');

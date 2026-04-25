@@ -12,10 +12,10 @@ export class NodeProcessor{
         this.maxChunck = maxChunck;
     }
 
-    setTorpologycal(node:Node){
+    setProcess(node:Node){
         const newNodeDependencies = this.makeDependence(node);
         this.mergeDependencies(newNodeDependencies)
-        this.runTorpological()
+        this.runProcess()
     }
 
     stop(){
@@ -26,7 +26,7 @@ export class NodeProcessor{
         this.isRunning = true;
     }
 
-    private runTorpological(){
+    private runProcess(){
         if (this.isRunning) {return;}
         this.visited.clear();
         this.isRunning = true;
